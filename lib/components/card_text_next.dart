@@ -12,9 +12,12 @@ Widget CardTextNext(String hintText, Function()? onNextClick) {
         filled: true,
         fillColor: Colors.white,
         suffixIconConstraints: BoxConstraints.tightForFinite(),
-        suffixIcon: SvgPicture.asset(
-          "assets/svgs/vector_circleforward.svg",
-          semanticsLabel: 'Acme Logo',
+        suffixIcon: GestureDetector(
+          onTap: onNextClick,
+          child: SvgPicture.asset(
+            "assets/svgs/vector_circleforward.svg",
+            semanticsLabel: 'Acme Logo',
+          ),
         ),
         hintText: hintText,
         border: OutlineInputBorder(
