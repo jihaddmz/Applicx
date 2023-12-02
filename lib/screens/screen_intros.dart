@@ -1,6 +1,7 @@
-import 'package:applicx/components/card_text_next.dart';
-import 'package:applicx/components/text.dart';
-import 'package:applicx/screens/screen_main.dart';
+import 'package:applicx/screens/screen_intro1.dart';
+import 'package:applicx/screens/screen_intro2.dart';
+import 'package:applicx/screens/screen_intro3.dart';
+import 'package:applicx/screens/screen_intro4.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -13,10 +14,17 @@ class ScreenIntros extends StatefulWidget {
   _ScreenIntros createState() => _ScreenIntros();
 }
 
-class _ScreenIntros extends State<ScreenIntros> {
-  final PageController pageController = PageController();
+class _ScreenIntros extends State<ScreenIntros>
+    with SingleTickerProviderStateMixin {
   String _imageIntroSlider = "assets/images/image_intro1_slider.png";
   bool _showSlider = true;
+  int _currentPage = 0;
+  late final _controllerFade = AnimationController(
+      vsync: this,
+      lowerBound: 0,
+      upperBound: 1.0,
+      value: 1.0,
+      duration: const Duration(milliseconds: 500));
 
   @override
   Widget build(BuildContext context) {
@@ -34,24 +42,26 @@ class _ScreenIntros extends State<ScreenIntros> {
                 visible: _showSlider,
                 child: GestureDetector(
                   onTap: () {
-                    pageController.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.linear);
-                    if (pageController.page == 0) {
+                    if (_currentPage == 0) {
                       setState(() {
                         _imageIntroSlider =
                             "assets/images/image_intro2_slider.png";
                       });
-                    } else if (pageController.page == 1) {
+                    } else if (_currentPage == 1) {
                       setState(() {
                         _imageIntroSlider =
                             "assets/images/image_intro3_slider.png";
                       });
-                    } else if (pageController.page == 2) {
+                    } else if (_currentPage == 2) {
                       setState(() {
                         _showSlider = false;
                       });
                     }
+                    setState(() {
+                      _currentPage++;
+                    });
+                    _controllerFade.reset();
+                    _controllerFade.forward();
                   },
                   child: SvgPicture.asset(
                       "assets/svgs/vector_circleforward.svg",
@@ -59,190 +69,54 @@ class _ScreenIntros extends State<ScreenIntros> {
                 ))
           ],
         ),
-        body: PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageController,
+        body: Stack(
           children: [
-            Container(
-              color: const Color(0xffF9CDCC),
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-                        child: Image.asset("assets/images/image_intro1.png"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextBoldBlack(
-                                "Eliminate the time wasted on credit transfer.")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextGrey(
-                                "Recharge the desired amount of credits with just one click.")),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ), // end of first screen
-            Container(
-              color: const Color(0xffAAD59E),
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 200, 0, 0),
-                        child: Image.asset("assets/images/image_intro2.png"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextBoldBlack(
-                                "Send alfa and touch gifts immediatly")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextGrey(
-                                "Send the gift to the person without sending any SMS")),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-                    child: GestureDetector(
-                      onTap: () {
-                        onBackClick();
-                      },
-                      child: Image.asset("assets/images/image_back.png"),
-                    ),
-                  ),
-                ],
-              ),
-            ), // end of second screen
-            Container(
-              color: const Color(0xffFDD848),
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(90, 100, 0, 0),
-                        child: Image.asset("assets/images/image_intro3.png"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextBoldBlack(
-                                "No need to remember the user payment status")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextGrey(
-                                "Check if the user has paid the required amount")),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-                    child: GestureDetector(
-                      onTap: () {
-                        onBackClick();
-                      },
-                      child: Image.asset("assets/images/image_back.png"),
-                    ),
-                  ),
-                ],
-              ),
-            ), // end of third screen
-            Container(
-              color: const Color(0xff9ECCFA),
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(90, 100, 0, 0),
-                        child: Image.asset("assets/images/image_intro4.png"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: SizedBox(
-                            width: 335, child: TextBoldBlack("Sign In")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextNormalBlack(
-                                "Login using your unique username")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 0, 0),
-                        child: SizedBox(
-                            width: 335,
-                            child: TextGrey(
-                                "We will share with you the specific username for your store")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: CardTextNext("Enter your username", () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ScreenMain();
-                          }));
-                        }),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-                    child: GestureDetector(
-                      onTap: () {
-                        onBackClick();
-                      },
-                      child: Image.asset("assets/images/image_back.png"),
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Visibility(
+                visible: _currentPage == 0,
+                child: FadeTransition(
+                  opacity: _controllerFade,
+                  child: ScreenIntro1(),
+                )),
+            Visibility(
+                visible: _currentPage == 1,
+                child: FadeTransition(
+                  opacity: _controllerFade,
+                  child: ScreenIntro2(onBackClick),
+                )),
+            Visibility(
+                visible: _currentPage == 2,
+                child: FadeTransition(
+                  opacity: _controllerFade,
+                  child: ScreenIntro3(onBackClick),
+                )),
+            Visibility(
+                visible: _currentPage == 3,
+                child: FadeTransition(
+                  opacity: _controllerFade,
+                  child: ScreenIntro4(context, onBackClick),
+                )),
           ],
         ));
   }
 
   void onBackClick() {
-    if (pageController.page == 2) {
+    if (_currentPage == 2) {
       setState(() {
         _imageIntroSlider = "assets/images/image_intro2_slider.png";
       });
-      pageController.previousPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.linear);
-    } else if (pageController.page == 1) {
+    } else if (_currentPage == 1) {
       setState(() {
         _imageIntroSlider = "assets/images/image_intro1_slider.png";
       });
-      pageController.previousPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.linear);
-    } else if (pageController.page == 3) {
-      pageController.previousPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.linear);
+    } else if (_currentPage == 3) {
       setState(() {
         _showSlider = true;
       });
     }
+    setState(() {
+      _currentPage--;
+    });
+    _controllerFade.reset();
+    _controllerFade.forward();
   }
 }

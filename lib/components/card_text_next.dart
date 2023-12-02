@@ -11,7 +11,6 @@ Widget CardTextNext(String hintText, Function()? onNextClick) {
         contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
         filled: true,
         fillColor: Colors.white,
-        suffixIconConstraints: BoxConstraints.tightForFinite(),
         suffixIcon: GestureDetector(
           onTap: onNextClick,
           child: SvgPicture.asset(

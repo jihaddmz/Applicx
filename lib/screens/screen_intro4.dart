@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 Widget ScreenIntro4(BuildContext context, Function onBackClick) {
   return Container(
+    width: double.maxFinite,
     color: const Color(0xff9ECCFA),
     child: Stack(
       children: [
