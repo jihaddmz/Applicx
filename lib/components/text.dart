@@ -22,3 +22,15 @@ Widget TextBoldBlack(String text) {
     style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
   );
 }
+
+Widget TextLink(String text) {
+  return Text(
+    text,
+    style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline,
+        decorationColor: Color(0xffFF6F77),
+        color: Color(0xffFF6F77)),
+  );
+}

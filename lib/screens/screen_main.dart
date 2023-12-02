@@ -28,11 +28,75 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       lowerBound: 0,
       upperBound: 1.0,
       value: 1.0,
-      duration: const Duration(seconds: 1));
+      duration: const Duration(milliseconds: 500));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 70),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            const Divider(
+              color: Colors.black,
+              thickness: 3,
+              indent: 70,
+              endIndent: 70,
+            ),
+
+            /**                                 Wallet Amount          */
+
+            Visibility(
+                visible: _selectedIndex == 0,
+                child: SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: TextField(
+                    controller: TextEditingController(text: "100.00 \$"),
+                    enabled: false,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        floatingLabelAlignment: FloatingLabelAlignment.center,
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(
+                                color: Color(0xffF2F2F2), width: 5)),
+                        labelText: "Wallet",
+                        labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 20,
+                            color: Colors.black)),
+                  ),
+                )),
+            Visibility(
+                visible: _selectedIndex == 1,
+                child: SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: TextField(
+                    controller: TextEditingController(text: "10 Reports"),
+                    enabled: false,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 5)),
+                    ),
+                  ),
+                )),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 15,
         unselectedFontSize: 10,
@@ -169,7 +233,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
           });
         },
       ),
-      body: Stack(
+      body: SafeArea(
+          child: Stack(
         children: [
           Visibility(
               visible: _selectedIndex == 0,
@@ -184,7 +249,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               child: FadeTransition(
                   opacity: _controllerFade, child: ScreenSettings())),
         ],
-      ),
+      )),
     );
   }
 }
