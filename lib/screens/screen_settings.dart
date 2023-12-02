@@ -1,8 +1,8 @@
 import 'package:applicx/components/text.dart';
 import 'package:flutter/material.dart';
 
-Widget ScreenHome() {
+Widget ScreenSettings() {
   return Center(
-    child: TextBoldBlack("Screen Home"),
+    child: TextBoldBlack("ScreenSettings"),
   );
 }

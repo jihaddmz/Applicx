@@ -1,6 +1,6 @@
 import 'package:applicx/components/card_text_next.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/screens/screen_home.dart';
+import 'package:applicx/screens/screen_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -202,7 +202,7 @@ class _ScreenIntros extends State<ScreenIntros> {
                         child: CardTextNext("Enter your username", () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                            return ScreenHome();
+                            return ScreenMain();
                           }));
                         }),
                       )
