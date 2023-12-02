@@ -72,6 +72,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                             color: Colors.black)),
                   ),
                 )),
+
+            /**                                 Reports found          */
             Visibility(
                 visible: _selectedIndex == 1,
                 child: SizedBox(
@@ -83,7 +85,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
+                      contentPadding: const EdgeInsets.all(0),
                       fillColor: Colors.white,
                       filled: true,
                       disabledBorder: OutlineInputBorder(
@@ -239,7 +241,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
           Visibility(
               visible: _selectedIndex == 0,
               child: FadeTransition(
-                  opacity: _controllerFade, child: ScreenHome())),
+                  opacity: _controllerFade, child: ScreenHome(context))),
           Visibility(
               visible: _selectedIndex == 1,
               child: FadeTransition(

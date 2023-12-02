@@ -1,9 +1,11 @@
 import 'package:applicx/components/card_text_image.dart';
+import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/screens/screen_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget ScreenHome() {
+Widget ScreenHome(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -11,11 +13,18 @@ Widget ScreenHome() {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           TextBoldBlack("Carrier Selection"),
-          Badge.count(
-            count: 2,
-            child: SvgPicture.asset(
-              "assets/svgs/vector_bell.svg",
-              semanticsLabel: "Settings",
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MyCustomRoute((BuildContext context) {
+                return ScreenNotifications();
+              }, RouteSettings(), ScreenNotifications()));
+            },
+            child: Badge.count(
+              count: 2,
+              child: SvgPicture.asset(
+                "assets/svgs/vector_bell.svg",
+                semanticsLabel: "Settings",
+              ),
             ),
           )
         ],
