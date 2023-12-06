@@ -1,57 +1,95 @@
 import 'package:applicx/components/text.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:flutter/material.dart';
 
-Widget CardToggler(
-    String textLeft,
-    String textRight,
-    Color color1,
-    Color color2,
-    double elevation1,
-    double elevation2,
-    Function() onCard1Tap,
-    Function() onCard2Tap) {
-  double elev1 = 1;
-  double elev2 = 0;
+class CardToggler extends StatefulWidget {
+  CardToggler(
+      {required this.textLeft,
+      required this.textRight,
+      required this.onToggle});
 
-  return Card(
-    elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-    color: const Color(0xffF5F5F5),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GestureDetector(
-          onTap: () {
-            onCard1Tap();
-            elev1 = 1;
-            elev2 = 0;
-          },
-          child: Card(
-            elevation: elevation1,
-            color: color1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TextNormalBlack(textLeft),
+  final String textLeft;
+  final String textRight;
+  final Function(int) onToggle;
+
+  @override
+  _CardToggler createState() => _CardToggler();
+}
+
+class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
+  Color color1 = const Color(0xff243141);
+  Color color2 = const Color(0xffF5F5F5);
+  Color colorText1 = const Color(0xffF5F5F5);
+  Color colorText2 = const Color(0xff243141);
+  double elevation1 = 1;
+  double elevation2 = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
+      color: const Color(0xffF5F5F5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () {
+              onCard1Tap();
+              widget.onToggle(0);
+            },
+            child: Card(
+              elevation: elevation1,
+              color: color1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(70)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: TextNormalBlack(widget.textLeft, color: colorText1),
+              ),
             ),
           ),
-        ),
-        GestureDetector(
-          onTap: () {
-            onCard2Tap();
-            elev1 = 0;
-            elev2 = 1;
-          },
-          child: Card(
-            elevation: elevation2,
-            color: color2,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TextNormalBlack(textRight),
+          GestureDetector(
+            onTap: () {
+              onCard2Tap();
+              widget.onToggle(1);
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(70)),
+              elevation: elevation2,
+              color: color2,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: TextNormalBlack(widget.textRight, color: colorText2),
+              ),
             ),
-          ),
-        )
-      ],
-    ),
-  );
+          )
+        ],
+      ),
+    );
+  }
+
+  void onCard1Tap() {
+    setState(() {
+      color1 = const Color(0xff243141);
+      color2 = const Color(0xffF5F5F5);
+      colorText1 = const Color(0xffF5F5F5);
+      colorText2 = const Color(0xff243141);
+      elevation1 = 1;
+      elevation2 = 0;
+    });
+  }
+
+  void onCard2Tap() {
+    setState(() {
+      color1 = const Color(0xffF5F5F5);
+      color2 = const Color(0xff243141);
+      colorText1 = const Color(0xff243141);
+      colorText2 = const Color(0xffF5F5F5);
+      elevation1 = 0;
+      elevation2 = 1;
+    });
+  }
 }

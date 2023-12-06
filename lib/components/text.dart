@@ -4,15 +4,17 @@ Widget TextGrey(String text) {
   return Text(
     text,
     style: const TextStyle(
-        fontSize: 18, color: Color(0xff243141), fontWeight: FontWeight.w200),
+        fontSize: 16, color: Color(0xff243141), fontWeight: FontWeight.w200),
   );
 }
 
-Widget TextNormalBlack(String text) {
+Widget TextNormalBlack(String text, {Color? color}) {
   return Text(
     text,
-    style: const TextStyle(
-        fontSize: 18, color: Color(0xff243141), fontWeight: FontWeight.w600),
+    style: TextStyle(
+        fontSize: 18,
+        color: color ?? Color(0xff243141),
+        fontWeight: FontWeight.w600),
   );
 }
 

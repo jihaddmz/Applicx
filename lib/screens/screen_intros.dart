@@ -3,6 +3,7 @@ import 'package:applicx/screens/screen_intro2.dart';
 import 'package:applicx/screens/screen_intro3.dart';
 import 'package:applicx/screens/screen_intro4.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 /*
@@ -118,5 +119,15 @@ class _ScreenIntros extends State<ScreenIntros>
     });
     _controllerFade.reset();
     _controllerFade.forward();
+  }
+
+  Color getColorByPageIndex() {
+    return _currentPage == 0
+        ? const Color(0xffF9CDCC)
+        : _currentPage == 1
+            ? const Color(0xffAAD59E)
+            : _currentPage == 2
+                ? const Color(0xffFDD848)
+                : const Color(0xff9ECCFA);
   }
 }
