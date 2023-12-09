@@ -5,10 +5,14 @@ class CardToggler extends StatefulWidget {
   CardToggler(
       {required this.textLeft,
       required this.textRight,
+      this.iconLeft,
+      this.iconRight,
       required this.onToggle});
 
   final String textLeft;
   final String textRight;
+  final Widget? iconLeft;
+  final Widget? iconRight;
   final Function(int) onToggle;
 
   @override
@@ -45,7 +49,17 @@ class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextNormalBlack(widget.textLeft, color: colorText1),
+                child: Row(
+                  children: [
+                    TextNormalBlack(widget.textLeft, color: colorText1),
+                    widget.iconLeft != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: widget.iconLeft,
+                          )
+                        : Text("")
+                  ],
+                ),
               ),
             ),
           ),
@@ -62,7 +76,17 @@ class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextNormalBlack(widget.textRight, color: colorText2),
+                child: Row(
+                  children: [
+                    TextNormalBlack(widget.textRight, color: colorText2),
+                    widget.iconRight != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: widget.iconRight,
+                          )
+                        : Text("")
+                  ],
+                ),
               ),
             ),
           )

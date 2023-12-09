@@ -16,6 +16,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   String _iconHome = "assets/svgs/vector_home_black.svg";
   String _iconReports = "assets/svgs/vector_reports.svg";
   String _iconSettings = "assets/svgs/vector_settings.svg";
+  int _historyReportsNumber = 0;
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 1),
     vsync: this,
@@ -34,7 +35,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70),
+        padding: const EdgeInsets.only(bottom: 30),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -80,7 +81,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                   width: 150,
                   height: 50,
                   child: TextField(
-                    controller: TextEditingController(text: "10 Reports"),
+                    controller: TextEditingController(
+                        text: "$_historyReportsNumber Reports"),
                     enabled: false,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black),
@@ -245,7 +247,14 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
           Visibility(
               visible: _selectedIndex == 1,
               child: FadeTransition(
-                  opacity: _controllerFade, child: ScreenReports())),
+                  opacity: _controllerFade,
+                  child: ScreenReports(
+                    changeNumberOfReports: (reportsNumber) {
+                      setState(() {
+                        _historyReportsNumber = reportsNumber;
+                      });
+                    },
+                  ))),
           Visibility(
               visible: _selectedIndex == 2,
               child: FadeTransition(

@@ -8,9 +8,10 @@ Widget TextGrey(String text) {
   );
 }
 
-Widget TextNormalBlack(String text, {Color? color}) {
+Widget TextNormalBlack(String text, {Color? color, TextAlign? textAlign}) {
   return Text(
     text,
+    textAlign: textAlign,
     style: TextStyle(
         fontSize: 18,
         color: color ?? Color(0xff243141),
