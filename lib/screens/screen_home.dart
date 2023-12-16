@@ -1,6 +1,7 @@
 import 'package:applicx/components/card_text_image.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/screens/screen_buy_credits.dart';
 import 'package:applicx/screens/screen_chargealfa.dart';
 import 'package:applicx/screens/screen_chargetouch.dart';
 import 'package:applicx/screens/screen_notifications.dart';
@@ -74,7 +75,18 @@ Widget ScreenHome(BuildContext context) {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [TextGrey("Not enough credits?"), TextLink("Buy Credits")],
+          children: [
+            TextGrey("Not enough credits?"),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MyCustomRoute((BuildContext context) {
+                  return ScreenBuyCredits();
+                }, RouteSettings(), ScreenBuyCredits()));
+              },
+              child: TextLink("Buy Credits"),
+            )
+          ],
         ),
       ),
     ],
