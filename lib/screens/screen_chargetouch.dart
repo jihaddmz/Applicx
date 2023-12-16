@@ -11,12 +11,12 @@ import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 
-class ScreenChargeAlfa extends StatefulWidget {
+class ScreenChargeTouch extends StatefulWidget {
   @override
-  _ScreenChargeAlfa createState() => _ScreenChargeAlfa();
+  _ScreenChargeTouch createState() => _ScreenChargeTouch();
 }
 
-class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
+class _ScreenChargeTouch extends State<ScreenChargeTouch> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPhoneNumber = TextEditingController();
   String? _textNumberError;
@@ -24,7 +24,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
   late final List<ModelCartVoucher> listOfCartVouchers;
-  late final List<ModelCartVoucher> listOfCartVouchersWaffer;
+  late final List<ModelCartVoucher> listOfCartVouchersOthers;
   late List<ModelCartVoucher> _listOfChosenVouchers;
 
   @override
@@ -36,60 +36,14 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           title: "Credit Transfer",
           msg: "Specify the amount of credits",
           totalFees: 0),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "Mobile Internet",
-          msg: "Specify the amount of GBs",
-          availability: "30 Days",
-          cost: 0,
-          color: const Color(0xffFFB1B6),
-          listOfOptions: const ["2", "5", "7"]),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "Weekly Data Bundle",
-          msg: "Specify the amount of GBs",
-          availability: "7 Days",
-          cost: 0,
-          color: const Color(0xffCDBCDB),
-          listOfOptions: const ["2", "5", "7"]),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "Data Booster",
-          msg: "Specify the amount of GBs",
-          availability: "... Days",
-          cost: 0,
-          color: const Color(0xffFDD848),
-          listOfOptions: const ["2", "5", "7"]),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "Alfa 4x4 / 5x5",
-          msg: "Specify which service",
-          availability: "30 Days",
-          cost: 0,
-          color: const Color(0xffBCDBD7),
-          listOfOptions: const ["1", "2"]),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "Minutes Booster 20 Min",
-          msg: "Recharge 20 Mins call for anyone",
-          availability: "Tomorrow Midnight",
-          cost: 0.34,
-          color: const Color(0xffAAD59E)),
-      ModelGift(
-          isServiceCreditTransfer: 0,
-          title: "The Weekender",
-          msg: "Recharge the weekender service",
-          availability: "Weekend",
-          cost: 1.34,
-          color: const Color(0xffFACA9E)),
     ];
 
     listOfCartVouchers = [
       ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 1.22,
-          availability: 10,
+          isAlfa: false,
+          title: "magic",
+          cost: 1.00,
+          availability: 0,
           dolars: 2,
           imagePath: "assets/images/image_cart_1.png",
           color: const Color(0xffFDD848),
@@ -97,10 +51,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
       ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 3.03,
-          availability: 13,
+          isAlfa: false,
+          title: "magic",
+          cost: 1.67,
+          availability: 0,
           dolars: 3,
           imagePath: "assets/images/image_cart_2.png",
           color: const Color(0xffFFB1B6),
@@ -108,10 +62,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
       ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 4.50,
-          availability: 35,
+          isAlfa: false,
+          title: "magic",
+          cost: 3.79,
+          availability: 10,
           dolars: 4,
           imagePath: "assets/images/image_cart_2.png",
           color: const Color(0xffBCDBD7),
@@ -119,10 +73,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
       ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 7.58,
-          availability: 35,
+          isAlfa: false,
+          title: "magic",
+          cost: 4.50,
+          availability: 30,
           dolars: 4,
           imagePath: "assets/images/image_cart_4.png",
           color: const Color(0xffCDBCDB),
@@ -130,38 +84,60 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
       ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 15.15,
-          availability: 65,
+          isAlfa: false,
+          title: "magic",
+          cost: 7.58,
+          availability: 30,
           dolars: 5,
           imagePath: "assets/images/image_cart_5.png",
           color: const Color(0xffAAD59E),
           actCode: "12312312243241123123213321321312",
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
+      ModelCartVoucher(
+          isAlfa: false,
+          title: "magic",
+          cost: 15.15,
+          availability: 60,
+          dolars: 5,
+          imagePath: "assets/images/image_cart_6.png",
+          color: const Color(0xffAAD59E),
+          actCode: "12312312243241123123213321321312",
+          expDate: "2023-02-15 12:00:00 AM",
+          instruction: "Dial *14*ActivationCode#")
     ];
 
-    listOfCartVouchersWaffer = [
+    listOfCartVouchersOthers = [
       ModelCartVoucher(
-          isAlfa: true,
-          title: "وفّر",
-          cost: 7.50,
+          isAlfa: false,
+          title: "Start",
+          cost: 4.50,
           availability: 30,
           dolars: 5,
           imagePath: "assets/images/image_cart_4.png",
-          color: const Color(0xffD9D9D9),
+          color: const Color(0xffFDD848),
           actCode: "12312312243241123123213321321312",
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#"),
       ModelCartVoucher(
-          isAlfa: true,
-          title: "وفّر",
-          cost: 13.50,
+          isAlfa: false,
+          title: "Smart",
+          cost: 7.50,
           availability: 30,
           dolars: 5,
           imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffD9D9D9),
+          color: const Color(0xffFFB1B6),
+          actCode: "12312312243241123123213321321312",
+          expDate: "2023-02-15 12:00:00 AM",
+          instruction: "Dial *14*ActivationCode#"),
+      ModelCartVoucher(
+          isAlfa: false,
+          title: "Super",
+          cost: 13.50,
+          availability: 30,
+          dolars: 5,
+          imagePath: "assets/images/image_cart_6.png",
+          color: const Color(0xffBCDBD7),
           actCode: "12312312243241123123213321321312",
           expDate: "2023-02-15 12:00:00 AM",
           instruction: "Dial *14*ActivationCode#")
@@ -191,7 +167,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextBoldBlack("Services"),
-                    Image.asset("assets/images/logo_alfa.png")
+                    Image.asset("assets/images/logo_touch.png")
                   ],
                 ),
                 FractionallySizedBox(
@@ -355,7 +331,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                           borderSide: const BorderSide(
-                                              color: Color(0xffFF6F77),
+                                              color: Color(0xff009CBC),
                                               width: 5)),
                                       labelText: "Wallet",
                                       labelStyle: const TextStyle(
@@ -370,8 +346,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: CardToggler(
-                              textLeft: "Original",
-                              textRight: "وفّر",
+                              textLeft: "Magic",
+                              textRight: "Other",
                               onToggle: (index) {
                                 setState(() {
                                   _tabIndexVoucherType = index;
@@ -379,7 +355,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                     _listOfChosenVouchers = listOfCartVouchers;
                                   } else {
                                     _listOfChosenVouchers =
-                                        listOfCartVouchersWaffer;
+                                        listOfCartVouchersOthers;
                                   }
                                 });
                               }),
@@ -447,7 +423,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                       ),
                                       TextGrey(
                                           "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
-                                      Image.asset("assets/images/logo_alfa.png")
+                                      Image.asset(
+                                          "assets/images/logo_touch.png")
                                     ],
                                   ),
                                 ),
@@ -506,7 +483,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                     Positioned(
                                         right: 0,
                                         child: Image.asset(
-                                            "assets/images/logo_alfa.png")),
+                                            "assets/images/logo_touch.png")),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 10, 0, 10),
@@ -517,7 +494,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                           FractionallySizedBox(
                                             widthFactor: 0.7,
                                             child: TextGrey(
-                                                "Cart: ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
+                                                "Cart: ${modelCartVoucher.title} ${modelCartVoucher.cost}\$"),
                                           ),
                                           TextGrey(
                                               "Number: ${_controllerPhoneNumber.text}"),
@@ -696,7 +673,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                   Positioned(
                                       right: 0,
                                       child: Image.asset(
-                                          "assets/images/logo_alfa.png")),
+                                          "assets/images/logo_touch.png")),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         10, 10, 0, 10),
