@@ -38,6 +38,8 @@ dependencies:
   flutter_svg: ^2.0.9
   swipe_to: ^1.0.5
   flutter_slidable: ^3.0.1
+  fluttercontactpicker: ^4.7.0
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:

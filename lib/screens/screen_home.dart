@@ -1,6 +1,7 @@
 import 'package:applicx/components/card_text_image.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/screens/screen_chargealfa.dart';
 import 'package:applicx/screens/screen_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,7 +40,14 @@ Widget ScreenHome(BuildContext context) {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: CardTextImage("Alfa", "assets/images/logo_alfa.png"),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MyCustomRoute((BuildContext context) {
+              return ScreenChargeAlfa();
+            }, RouteSettings(), ScreenChargeAlfa()));
+          },
+          child: CardTextImage("Alfa", "assets/images/logo_alfa.png"),
+        ),
       ),
       const Padding(
         padding: EdgeInsets.symmetric(vertical: 10),

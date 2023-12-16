@@ -4,7 +4,7 @@ import 'package:applicx/components/card_unpaid_status.dart';
 import 'package:applicx/components/item_history_report.dart';
 import 'package:applicx/components/item_history_report_cardvoucher.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/components/textfield_search.dart';
+import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:applicx/models/model_report.dart';
 import 'package:flutter/material.dart';
@@ -178,10 +178,12 @@ class _ScreenReports extends State<ScreenReports> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: TextFieldSearch(
-                          _controllerSearch, "Search by Name/Number", (value) {
-                        searchReports(value);
-                      }),
+                      child: MyTextField(
+                          controller: _controllerSearch,
+                          hintText: "Search by Name/Number",
+                          onValueChanged: (value) {
+                            searchReports(value);
+                          }),
                     ),
                   ],
                 )),

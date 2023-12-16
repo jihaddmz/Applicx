@@ -15,7 +15,7 @@ Widget CardTextNext(String hintText, Function()? onNextClick) {
           onTap: onNextClick,
           child: SvgPicture.asset(
             "assets/svgs/vector_circleforward.svg",
-            semanticsLabel: 'Acme Logo',
+            semanticsLabel: 'Next',
           ),
         ),
         hintText: hintText,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-Widget TextGrey(String text) {
+Widget TextGrey(String text, {TextAlign textAlign = TextAlign.start}) {
   return Text(
     text,
+    textAlign: textAlign,
     style: const TextStyle(
         fontSize: 16, color: Color(0xff243141), fontWeight: FontWeight.w200),
   );
@@ -35,5 +36,13 @@ Widget TextLink(String text) {
         decoration: TextDecoration.underline,
         decorationColor: Color(0xffFF6F77),
         color: Color(0xffFF6F77)),
+  );
+}
+
+Widget TextNote(String text) {
+  return Text(
+    text,
+    style: const TextStyle(
+        fontSize: 16, color: Color(0xffE31F2B), fontWeight: FontWeight.w200),
   );
 }
