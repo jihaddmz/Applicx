@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-Widget TextGrey(String text, {TextAlign textAlign = TextAlign.start}) {
+Widget TextGrey(String text,
+    {TextAlign textAlign = TextAlign.start,
+    Color color = const Color(0xff243141)}) {
   return Text(
     text,
     textAlign: textAlign,
-    style: const TextStyle(
-        fontSize: 16, color: Color(0xff243141), fontWeight: FontWeight.w200),
+    style: TextStyle(fontSize: 16, color: color, fontWeight: FontWeight.w200),
   );
 }
 

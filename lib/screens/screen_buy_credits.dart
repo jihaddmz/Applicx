@@ -306,10 +306,10 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ButtonDialog("No", () {
+                        ButtonSmall("No", () {
                           Navigator.pop(context);
                         }),
-                        ButtonDialog(
+                        ButtonSmall(
                             "Pay ${modelBuyCredit.cost + modelBuyCredit.fees}\$",
                             () {
                           Navigator.pop(context);

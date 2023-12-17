@@ -20,7 +20,7 @@ Widget Button(String text, Function() onCLick,
       ));
 }
 
-Widget ButtonDialog(String text, Function() onCLick,
+Widget ButtonSmall(String text, Function() onCLick,
     {Color color = const Color(0xffFF6F77)}) {
   return ElevatedButton(
       style: ButtonStyle(

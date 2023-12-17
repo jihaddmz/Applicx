@@ -435,13 +435,13 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    ButtonDialog("No", () {
+                                    ButtonSmall("No", () {
                                       setState(() {
                                         modelCartVoucher.isCardClicked = false;
                                       });
                                       Navigator.pop(context);
                                     }, color: const Color(0xffFF6F77)),
-                                    ButtonDialog(
+                                    ButtonSmall(
                                         "Pay ${modelCartVoucher.cost}\$", () {
                                       setState(() {
                                         modelCartVoucher.isCardClicked = false;
@@ -513,14 +513,13 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              ButtonDialog("No", () {
+                              ButtonSmall("No", () {
                                 setState(() {
                                   modelCartVoucher.isCardClicked = false;
                                 });
                                 Navigator.pop(context);
                               }),
-                              ButtonDialog("Pay ${modelCartVoucher.cost}\$",
-                                  () {
+                              ButtonSmall("Pay ${modelCartVoucher.cost}\$", () {
                                 setState(() {
                                   modelCartVoucher.isCardClicked = false;
                                 });
@@ -608,10 +607,10 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                           ],
                                         ),
                                         actions: [
-                                          ButtonDialog("Save", () {
+                                          ButtonSmall("Save", () {
                                             Navigator.pop(context);
                                           }, color: const Color(0xff9ECCFA)),
-                                          ButtonDialog("Share", () {},
+                                          ButtonSmall("Share", () {},
                                               color: const Color(0xffAAD59E))
                                         ],
                                         actionsAlignment:
@@ -700,14 +699,14 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ButtonDialog("No", () {
+                            ButtonSmall("No", () {
                               setState(() {
                                 modelGift.totalFees = 0;
                                 modelGift.chosen = null;
                               });
                               Navigator.pop(context);
                             }),
-                            ButtonDialog("Pay ${modelGift.totalFees}\$", () {
+                            ButtonSmall("Pay ${modelGift.totalFees}\$", () {
                               setState(() {
                                 modelGift.totalFees = 0;
                                 modelGift.chosen = null;
@@ -796,7 +795,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ButtonDialog("No", () {
+                            ButtonSmall("No", () {
                               setState(() {
                                 if (modelGift.msg.contains("Specify")) {
                                   setState(() {
@@ -807,7 +806,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               });
                               Navigator.pop(context);
                             }),
-                            ButtonDialog("Pay ${modelGift.cost}\$", () {
+                            ButtonSmall("Pay ${modelGift.cost}\$", () {
                               setState(() {
                                 if (modelGift.msg.contains("Specify")) {
                                   setState(() {

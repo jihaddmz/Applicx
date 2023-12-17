@@ -2,11 +2,16 @@ import 'package:applicx/components/text.dart';
 import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
-  MyDropDown({required this.list, required this.label, required this.onSelect});
+  MyDropDown(
+      {required this.list,
+      required this.label,
+      required this.onSelect,
+      this.initialSelected});
 
   final List<String> list;
   final String label;
   final Function(String?) onSelect;
+  final String? initialSelected;
 
   @override
   _MyDropDown createState() => _MyDropDown();
@@ -14,6 +19,13 @@ class MyDropDown extends StatefulWidget {
 
 class _MyDropDown extends State<MyDropDown> {
   String? _selected;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selected = widget.initialSelected;
+  }
 
   @override
   Widget build(BuildContext context) {

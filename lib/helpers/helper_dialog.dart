@@ -12,7 +12,7 @@ class HelperDialog {
             title: TextBoldBlack(title),
             content: TextNormalBlack(msg),
             actions: [
-              ButtonDialog("OK", () {
+              ButtonSmall("OK", () {
                 Navigator.pop(context);
                 onClick();
               })
