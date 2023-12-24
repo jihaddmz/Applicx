@@ -1,5 +1,4 @@
 import 'package:applicx/screens/screen_intros.dart';
-import 'package:applicx/screens/screen_notifications.dart';
 import 'package:flutter/material.dart';
 
 void main() {

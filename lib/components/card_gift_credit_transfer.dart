@@ -1,7 +1,9 @@
 import 'package:applicx/components/drop_down.dart';
+import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CardGiftCreditTransfer extends StatefulWidget {
   CardGiftCreditTransfer(
@@ -15,6 +17,8 @@ class CardGiftCreditTransfer extends StatefulWidget {
 }
 
 class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
+  final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -75,18 +79,57 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                               children: [
                                 TextGrey(
                                     "Total Fees: ${widget.modelGift.totalFees}\$"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 30),
-                                  child: MyDropDown(
-                                      list: const ["1", "2", "3"],
-                                      label: "Credits",
-                                      onSelect: (item) => {
-                                            setState(() {
-                                              widget.modelGift.chosen = item;
-                                              widget.modelGift.totalFees =
-                                                  double.parse(item!);
-                                            })
-                                          }),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(left: 30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Card(
+                                            elevation: 0,
+                                            shape: const RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                    color: Colors.white),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20))),
+                                            child: SizedBox(
+                                              width: 60,
+                                              height: 40,
+                                              child: TextField(
+                                                controller: _controller,
+                                                textAlign: TextAlign.center,
+                                                inputFormatters: [
+                                                  LengthLimitingTextInputFormatter(
+                                                      3),
+                                                ],
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        hintText: "...",
+                                                        border:
+                                                            InputBorder.none,
+                                                        hintStyle: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        )),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    widget.modelGift.chosen =
+                                                        value;
+                                                    widget.modelGift.totalFees =
+                                                        double.parse(value);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          TextGrey("Credits")
+                                        ],
+                                      )),
                                 ),
                               ],
                             )),

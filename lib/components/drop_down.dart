@@ -1,5 +1,6 @@
 import 'package:applicx/components/text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MyDropDown extends StatefulWidget {
   MyDropDown(
@@ -40,7 +41,14 @@ class _MyDropDown extends State<MyDropDown> {
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-              child: Text(_selected ?? "..."),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(_selected ?? "..."),
+                  Image.asset("assets/images/image_dropdown.png")
+                ],
+              ),
             ),
           ),
           items: widget.list.map((String value) {

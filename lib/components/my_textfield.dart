@@ -6,8 +6,13 @@ class MyTextField extends StatefulWidget {
       this.fillColor = const Color(0xffF2F2F2),
       this.inputType = TextInputType.text,
       required this.hintText,
+      this.showLabel = false,
+      this.enabled = true,
       this.prefixIcon = const Icon(
         Icons.search,
+      ),
+      this.suffixIcon = const Icon(
+        Icons.clear,
       ),
       required this.onValueChanged,
       this.errorText});
@@ -15,8 +20,11 @@ class MyTextField extends StatefulWidget {
   final TextEditingController controller;
   final Color fillColor;
   final TextInputType inputType;
-  final Widget prefixIcon;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final String hintText;
+  final bool showLabel;
+  final bool enabled;
   final Function(String) onValueChanged;
   String? errorText;
 
@@ -36,14 +44,16 @@ class _MyTextField extends State<MyTextField> {
     }
 
     return TextField(
+      enabled: widget.enabled,
       keyboardType: widget.inputType,
       controller: widget.controller,
       decoration: InputDecoration(
           fillColor: widget.fillColor,
           filled: true,
           errorText: widget.errorText,
-          hintText: widget.hintText,
+          hintText: widget.showLabel == false ? widget.hintText : null,
           hintStyle: const TextStyle(fontWeight: FontWeight.w100),
+          labelText: widget.showLabel ? widget.hintText : null,
           prefixIcon: widget.prefixIcon,
           suffixIcon: _showSuffixIcon
               ? GestureDetector(
@@ -54,7 +64,7 @@ class _MyTextField extends State<MyTextField> {
                     });
                     widget.onValueChanged(widget.controller.text);
                   },
-                  child: const Icon(Icons.clear),
+                  child: widget.suffixIcon,
                 )
               : null,
           border: OutlineInputBorder(

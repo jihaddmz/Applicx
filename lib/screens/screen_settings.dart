@@ -1,6 +1,11 @@
 import 'package:applicx/components/button.dart';
+import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/drop_down.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/screens/screen_intros.dart';
+import 'package:applicx/screens/screen_settings_deposit.dart';
+import 'package:applicx/screens/screen_settings_editprofile.dart';
+import 'package:applicx/screens/screen_settings_payments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -12,6 +17,8 @@ class ScreenSettings extends StatefulWidget {
 class _ScreenSettings extends State<ScreenSettings> {
   bool _isSubscriptionActive = true;
   String _user = "User123";
+  String _darkModeIconPath = "assets/svgs/vector_toggle_off.svg";
+  double _walletAmount = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +78,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                               )
                             ],
                           ),
-                          ItemSettingHeadline("Wallet:", "133.00\$"),
+                          ItemSettingHeadline("Wallet:", "$_walletAmount\$"),
                           ItemSettingHeadline("Subscription Fees:", "20\$"),
                           ItemSettingHeadline("Expiration Date:", "12/12/23"),
                           ItemSettingHeadline("Last Payment Date:", "12/12/23"),
@@ -101,7 +108,13 @@ class _ScreenSettings extends State<ScreenSettings> {
                                   "assets/svgs/vector_profile.svg",
                                   const Color(0xffFFB1B6),
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.of(context).push(MyCustomRoute(
+                                          (BuildContext context) {
+                                        return ScreenSettingsEditProfile();
+                                      }, const RouteSettings(),
+                                          ScreenSettingsEditProfile()));
+                                    },
                                     child: SvgPicture.asset(
                                         "assets/svgs/vector_arrow_next.svg"),
                                   )),
@@ -127,9 +140,20 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       "assets/svgs/vector_moon.svg",
                                       const Color(0xff243141),
                                       GestureDetector(
-                                        onTap: () {},
-                                        child: SvgPicture.asset(
-                                            "assets/svgs/vector_toggle_off.svg"),
+                                        onTap: () {
+                                          setState(() {
+                                            if (_darkModeIconPath ==
+                                                "assets/svgs/vector_toggle_off.svg") {
+                                              _darkModeIconPath =
+                                                  "assets/svgs/vector_toggle_on.svg";
+                                            } else {
+                                              _darkModeIconPath =
+                                                  "assets/svgs/vector_toggle_off.svg";
+                                            }
+                                          });
+                                        },
+                                        child:
+                                            SvgPicture.asset(_darkModeIconPath),
                                       )),
                                 ),
                                 Padding(
@@ -171,8 +195,65 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       const Color(0xffFDD848),
                                       GestureDetector(
                                         onTap: () {},
-                                        child: ButtonSmall("Renew", () {},
-                                            color: const Color(0xffF2F2F2)),
+                                        child: ButtonSmall("Renew", () {
+                                          if (_walletAmount >= 20) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    elevation: 0,
+                                                    title: TextNormalBlack(
+                                                        "Attention!",
+                                                        textAlign:
+                                                            TextAlign.center),
+                                                    content: TextGrey(
+                                                        "Are you sure you want to renew your subscription for 20\$?",
+                                                        textAlign:
+                                                            TextAlign.center),
+                                                    actionsAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    actions: [
+                                                      ButtonSmall("No", () {
+                                                        Navigator.pop(context);
+                                                      }),
+                                                      ButtonSmall("Yes", () {
+                                                        setState(() {
+                                                          _walletAmount -= 20;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      },
+                                                          color: const Color(
+                                                              0xffAAD59E))
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    elevation: 0,
+                                                    title: TextNormalBlack(
+                                                        "Attention!",
+                                                        textAlign:
+                                                            TextAlign.center),
+                                                    content: TextGrey(
+                                                        "You don't have enough money in your wallet! Please charge your wallet.",
+                                                        textAlign:
+                                                            TextAlign.center),
+                                                    actionsAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    actions: [
+                                                      ButtonSmall("OK", () {
+                                                        Navigator.pop(context);
+                                                      })
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        }, color: const Color(0xffF2F2F2)),
                                       )),
                                 ),
                                 Padding(
@@ -184,7 +265,14 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       "assets/svgs/vector_deposit.svg",
                                       const Color(0xffAAD59E),
                                       GestureDetector(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MyCustomRoute(
+                                                    (BuildContext context) {
+                                              return ScreenSettingsDeposit();
+                                            }, RouteSettings(),
+                                                    ScreenSettingsDeposit()));
+                                          },
                                           child: SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg"))),
                                 ),
@@ -197,7 +285,14 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       "assets/svgs/vector_money.svg",
                                       const Color(0xffCDBCDB),
                                       GestureDetector(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MyCustomRoute(
+                                                    (BuildContext context) {
+                                              return ScreenSettingsPayments();
+                                            }, RouteSettings(),
+                                                    ScreenSettingsPayments()));
+                                          },
                                           child: SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg"))),
                                 ),
@@ -246,6 +341,17 @@ class _ScreenSettings extends State<ScreenSettings> {
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: Button("Log Out", () {
+                              Navigator.of(context)
+                                  .push(MyCustomRoute((BuildContext context) {
+                                return ScreenIntros();
+                              }, const RouteSettings(), ScreenIntros()));
+                            }, color: const Color(0xffFFB1B6)),
                           ),
                         )
                       ],
