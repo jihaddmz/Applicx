@@ -12,28 +12,32 @@ Widget ScreenHome(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextBoldBlack("Carrier Selection"),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MyCustomRoute((BuildContext context) {
-                return ScreenNotifications();
-              }, RouteSettings(), ScreenNotifications()));
-            },
-            child: Badge.count(
-              count: 2,
-              child: SvgPicture.asset(
-                "assets/svgs/vector_bell.svg",
-                semanticsLabel: "Settings",
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextBoldBlack("Carrier \nSelection"),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MyCustomRoute((BuildContext context) {
+                  return ScreenNotifications();
+                }, RouteSettings(), ScreenNotifications()));
+              },
+              child: Badge.count(
+                count: 2,
+                child: SvgPicture.asset(
+                  "assets/svgs/vector_bell.svg",
+                  semanticsLabel: "Settings",
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 32),
+        padding: const EdgeInsets.only(left: 30),
         child: TextGrey("Specify the carrier you want"),
       ),
       Align(

@@ -36,6 +36,7 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                   child: Positioned(
                       bottom: -30,
                       child: Card(
+                        elevation: 0,
                         color: const Color(0xff243141),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -53,6 +54,7 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
             height: 150,
             child: Card(
               color: const Color(0xff9ECCFA),
+              elevation: 2,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -89,12 +91,12 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Card(
-                                            elevation: 0,
+                                            elevation: 2,
                                             shape: const RoundedRectangleBorder(
                                                 side: BorderSide(
                                                     color: Colors.white),
                                                 borderRadius: BorderRadius.all(
-                                                    Radius.circular(20))),
+                                                    Radius.circular(5))),
                                             child: SizedBox(
                                               width: 60,
                                               height: 40,
@@ -117,12 +119,22 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                                                               FontWeight.bold,
                                                         )),
                                                 onChanged: (value) {
-                                                  setState(() {
-                                                    widget.modelGift.chosen =
-                                                        value;
-                                                    widget.modelGift.totalFees =
-                                                        double.parse(value);
-                                                  });
+                                                  if (value.isNotEmpty) {
+                                                    setState(() {
+                                                      widget.modelGift.chosen =
+                                                          value;
+                                                      widget.modelGift
+                                                              .totalFees =
+                                                          double.parse(value);
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      widget.modelGift.chosen =
+                                                          null;
+                                                      widget.modelGift
+                                                          .totalFees = 0;
+                                                    });
+                                                  }
                                                 },
                                               ),
                                             ),

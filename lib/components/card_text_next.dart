@@ -4,23 +4,37 @@ import 'package:flutter_svg/svg.dart';
 Widget CardTextNext(String hintText, Function()? onNextClick) {
   TextEditingController controller = TextEditingController();
 
-  return TextField(
-    controller: controller,
-    style: const TextStyle(),
-    decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        filled: true,
-        fillColor: Colors.white,
-        suffixIcon: GestureDetector(
-          onTap: onNextClick,
-          child: SvgPicture.asset(
-            "assets/svgs/vector_circleforward.svg",
-            semanticsLabel: 'Next',
+  return SizedBox(
+    height: 80,
+    child: Card(
+      elevation: 2,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          TextField(
+            controller: controller,
+            style: const TextStyle(),
+            decoration: InputDecoration(
+                hintText: hintText,
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(100))),
           ),
-        ),
-        hintText: hintText,
-        border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(100))),
+          Positioned(
+              right: -7,
+              top: 0,
+              child: GestureDetector(
+                onTap: onNextClick,
+                child: SvgPicture.asset(
+                  "assets/svgs/vector_circleforward.svg",
+                  semanticsLabel: 'Next',
+                  height: 85,
+                ),
+              ))
+        ],
+      ),
+    ),
   );
 }

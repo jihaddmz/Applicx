@@ -75,7 +75,7 @@ Widget ItemHistoryReportCardVoucher(
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Card(
-                            elevation: 0,
+                            elevation: 2,
                             color: const Color(0xffffffff),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -154,6 +154,7 @@ Widget ItemHistoryReportCardVoucher(
       ]),
       child: Card(
         color: const Color(0xffF2F2F2),
+        elevation: 2,
         child: Row(
           children: [
             Padding(
@@ -179,6 +180,7 @@ Widget ItemHistoryReportCardVoucher(
             ),
             Expanded(
                 child: Card(
+              elevation: 2,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),

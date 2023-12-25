@@ -45,7 +45,7 @@ Widget ItemHistoryReportGift(
         modelReport.isPaid == 0 ? CardPaidStatus() : CardUnPaidStatus(),
     child: Card(
       color: const Color(0xffF2F2F2),
-      elevation: 0,
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Column(

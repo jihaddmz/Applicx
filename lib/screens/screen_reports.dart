@@ -224,7 +224,10 @@ class _ScreenReports extends State<ScreenReports> {
   List<Widget> addReportWidgets() {
     List<Widget> result = [];
     for (var element in _list) {
-      result.add(ItemHistoryReportGift(element, context));
+      result.add(Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: ItemHistoryReportGift(element, context),
+      ));
     }
 
     return result;
@@ -233,7 +236,10 @@ class _ScreenReports extends State<ScreenReports> {
   List<Widget> addCardVoucherReportWidgets() {
     List<Widget> result = [];
     for (var element in _list) {
-      result.add(ItemHistoryReportCardVoucher(element, context));
+      result.add(Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: ItemHistoryReportCardVoucher(element, context),
+      ));
     }
 
     return result;
@@ -241,7 +247,7 @@ class _ScreenReports extends State<ScreenReports> {
 
   Widget Filter() {
     return Card(
-      elevation: 0,
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       color: const Color(0xffF2F2F2),
       child: Column(

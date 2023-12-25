@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 Widget CardTextImage(String text, String imagePath) {
   return Card(
+    elevation: 2,
     color: const Color(0xffF2F2F2),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
     child: Row(

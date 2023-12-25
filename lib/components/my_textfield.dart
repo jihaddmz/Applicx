@@ -43,52 +43,54 @@ class _MyTextField extends State<MyTextField> {
       });
     }
 
-    return TextField(
-      enabled: widget.enabled,
-      keyboardType: widget.inputType,
-      controller: widget.controller,
-      decoration: InputDecoration(
-          fillColor: widget.fillColor,
-          filled: true,
-          errorText: widget.errorText,
-          hintText: widget.showLabel == false ? widget.hintText : null,
-          hintStyle: const TextStyle(fontWeight: FontWeight.w100),
-          labelText: widget.showLabel ? widget.hintText : null,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: _showSuffixIcon
-              ? GestureDetector(
-                  onTap: () {
-                    widget.controller.clear();
-                    setState(() {
-                      _showSuffixIcon = false;
-                    });
-                    widget.onValueChanged(widget.controller.text);
-                  },
-                  child: widget.suffixIcon,
-                )
-              : null,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide.none)),
-      onChanged: (value) {
-        if (widget.errorText != null) {
-          if (widget.errorText!.isNotEmpty) {
+    return Card(
+      color: widget.fillColor,
+      elevation: 2,
+      child: TextField(
+        enabled: widget.enabled,
+        keyboardType: widget.inputType,
+        controller: widget.controller,
+        decoration: InputDecoration(
+            errorText: widget.errorText,
+            hintText: widget.showLabel == false ? widget.hintText : null,
+            hintStyle: const TextStyle(fontWeight: FontWeight.w100),
+            labelText: widget.showLabel ? widget.hintText : null,
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: _showSuffixIcon
+                ? GestureDetector(
+                    onTap: () {
+                      widget.controller.clear();
+                      setState(() {
+                        _showSuffixIcon = false;
+                      });
+                      widget.onValueChanged(widget.controller.text);
+                    },
+                    child: widget.suffixIcon,
+                  )
+                : null,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide.none)),
+        onChanged: (value) {
+          if (widget.errorText != null) {
+            if (widget.errorText!.isNotEmpty) {
+              setState(() {
+                widget.errorText = null;
+              });
+            }
+          }
+          widget.onValueChanged(value);
+          if (value.isNotEmpty) {
             setState(() {
-              widget.errorText = null;
+              _showSuffixIcon = true;
+            });
+          } else {
+            setState(() {
+              _showSuffixIcon = false;
             });
           }
-        }
-        widget.onValueChanged(value);
-        if (value.isNotEmpty) {
-          setState(() {
-            _showSuffixIcon = true;
-          });
-        } else {
-          setState(() {
-            _showSuffixIcon = false;
-          });
-        }
-      },
+        },
+      ),
     );
   }
 }

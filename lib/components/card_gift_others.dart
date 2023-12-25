@@ -64,6 +64,7 @@ class _CardGiftOthers extends State<CardGiftOthers> {
             height: 150,
             child: Card(
               color: widget.color,
+              elevation: 2,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [

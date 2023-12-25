@@ -180,7 +180,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    elevation: 0,
+                    elevation: 2,
                     color: const Color(0xffF2F2F2),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
@@ -477,7 +477,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 color: Colors.white,
-                                elevation: 0,
+                                elevation: 2,
                                 child: Stack(
                                   children: [
                                     Positioned(
@@ -549,7 +549,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                               padding: const EdgeInsets.only(
                                                   top: 20),
                                               child: Card(
-                                                elevation: 0,
+                                                elevation: 2,
                                                 color: const Color(0xffffffff),
                                                 child: Padding(
                                                   padding:
@@ -666,7 +666,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               color: Colors.white,
-                              elevation: 0,
+                              elevation: 2,
                               child: Stack(
                                 children: [
                                   Positioned(
@@ -753,7 +753,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               color: Colors.white,
-                              elevation: 0,
+                              elevation: 2,
                               child: Stack(
                                 children: [
                                   Positioned(

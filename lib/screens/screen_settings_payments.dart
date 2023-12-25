@@ -137,7 +137,7 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
         SizedBox(
           width: MediaQuery.of(context).size.width - 80,
           child: Card(
-            elevation: 3,
+            elevation: 2,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(30, 30, 5, 4),
               child: Expanded(
