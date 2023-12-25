@@ -238,29 +238,30 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
         },
       ),
       body: SafeArea(
+          minimum: const EdgeInsets.only(top: 40),
           child: Stack(
-        children: [
-          Visibility(
-              visible: _selectedIndex == 0,
-              child: FadeTransition(
-                  opacity: _controllerFade, child: ScreenHome(context))),
-          Visibility(
-              visible: _selectedIndex == 1,
-              child: FadeTransition(
-                  opacity: _controllerFade,
-                  child: ScreenReports(
-                    changeNumberOfReports: (reportsNumber) {
-                      setState(() {
-                        _historyReportsNumber = reportsNumber;
-                      });
-                    },
-                  ))),
-          Visibility(
-              visible: _selectedIndex == 2,
-              child: FadeTransition(
-                  opacity: _controllerFade, child: ScreenSettings())),
-        ],
-      )),
+            children: [
+              Visibility(
+                  visible: _selectedIndex == 0,
+                  child: FadeTransition(
+                      opacity: _controllerFade, child: ScreenHome(context))),
+              Visibility(
+                  visible: _selectedIndex == 1,
+                  child: FadeTransition(
+                      opacity: _controllerFade,
+                      child: ScreenReports(
+                        changeNumberOfReports: (reportsNumber) {
+                          setState(() {
+                            _historyReportsNumber = reportsNumber;
+                          });
+                        },
+                      ))),
+              Visibility(
+                  visible: _selectedIndex == 2,
+                  child: FadeTransition(
+                      opacity: _controllerFade, child: ScreenSettings())),
+            ],
+          )),
     );
   }
 }
