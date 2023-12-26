@@ -2,6 +2,7 @@ import 'package:applicx/components/button.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/drop_down.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_intros.dart';
 import 'package:applicx/screens/screen_settings_deposit.dart';
 import 'package:applicx/screens/screen_settings_editprofile.dart';
@@ -10,18 +11,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ScreenSettings extends StatefulWidget {
+  ScreenSettings({required this.walletAmount});
+
+  final double walletAmount;
+
   @override
   _ScreenSettings createState() => _ScreenSettings();
 }
 
 class _ScreenSettings extends State<ScreenSettings> {
   bool _isSubscriptionActive = true;
-  String _user = "User123";
+  String _user = "";
   String _darkModeIconPath = "assets/svgs/vector_toggle_off.svg";
-  double _walletAmount = 10;
+  double _walletAmount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // fetching username from sharedpreferences
+    HelperSharedPreferences.getUsername().then((value) {
+      setState(() {
+        _user = value;
+      });
+    });
+
+    // setting walltAmount
+    setState(() {
+      _walletAmount = widget.walletAmount;
+    });
+
     return SingleChildScrollView(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -78,7 +100,8 @@ class _ScreenSettings extends State<ScreenSettings> {
                               )
                             ],
                           ),
-                          ItemSettingHeadline("Wallet:", "$_walletAmount\$"),
+                          ItemSettingHeadline("Wallet:",
+                              "${_walletAmount.toStringAsFixed(2)}\$"),
                           ItemSettingHeadline("Subscription Fees:", "20\$"),
                           ItemSettingHeadline("Expiration Date:", "12/12/23"),
                           ItemSettingHeadline("Last Payment Date:", "12/12/23"),
@@ -111,9 +134,12 @@ class _ScreenSettings extends State<ScreenSettings> {
                                     onTap: () {
                                       Navigator.of(context).push(MyCustomRoute(
                                           (BuildContext context) {
-                                        return ScreenSettingsEditProfile();
-                                      }, const RouteSettings(),
-                                          ScreenSettingsEditProfile()));
+                                        return ScreenSettingsEditProfile(
+                                            username: _user);
+                                      },
+                                          const RouteSettings(),
+                                          ScreenSettingsEditProfile(
+                                              username: _user)));
                                     },
                                     child: SvgPicture.asset(
                                         "assets/svgs/vector_arrow_next.svg"),
@@ -217,10 +243,14 @@ class _ScreenSettings extends State<ScreenSettings> {
                                                       ButtonSmall("No", () {
                                                         Navigator.pop(context);
                                                       }),
-                                                      ButtonSmall("Yes", () {
+                                                      ButtonSmall("Yes",
+                                                          () async {
                                                         setState(() {
                                                           _walletAmount -= 20;
                                                         });
+                                                        await HelperSharedPreferences
+                                                            .setWalletAmount(
+                                                                _walletAmount);
                                                         Navigator.pop(context);
                                                       },
                                                           color: const Color(
@@ -290,7 +320,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                                 MyCustomRoute(
                                                     (BuildContext context) {
                                               return ScreenSettingsPayments();
-                                            }, RouteSettings(),
+                                            }, const RouteSettings(),
                                                     ScreenSettingsPayments()));
                                           },
                                           child: SvgPicture.asset(
@@ -347,6 +377,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Button("Log Out", () {
+                              HelperSharedPreferences.setUsername("");
                               Navigator.of(context)
                                   .push(MyCustomRoute((BuildContext context) {
                                 return ScreenIntros();

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget CardTextNext(String hintText, Function()? onNextClick) {
-  TextEditingController controller = TextEditingController();
-
+Widget CardTextNext(String hintText, TextEditingController controller,
+    Function()? onNextClick) {
   return SizedBox(
     height: 80,
     child: Card(

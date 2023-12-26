@@ -54,7 +54,8 @@ class _ScreenNotifications extends State<ScreenNotifications>
           child: Image.asset("assets/images/image_back.png"),
         ),
       ),
-      body: Stack(
+      body: SafeArea(
+          child: Stack(
         children: [
           Align(
             alignment: Alignment.topRight,
@@ -99,7 +100,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
             ),
           )
         ],
-      ),
+      )),
     );
   }
 

@@ -1,11 +1,16 @@
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class ScreenSettingsEditProfile extends StatefulWidget {
+  ScreenSettingsEditProfile({required this.username});
+
+  final String username;
+
   @override
   _ScreenSettingsEditProfile createState() => _ScreenSettingsEditProfile();
 }
@@ -17,8 +22,11 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
 
   @override
   void initState() {
-    _controllerUsername.text = "User123";
-    _controllerAddress.text = "Street123";
+    super.initState();
+    _controllerUsername.text = widget.username;
+    HelperSharedPreferences.getAddress().then((value) {
+      _controllerAddress.text = value;
+    });
   }
 
   @override
@@ -27,8 +35,10 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FractionallySizedBox(
         widthFactor: 0.6,
-        child: Button(_editingEnabled ? "Save" : "Edit", () {
+        child: Button(_editingEnabled ? "Save" : "Edit", () async {
           if (_editingEnabled) {
+            await HelperSharedPreferences.setAddress(_controllerAddress.text);
+            await HelperSharedPreferences.setUsername(_controllerUsername.text);
             setState(() {
               _editingEnabled = false;
             });

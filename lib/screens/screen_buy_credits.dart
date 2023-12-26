@@ -4,11 +4,16 @@ import 'package:applicx/components/item_buy_credit.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_permission.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_buy_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 
 class ScreenBuyCredits extends StatefulWidget {
+  ScreenBuyCredits({required this.walletAmount});
+
+  final double walletAmount;
+
   @override
   _ScreenBuyCredits createState() => _ScreenBuyCredits();
 }
@@ -18,13 +23,13 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   final TextEditingController _controllerPhoneNumber = TextEditingController();
   String? _textNumberError;
   int _tabIndex = 0;
-
+  double _walletAmount = 0;
   late final listOfCreditsToBuy;
 
   @override
   void initState() {
     super.initState();
-
+    _walletAmount = widget.walletAmount;
     listOfCreditsToBuy = [
       ModelBuyCredit(credits: 1, cost: 1.3, fees: 0.16),
       ModelBuyCredit(credits: 2, cost: 2.3, fees: 0.16),
@@ -193,8 +198,9 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                 width: 150,
                                 height: 50,
                                 child: TextField(
-                                  controller:
-                                      TextEditingController(text: "100.00 \$"),
+                                  controller: TextEditingController(
+                                      text:
+                                          "${_walletAmount.toStringAsFixed(2)} \$"),
                                   enabled: false,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(color: Colors.black),
@@ -268,6 +274,12 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                       TextGrey("Are you sure you want to charge this?",
                           textAlign: TextAlign.center),
                       TextNote("It may take up to 5 min to transfer credits"),
+                      Visibility(
+                          visible: _walletAmount < modelBuyCredit.cost,
+                          child: TextGrey(
+                              "There is no enough money in your wallet to complete this transaction!!",
+                              textAlign: TextAlign.center,
+                              color: Colors.red)),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
@@ -311,8 +323,15 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                         }),
                         ButtonSmall(
                             "Pay ${modelBuyCredit.cost + modelBuyCredit.fees}\$",
-                            () {
-                          Navigator.pop(context);
+                            () async {
+                          if (_walletAmount >= modelBuyCredit.cost) {
+                            setState(() {
+                              _walletAmount -= modelBuyCredit.cost;
+                            });
+                            await HelperSharedPreferences.setWalletAmount(
+                                _walletAmount);
+                            Navigator.pop(context);
+                          }
                         }, color: const Color(0xffAAD59E)),
                       ],
                     )

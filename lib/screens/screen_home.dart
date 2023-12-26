@@ -8,7 +8,7 @@ import 'package:applicx/screens/screen_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget ScreenHome(BuildContext context) {
+Widget ScreenHome(BuildContext context, double walletAmount) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -49,8 +49,14 @@ Widget ScreenHome(BuildContext context) {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MyCustomRoute((BuildContext context) {
-              return ScreenChargeAlfa();
-            }, RouteSettings(), ScreenChargeAlfa()));
+              return ScreenChargeAlfa(
+                walletAmount: walletAmount,
+              );
+            },
+                RouteSettings(),
+                ScreenChargeAlfa(
+                  walletAmount: walletAmount,
+                )));
           },
           child: CardTextImage("Alfa", "assets/images/logo_alfa.png"),
         ),
@@ -69,8 +75,14 @@ Widget ScreenHome(BuildContext context) {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MyCustomRoute((BuildContext context) {
-              return ScreenChargeTouch();
-            }, RouteSettings(), ScreenChargeTouch()));
+              return ScreenChargeTouch(
+                walletAmount: walletAmount,
+              );
+            },
+                RouteSettings(),
+                ScreenChargeTouch(
+                  walletAmount: walletAmount,
+                )));
           },
           child: CardTextImage("Touch", "assets/images/logo_touch.png"),
         ),
@@ -83,10 +95,11 @@ Widget ScreenHome(BuildContext context) {
             TextGrey("Not enough credits?"),
             GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .push(MyCustomRoute((BuildContext context) {
-                  return ScreenBuyCredits();
-                }, RouteSettings(), ScreenBuyCredits()));
+                Navigator.of(context).push(MyCustomRoute(
+                    (BuildContext context) {
+                  return ScreenBuyCredits(walletAmount: walletAmount);
+                }, RouteSettings(),
+                    ScreenBuyCredits(walletAmount: walletAmount)));
               },
               child: TextLink("Buy Credits"),
             )

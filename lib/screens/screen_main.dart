@@ -1,5 +1,6 @@
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_logging.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_home.dart';
 import 'package:applicx/screens/screen_reports.dart';
 import 'package:applicx/screens/screen_settings.dart';
@@ -13,6 +14,7 @@ class ScreenMain extends StatefulWidget {
 
 class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   int _selectedIndex = 0;
+  double _walletAmount = 0;
   String _iconHome = "assets/svgs/vector_home_black.svg";
   String _iconReports = "assets/svgs/vector_reports.svg";
   String _iconSettings = "assets/svgs/vector_settings.svg";
@@ -33,6 +35,12 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    HelperSharedPreferences.getWalletAmount().then((value) {
+      setState(() {
+        _walletAmount = value;
+      });
+    });
+
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 30),
@@ -54,7 +62,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                   width: 150,
                   height: 50,
                   child: TextField(
-                    controller: TextEditingController(text: "100.00 \$"),
+                    controller: TextEditingController(
+                        text: "${_walletAmount.toStringAsFixed(2)} \$"),
                     enabled: false,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black),
@@ -244,7 +253,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               Visibility(
                   visible: _selectedIndex == 0,
                   child: FadeTransition(
-                      opacity: _controllerFade, child: ScreenHome(context))),
+                      opacity: _controllerFade,
+                      child: ScreenHome(context, _walletAmount))),
               Visibility(
                   visible: _selectedIndex == 1,
                   child: FadeTransition(
@@ -259,7 +269,10 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               Visibility(
                   visible: _selectedIndex == 2,
                   child: FadeTransition(
-                      opacity: _controllerFade, child: ScreenSettings())),
+                      opacity: _controllerFade,
+                      child: ScreenSettings(
+                        walletAmount: _walletAmount,
+                      ))),
             ],
           )),
     );
