@@ -18,14 +18,14 @@ Widget ScreenIntro3(Function onBackClick) {
               child: SizedBox(
                   width: 335,
                   child: TextBoldBlack(
-                      "No need to remember the user payment status")),
+                      "No need to remember whether the user paid or not.")),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(
-                      "Check if the user has paid the required amount")),
+                      "Verify whether the user has made the necessary payment.")),
             )
           ],
         ),

@@ -16,14 +16,14 @@ Widget ScreenIntro1() {
           child: SizedBox(
               width: 335,
               child: TextBoldBlack(
-                  "Eliminate the time wasted on credit transfer.")),
+                  "Reduce the time spent on transferring credits.")),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
           child: SizedBox(
               width: 335,
               child: TextGrey(
-                  "Recharge the desired amount of credits with just one click.")),
+                  "Refill your chosen credit amount easily by clicking just once.")),
         )
       ],
     ),

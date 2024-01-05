@@ -38,7 +38,7 @@ Widget ScreenHome(BuildContext context, double walletAmount) {
       ),
       Padding(
         padding: const EdgeInsets.only(left: 30),
-        child: TextGrey("Specify the carrier you want"),
+        child: TextNormalBlack("Specify the carrier you want"),
       ),
       Align(
         alignment: Alignment.centerRight,

@@ -99,7 +99,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           isAlfa: true,
           title: "",
           cost: 1.22,
-          availability: 10,
+          availability: 0,
           dolars: 2,
           imagePath: "assets/images/image_cart_1.png",
           color: const Color(0xffFDD848),
@@ -197,99 +197,111 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Stack(
                   children: [
-                    TextBoldBlack("Services"),
-                    Image.asset("assets/images/logo_alfa.png")
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextBoldBlack("Services"),
+                        FractionallySizedBox(
+                          widthFactor: 0.7,
+                          child: TextGrey("Specify the service you want"),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Positioned(
+                          right: 0,
+                          child: Image.asset("assets/images/logo_alfa.png")),
+                    )
                   ],
                 ),
-                FractionallySizedBox(
-                  widthFactor: 0.7,
-                  child:
-                      TextGrey("Please select the service you need to achieve"),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 2,
-                    color: const Color(0xffF2F2F2),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                              bottom: 0,
-                              top: 0,
-                              right: 20,
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircleAvatar(
-                                  backgroundColor: const Color(0xffFDD848),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      if (await HelperPermission
-                                          .requestContactPermission(context)) {
-                                        final PhoneContact contact =
-                                            await FlutterContactPicker
-                                                .pickPhoneContact();
-                                        setState(() {
-                                          _controllerName.text =
-                                              contact.fullName ?? "";
-                                        });
-                                        if (contact.phoneNumber != null) {
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      elevation: 2,
+                      color: const Color(0xffF2F2F2),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                                bottom: 0,
+                                top: 0,
+                                right: 20,
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircleAvatar(
+                                    backgroundColor: const Color(0xffFDD848),
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        if (await HelperPermission
+                                            .requestContactPermission(
+                                                context)) {
+                                          final PhoneContact contact =
+                                              await FlutterContactPicker
+                                                  .pickPhoneContact();
                                           setState(() {
-                                            _controllerPhoneNumber.text =
-                                                contact.phoneNumber!.number ??
-                                                    "";
+                                            _controllerName.text =
+                                                contact.fullName ?? "";
                                           });
+                                          if (contact.phoneNumber != null) {
+                                            setState(() {
+                                              _controllerPhoneNumber.text =
+                                                  contact.phoneNumber!.number ??
+                                                      "";
+                                            });
+                                          }
                                         }
-                                      }
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/image_contacts.png",
-                                      width: 40,
-                                      height: 40,
+                                      },
+                                      child: Image.asset(
+                                        "assets/images/image_contacts.png",
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FractionallySizedBox(
+                                  widthFactor: 0.7,
+                                  child: MyTextField(
+                                      controller: _controllerName,
+                                      hintText: "User 123 (Optional)",
+                                      onValueChanged: (text) {},
+                                      prefixIcon:
+                                          const Icon(Icons.account_circle),
+                                      fillColor: Colors.white),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: FractionallySizedBox(
+                                    widthFactor: 0.7,
+                                    child: MyTextField(
+                                      controller: _controllerPhoneNumber,
+                                      hintText: "76 554 635",
+                                      onValueChanged: (text) {
+                                        _textNumberError = null;
+                                      },
+                                      prefixIcon: const Icon(Icons.phone),
+                                      fillColor: Colors.white,
+                                      inputType: TextInputType.phone,
+                                      errorText: _textNumberError,
                                     ),
                                   ),
                                 ),
-                              )),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FractionallySizedBox(
-                                widthFactor: 0.7,
-                                child: MyTextField(
-                                    controller: _controllerName,
-                                    hintText: "User 123 (Optional)",
-                                    onValueChanged: (text) {},
-                                    prefixIcon:
-                                        const Icon(Icons.account_circle),
-                                    fillColor: Colors.white),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: FractionallySizedBox(
-                                  widthFactor: 0.7,
-                                  child: MyTextField(
-                                    controller: _controllerPhoneNumber,
-                                    hintText: "76 554 635",
-                                    onValueChanged: (text) {
-                                      _textNumberError = null;
-                                    },
-                                    prefixIcon: const Icon(Icons.phone),
-                                    fillColor: Colors.white,
-                                    inputType: TextInputType.phone,
-                                    errorText: _textNumberError,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -441,7 +453,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextGrey(
-                                  "Are you sure you want to buy this cart?",
+                                  "Are you sure you want to purchase this cart?",
                                   textAlign: TextAlign.center),
                               Visibility(
                                   visible:
@@ -522,7 +534,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextGrey("Are you sure you want to charge this?",
+                            TextGrey(
+                                "Are you sure you want to purchase this cart?",
                                 textAlign: TextAlign.center),
                             Visibility(
                                 visible: _walletAmount < modelCartVoucher.cost,
@@ -607,7 +620,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                               Align(
                                                 alignment: Alignment.center,
                                                 child: TextGrey(
-                                                    "You will share the cart as image"),
+                                                    "You will share the purchased cart as an image"),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -727,10 +740,12 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextGrey("Are you sure you want to charge this?",
+                          TextGrey(
+                              "Are you sure you want to proceed with this charge?",
                               textAlign: TextAlign.center),
                           TextNote(
-                              "It may take up to 5 min to transfer credits"),
+                              "It may take up to 5 min to transfer credits",
+                              textAlign: TextAlign.center),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Card(
@@ -816,7 +831,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextGrey("Are you sure you want to charge this?",
+                          TextGrey(
+                              "Are you sure you want to purchase this cart?",
                               textAlign: TextAlign.center),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,

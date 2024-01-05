@@ -70,6 +70,13 @@ flutter:
   assets:
     - assets/images/
     - assets/svgs/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Black.ttf 
+        - asset: assets/fonts/Montserrat-Light.ttf 
+        - asset: assets/fonts/Montserrat-Medium.ttf 
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

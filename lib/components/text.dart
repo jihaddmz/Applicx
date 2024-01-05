@@ -16,15 +16,28 @@ Widget TextNormalBlack(String text, {Color? color, TextAlign? textAlign}) {
     textAlign: textAlign,
     style: TextStyle(
         fontSize: 18,
-        color: color ?? Color(0xff243141),
+        color: color ?? const Color(0xff243141),
+        fontWeight: FontWeight.w400),
+  );
+}
+
+Widget TextLessBoldBlack(String text, {Color? color, TextAlign? textAlign}) {
+  return Text(
+    text,
+    textAlign: textAlign,
+    style: TextStyle(
+        fontSize: 18,
+        color: color ?? const Color(0xff243141),
         fontWeight: FontWeight.w600),
   );
 }
 
-Widget TextBoldBlack(String text) {
+Widget TextBoldBlack(String text, {TextAlign textAlign = TextAlign.center}) {
   return Text(
     text,
-    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+    textAlign: textAlign,
+    style: const TextStyle(
+        fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xff243141)),
   );
 }
 
@@ -40,9 +53,10 @@ Widget TextLink(String text) {
   );
 }
 
-Widget TextNote(String text) {
+Widget TextNote(String text, {TextAlign textAlign = TextAlign.start}) {
   return Text(
     text,
+    textAlign: textAlign,
     style: const TextStyle(
         fontSize: 16, color: Color(0xffE31F2B), fontWeight: FontWeight.w200),
   );

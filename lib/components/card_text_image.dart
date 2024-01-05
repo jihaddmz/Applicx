@@ -10,7 +10,7 @@ Widget CardTextImage(String text, String imagePath) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TextNormalBlack(text),
+        TextLessBoldBlack(text),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
           child: Image.asset(imagePath),

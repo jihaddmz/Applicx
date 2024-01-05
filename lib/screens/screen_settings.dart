@@ -228,7 +228,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                                 builder: (context) {
                                                   return AlertDialog(
                                                     elevation: 0,
-                                                    title: TextNormalBlack(
+                                                    title: TextBoldBlack(
                                                         "Attention!",
                                                         textAlign:
                                                             TextAlign.center),
@@ -264,7 +264,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                                 builder: (context) {
                                                   return AlertDialog(
                                                     elevation: 0,
-                                                    title: TextNormalBlack(
+                                                    title: TextBoldBlack(
                                                         "Attention!",
                                                         textAlign:
                                                             TextAlign.center),

@@ -74,7 +74,7 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
                     TextBoldBlack("Profile"),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: TextGrey("Update and modify your \nprofile "),
+                      child: TextGrey("Check and update your \nprofile "),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30),

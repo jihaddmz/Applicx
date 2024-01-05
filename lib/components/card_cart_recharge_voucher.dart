@@ -58,7 +58,7 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
               ),
               Positioned(
                   bottom: 15,
-                  left: 2,
+                  left: 8,
                   child: TextBoldBlack("\$${widget.modelCartVoucher.cost}")),
               Positioned(
                   bottom: 0,

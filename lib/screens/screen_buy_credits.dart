@@ -70,93 +70,97 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                     TextBoldBlack("Alfa and\nTouch Credits"),
                     TextGrey(
                         "Buy credits from our agent \nwith the lowest cost"),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        elevation: 5,
-                        color: const Color(0xffF2F2F2),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                  bottom: 0,
-                                  top: 0,
-                                  right: 20,
-                                  child: SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: CircleAvatar(
-                                      backgroundColor: const Color(0xffFDD848),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          if (await HelperPermission
-                                              .requestContactPermission(
-                                                  context)) {
-                                            final PhoneContact contact =
-                                                await FlutterContactPicker
-                                                    .pickPhoneContact();
-                                            setState(() {
-                                              _controllerName.text =
-                                                  contact.fullName ?? "";
-                                            });
-                                            if (contact.phoneNumber != null) {
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          elevation: 5,
+                          color: const Color(0xffF2F2F2),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                    bottom: 0,
+                                    top: 0,
+                                    right: 20,
+                                    child: SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            const Color(0xffFDD848),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            if (await HelperPermission
+                                                .requestContactPermission(
+                                                    context)) {
+                                              final PhoneContact contact =
+                                                  await FlutterContactPicker
+                                                      .pickPhoneContact();
                                               setState(() {
-                                                _controllerPhoneNumber.text =
-                                                    contact.phoneNumber!
-                                                            .number ??
-                                                        "";
+                                                _controllerName.text =
+                                                    contact.fullName ?? "";
                                               });
+                                              if (contact.phoneNumber != null) {
+                                                setState(() {
+                                                  _controllerPhoneNumber.text =
+                                                      contact.phoneNumber!
+                                                              .number ??
+                                                          "";
+                                                });
+                                              }
                                             }
-                                          }
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/image_contacts.png",
-                                          width: 40,
-                                          height: 40,
+                                          },
+                                          child: Image.asset(
+                                            "assets/images/image_contacts.png",
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    FractionallySizedBox(
+                                      widthFactor: 0.7,
+                                      child: MyTextField(
+                                          controller: _controllerName,
+                                          hintText: "User 123 (Optional)",
+                                          onValueChanged: (text) {
+                                            setState(() {
+                                              _textNumberError = null;
+                                            });
+                                          },
+                                          prefixIcon:
+                                              const Icon(Icons.account_circle),
+                                          fillColor: Colors.white),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: FractionallySizedBox(
+                                        widthFactor: 0.7,
+                                        child: MyTextField(
+                                          controller: _controllerPhoneNumber,
+                                          hintText: "76 554 635",
+                                          onValueChanged: (text) {
+                                            _textNumberError = null;
+                                          },
+                                          prefixIcon: const Icon(Icons.phone),
+                                          fillColor: Colors.white,
+                                          inputType: TextInputType.phone,
+                                          errorText: _textNumberError,
                                         ),
                                       ),
                                     ),
-                                  )),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  FractionallySizedBox(
-                                    widthFactor: 0.7,
-                                    child: MyTextField(
-                                        controller: _controllerName,
-                                        hintText: "User 123 (Optional)",
-                                        onValueChanged: (text) {
-                                          setState(() {
-                                            _textNumberError = null;
-                                          });
-                                        },
-                                        prefixIcon:
-                                            const Icon(Icons.account_circle),
-                                        fillColor: Colors.white),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: FractionallySizedBox(
-                                      widthFactor: 0.7,
-                                      child: MyTextField(
-                                        controller: _controllerPhoneNumber,
-                                        hintText: "76 554 635",
-                                        onValueChanged: (text) {
-                                          _textNumberError = null;
-                                        },
-                                        prefixIcon: const Icon(Icons.phone),
-                                        fillColor: Colors.white,
-                                        inputType: TextInputType.phone,
-                                        errorText: _textNumberError,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -271,9 +275,11 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextGrey("Are you sure you want to charge this?",
+                      TextGrey(
+                          "Are you sure you want to proceed with this charge?",
                           textAlign: TextAlign.center),
-                      TextNote("It may take up to 5 min to transfer credits"),
+                      TextNote("It may take up to 5 min to transfer credits",
+                          textAlign: TextAlign.center),
                       Visibility(
                           visible: _walletAmount < modelBuyCredit.cost,
                           child: TextGrey(

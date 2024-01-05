@@ -1,3 +1,4 @@
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
@@ -5,6 +6,7 @@ import 'package:applicx/components/item_history_report.dart';
 import 'package:applicx/components/item_history_report_cardvoucher.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:applicx/models/model_report.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +31,14 @@ class _ScreenReports extends State<ScreenReports> {
   String _filterPath = "assets/svgs/vector_filter.svg";
   bool _isFilterStatusPaid = true;
   bool _isFilterCarrierAlfa = true;
+  String _currentPhoneNumber = "";
 
   @override
   void initState() {
     super.initState();
+
+    fetchUserName();
+
     initialHistoryGiftReportList = [
       ModelHistoryReportGift(
           name: "Jihad Mahfouz",
@@ -90,6 +96,14 @@ class _ScreenReports extends State<ScreenReports> {
     });
   }
 
+  void fetchUserName() async {
+    HelperSharedPreferences.getPhoneNumber().then((value) {
+      setState(() {
+        _currentPhoneNumber = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -102,39 +116,80 @@ class _ScreenReports extends State<ScreenReports> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextBoldBlack("History"),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showFilter = !_showFilter;
-                    });
-                    if (_showFilter) {
-                      setState(() {
-                        _filterPath = "assets/svgs/vector_filter_close.svg";
-                      });
-                      filterReports();
-                    } else {
-                      setState(() {
-                        _filterPath = "assets/svgs/vector_filter.svg";
-                        _isFilterCarrierAlfa = true;
-                        _isFilterStatusPaid = true;
-                        _list = initialHistoryGiftReportList;
-                      });
-                      setState(() {
-                        _list = _tabIndex == 0
-                            ? initialHistoryGiftReportList
-                            : initialHistoryCardVoucherReportList;
-                      });
-                      widget.changeNumberOfReports(_list.length);
-                    }
-                  },
-                  child: SvgPicture.asset(
-                    _filterPath,
-                    semanticsLabel: "Filter",
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Visibility(
+                        visible: !_showFilter,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    elevation: 0,
+                                    title: TextBoldBlack("Attention!",
+                                        textAlign: TextAlign.center),
+                                    content: TextGrey(
+                                        "Are you sure you want to download new history?",
+                                        textAlign: TextAlign.center),
+                                    actionsAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    actions: [
+                                      ButtonSmall("No", () {
+                                        Navigator.pop(context);
+                                      }, color: const Color(0xffFF6F77)),
+                                      ButtonSmall("Yes", () {
+                                        Navigator.pop(context);
+                                      }, color: const Color(0xffAAD59E))
+                                    ],
+                                  );
+                                });
+                          },
+                          child: SvgPicture.asset(
+                            "assets/svgs/vector_fetch.svg",
+                            semanticsLabel: "Filter",
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _showFilter = !_showFilter;
+                          });
+                          if (_showFilter) {
+                            setState(() {
+                              _filterPath =
+                                  "assets/svgs/vector_filter_close.svg";
+                            });
+                            filterReports();
+                          } else {
+                            setState(() {
+                              _filterPath = "assets/svgs/vector_filter.svg";
+                              _isFilterCarrierAlfa = true;
+                              _isFilterStatusPaid = true;
+                              _list = initialHistoryGiftReportList;
+                            });
+                            setState(() {
+                              _list = _tabIndex == 0
+                                  ? initialHistoryGiftReportList
+                                  : initialHistoryCardVoucherReportList;
+                            });
+                            widget.changeNumberOfReports(_list.length);
+                          }
+                        },
+                        child: SvgPicture.asset(
+                          _filterPath,
+                          semanticsLabel: "Filter",
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            TextNormalBlack("Track users payment status"),
+            TextNormalBlack("View your purchase history"),
             Visibility(
                 visible: _showFilter,
                 child: Padding(
@@ -238,7 +293,8 @@ class _ScreenReports extends State<ScreenReports> {
     for (var element in _list) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: ItemHistoryReportCardVoucher(element, context),
+        child:
+            ItemHistoryReportCardVoucher(element, context, _currentPhoneNumber),
       ));
     }
 

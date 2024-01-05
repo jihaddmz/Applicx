@@ -11,6 +11,14 @@ class HelperSharedPreferences {
     await instance.setString("username", value);
   }
 
+  static Future<String> getPhoneNumber() async {
+    return instance.getString("phonenumber") ?? "";
+  }
+
+  static Future<void> setPhoneNumber(String value) async {
+    await instance.setString("phonenumber", value);
+  }
+
   static Future<String> getAddress() async {
     return instance.getString("address") ?? "";
   }

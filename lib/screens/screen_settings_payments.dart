@@ -49,7 +49,7 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextBoldBlack("Payments"),
-              TextGrey("Check all your previous payments"),
+              TextGrey("View your previous payments"),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: SizedBox(

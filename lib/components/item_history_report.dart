@@ -16,9 +16,10 @@ Widget ItemHistoryReportGift(
             return AlertDialog(
               elevation: 0,
               backgroundColor: const Color(0xffF2F2F2),
-              title: TextNormalBlack("Attention!", textAlign: TextAlign.center),
+              title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
               content: TextGrey(
-                  "Are you sure you want to set the user status as ${modelReport.isPaid == 0 ? "paid" : "unpaid"}?"),
+                  "Are you sure you want to set the user status as ${modelReport.isPaid == 0 ? "paid" : "unpaid"}?",
+                  textAlign: TextAlign.center),
               actions: [
                 ElevatedButton(
                     style: const ButtonStyle(

@@ -67,7 +67,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextBoldBlack("Notifications"),
-                TextGrey("You have 3 recent\nnotifications"),
+                TextGrey("You have ${_list.length} new notifications"),
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: Align(

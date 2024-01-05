@@ -1,14 +1,17 @@
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
 import 'package:applicx/components/oval_letter.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 Widget ItemHistoryReportCardVoucher(
     ModelHistoryReportCardVoucher modelHistoryReportCardVoucher,
-    BuildContext context) {
+    BuildContext context,
+    String currentPhoneNumber) {
   return Slidable(
       endActionPane: ActionPane(motion: ScrollMotion(), children: [
         GestureDetector(
@@ -19,10 +22,11 @@ Widget ItemHistoryReportCardVoucher(
                   return AlertDialog(
                     elevation: 0,
                     backgroundColor: const Color(0xffF2F2F2),
-                    title: TextNormalBlack("Attention!",
+                    title: TextBoldBlack("Attention!",
                         textAlign: TextAlign.center),
                     content: TextGrey(
-                        "Are you sure you want to set the user status as ${modelHistoryReportCardVoucher.isPaid == 0 ? "paid" : "unpaid"}?"),
+                        "Are you sure you want to set the user status as ${modelHistoryReportCardVoucher.isPaid == 0 ? "paid" : "unpaid"}?",
+                        textAlign: TextAlign.center),
                     actions: [
                       ElevatedButton(
                           style: const ButtonStyle(
@@ -70,7 +74,9 @@ Widget ItemHistoryReportCardVoucher(
                       children: [
                         Align(
                           alignment: Alignment.center,
-                          child: TextGrey("You will share the cart as image"),
+                          child: TextGrey(
+                              "You will share the purchased cart as an image",
+                              textAlign: TextAlign.center),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
@@ -117,26 +123,12 @@ Widget ItemHistoryReportCardVoucher(
                       ],
                     ),
                     actions: [
-                      ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xff9ECCFA)),
-                              foregroundColor:
-                                  MaterialStatePropertyAll(Colors.black)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancel")),
-                      ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xffAAD59E)),
-                              foregroundColor:
-                                  MaterialStatePropertyAll(Colors.black)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Share"))
+                      ButtonSmall("Cancel", () {
+                        Navigator.pop(context);
+                      }, color: const Color(0xff9ECCFA)),
+                      ButtonSmall("Share", () {
+                        Navigator.pop(context);
+                      }, color: const Color(0xffAAD59E)),
                     ],
                     actionsAlignment: MainAxisAlignment.spaceEvenly,
                   );
@@ -159,7 +151,11 @@ Widget ItemHistoryReportCardVoucher(
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 5),
-              child: OvalLetter(modelHistoryReportCardVoucher.name ?? "User"),
+              child: OvalLetter(modelHistoryReportCardVoucher.name ?? "User",
+                  color: modelHistoryReportCardVoucher.phoneNumber ==
+                          currentPhoneNumber
+                      ? const Color(0xffFFB1B6)
+                      : const Color(0xff9ECCFA)),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 5),

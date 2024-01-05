@@ -42,7 +42,7 @@ class _ScreenSettingsDeposit extends State<ScreenSettingsDeposit> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextBoldBlack("Deposits"),
-              TextGrey("Check all your previous deposits"),
+              TextGrey("View your previous deposits"),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: SizedBox(

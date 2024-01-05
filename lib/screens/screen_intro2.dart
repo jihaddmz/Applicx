@@ -17,14 +17,15 @@ Widget ScreenIntro2(Function onBackClick) {
               padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
               child: SizedBox(
                   width: 335,
-                  child: TextBoldBlack("Send alfa and touch gifts immediatly")),
+                  child: TextBoldBlack(
+                      "Instantly send gifts for Alfa and Touch.")),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(
-                      "Send the gift to the person without sending any SMS")),
+                      "Deliver the gift to the recipient without the need for any SMS.")),
             )
           ],
         ),
