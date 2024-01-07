@@ -54,7 +54,8 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
             height: 150,
             child: Card(
               color: const Color(0xff9ECCFA),
-              elevation: 2,
+              surfaceTintColor: const Color(0xffF2F2F2),
+              elevation: 4,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -91,7 +92,9 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Card(
-                                            elevation: 2,
+                                            surfaceTintColor:
+                                                const Color(0xffF2F2F2),
+                                            elevation: 4,
                                             shape: const RoundedRectangleBorder(
                                                 side: BorderSide(
                                                     color: Colors.white),

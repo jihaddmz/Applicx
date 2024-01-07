@@ -38,7 +38,7 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FractionallySizedBox(
         widthFactor: 0.6,
         child: Visibility(

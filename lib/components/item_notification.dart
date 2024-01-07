@@ -16,7 +16,8 @@ Widget ItemNotification(BuildContext context,
         width: MediaQuery.of(context).size.width * 0.8,
         height: 80,
         child: Card(
-            elevation: 2,
+            elevation: 4,
+            surfaceTintColor: const Color(0xffF2F2F2),
             color: const Color(0xffF2F2F2),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

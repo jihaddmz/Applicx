@@ -45,7 +45,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
           }
         }),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {

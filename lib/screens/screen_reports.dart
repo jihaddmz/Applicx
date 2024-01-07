@@ -281,7 +281,7 @@ class _ScreenReports extends State<ScreenReports> {
     for (var element in _list) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: ItemHistoryReportGift(element, context),
+        child: ItemHistoryReportGift(element, context, _currentPhoneNumber),
       ));
     }
 

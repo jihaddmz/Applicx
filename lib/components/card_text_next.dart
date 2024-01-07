@@ -6,7 +6,8 @@ Widget CardTextNext(String hintText, TextEditingController controller,
   return SizedBox(
     height: 80,
     child: Card(
-      elevation: 2,
+      elevation: 4,
+      surfaceTintColor: const Color(0xffF2F2F2),
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       child: Stack(

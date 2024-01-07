@@ -146,7 +146,8 @@ Widget ItemHistoryReportCardVoucher(
       ]),
       child: Card(
         color: const Color(0xffF2F2F2),
-        elevation: 2,
+        elevation: 4,
+        surfaceTintColor: const Color(0xffF2F2F2),
         child: Row(
           children: [
             Padding(

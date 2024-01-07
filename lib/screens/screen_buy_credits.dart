@@ -77,7 +77,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                         child: Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          elevation: 5,
+                          elevation: 4,
+                          surfaceTintColor: const Color(0xffF2F2F2),
                           color: const Color(0xffF2F2F2),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),

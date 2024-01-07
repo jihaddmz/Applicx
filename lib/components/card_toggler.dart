@@ -30,7 +30,8 @@ class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 4,
+      surfaceTintColor: const Color(0xffF2F2F2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
       color: const Color(0xffF5F5F5),
       child: Row(
@@ -44,6 +45,7 @@ class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
             child: Card(
               elevation: elevation1,
               color: color1,
+              surfaceTintColor: const Color(0xffF2F2F2),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(70)),
               child: Padding(
@@ -73,6 +75,7 @@ class _CardToggler extends State<CardToggler> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(70)),
               elevation: elevation2,
               color: color2,
+              surfaceTintColor: const Color(0xffF2F2F2),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

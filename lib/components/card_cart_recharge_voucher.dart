@@ -27,10 +27,11 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
         width: double.infinity,
         height: 150,
         child: Card(
+          surfaceTintColor: const Color(0xffF2F2F2),
           color: widget.modelCartVoucher.isCardClicked
               ? Colors.transparent
               : widget.modelCartVoucher.color,
-          elevation: 2,
+          elevation: 4,
           child: Stack(
             children: [
               Padding(

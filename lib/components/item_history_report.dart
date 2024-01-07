@@ -6,8 +6,8 @@ import 'package:applicx/models/model_report.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
 
-Widget ItemHistoryReportGift(
-    ModelHistoryReportGift modelReport, BuildContext context) {
+Widget ItemHistoryReportGift(ModelHistoryReportGift modelReport,
+    BuildContext context, String currentPhoneNumber) {
   return SwipeTo(
     onLeftSwipe: (details) => {
       showDialog(
@@ -46,7 +46,8 @@ Widget ItemHistoryReportGift(
         modelReport.isPaid == 0 ? CardPaidStatus() : CardUnPaidStatus(),
     child: Card(
       color: const Color(0xffF2F2F2),
-      elevation: 2,
+      elevation: 4,
+      surfaceTintColor: const Color(0xffF2F2F2),
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Column(
@@ -62,7 +63,10 @@ Widget ItemHistoryReportGift(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
-                OvalLetter(modelReport.name ?? "U"),
+                OvalLetter(modelReport.name ?? "U",
+                    color: currentPhoneNumber == modelReport.phoneNumber
+                        ? const Color(0xffFFB1B6)
+                        : const Color(0xff9ECCFA)),
                 Padding(
                   padding: const EdgeInsets.only(left: 0),
                   child: Column(

@@ -10,7 +10,8 @@ Widget ItemBuyCredit(ModelBuyCredit modelBuyCredit, int tabIndex,
     height: 170,
     child: Card(
       color: const Color(0xffF2F2F2),
-      elevation: 5,
+      elevation: 4,
+      surfaceTintColor: const Color(0xffF2F2F2),
       child: Stack(
         children: [
           Positioned(
