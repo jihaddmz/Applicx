@@ -247,7 +247,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
         },
       ),
       body: SafeArea(
-          minimum: const EdgeInsets.only(top: 40),
+          minimum: const EdgeInsets.symmetric(vertical: 40),
           child: Stack(
             children: [
               Visibility(

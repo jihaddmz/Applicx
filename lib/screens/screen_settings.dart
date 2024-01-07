@@ -376,8 +376,12 @@ class _ScreenSettings extends State<ScreenSettings> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: Button("Log Out", () {
-                              HelperSharedPreferences.setUsername("");
+                            child: Button("Log Out", () async {
+                              await HelperSharedPreferences
+                                  .clearSharedPreferences();
+                              // await HelperSharedPreferences.setUsername("");
+                              // await HelperSharedPreferences.setAddress("");
+                              // await HelperSharedPreferences.setPhoneNumber("");
                               Navigator.of(context)
                                   .push(MyCustomRoute((BuildContext context) {
                                 return ScreenIntros();

@@ -1,9 +1,10 @@
 import 'package:applicx/components/text.dart';
 import 'package:flutter/material.dart';
 
-Widget ScreenIntro3(Function onBackClick) {
+Widget ScreenIntro3(Function onBackClick, BuildContext context) {
   return Container(
     width: double.maxFinite,
+    height: MediaQuery.of(context).size.height,
     color: const Color(0xffFDD848),
     child: Stack(
       children: [

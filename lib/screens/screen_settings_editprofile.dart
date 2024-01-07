@@ -1,6 +1,7 @@
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/components/textfield_border.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -18,6 +19,7 @@ class ScreenSettingsEditProfile extends StatefulWidget {
 class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerAddress = TextEditingController();
+  final TextEditingController _controllerPhoneNumber = TextEditingController();
   bool _editingEnabled = false;
 
   @override
@@ -27,6 +29,10 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
     HelperSharedPreferences.getAddress().then((value) {
       _controllerAddress.text = value;
     });
+
+    HelperSharedPreferences.getPhoneNumber().then((value) {
+      _controllerPhoneNumber.text = value;
+    });
   }
 
   @override
@@ -35,19 +41,25 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FractionallySizedBox(
         widthFactor: 0.6,
-        child: Button(_editingEnabled ? "Save" : "Edit", () async {
-          if (_editingEnabled) {
-            await HelperSharedPreferences.setAddress(_controllerAddress.text);
-            await HelperSharedPreferences.setUsername(_controllerUsername.text);
-            setState(() {
-              _editingEnabled = false;
-            });
-          } else {
-            setState(() {
-              _editingEnabled = true;
-            });
-          }
-        }, color: const Color(0xff243141)),
+        child: Visibility(
+          visible: MediaQuery.of(context).viewInsets.bottom == 0,
+          child: Button(_editingEnabled ? "Save" : "Edit", () async {
+            if (_editingEnabled) {
+              await HelperSharedPreferences.setAddress(_controllerAddress.text);
+              await HelperSharedPreferences.setUsername(
+                  _controllerUsername.text);
+              await HelperSharedPreferences.setPhoneNumber(
+                  _controllerPhoneNumber.text);
+              setState(() {
+                _editingEnabled = false;
+              });
+            } else {
+              setState(() {
+                _editingEnabled = true;
+              });
+            }
+          }, color: const Color(0xff243141)),
+        ),
       ),
       appBar: AppBar(
         leading: GestureDetector(
@@ -78,23 +90,24 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
-                      child: MyTextField(
+                      child: TextFieldBorder(
                           controller: _controllerUsername,
-                          hintText: "Username",
-                          showLabel: true,
-                          prefixIcon: null,
                           enabled: _editingEnabled,
-                          onValueChanged: (value) {}),
+                          label: "Username"),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: MyTextField(
+                      child: TextFieldBorder(
                           controller: _controllerAddress,
-                          hintText: "Address",
-                          showLabel: true,
-                          prefixIcon: null,
                           enabled: _editingEnabled,
-                          onValueChanged: (value) {}),
+                          label: "Address"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFieldBorder(
+                          controller: _controllerPhoneNumber,
+                          enabled: _editingEnabled,
+                          label: "Phone Number"),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),

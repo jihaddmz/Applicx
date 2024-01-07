@@ -47,6 +47,7 @@ class _MyTextField extends State<MyTextField> {
       color: widget.fillColor,
       elevation: 2,
       child: TextField(
+        cursorColor: const Color(0xff243141),
         enabled: widget.enabled,
         keyboardType: widget.inputType,
         controller: widget.controller,

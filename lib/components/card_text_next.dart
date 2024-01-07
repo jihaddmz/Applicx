@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 Widget CardTextNext(String hintText, TextEditingController controller,
-    Function()? onNextClick) {
+    Function()? onNextClick, BuildContext context) {
   return SizedBox(
     height: 80,
     child: Card(
@@ -13,6 +13,7 @@ Widget CardTextNext(String hintText, TextEditingController controller,
         alignment: Alignment.center,
         children: [
           TextField(
+            cursorColor: const Color(0xff243141),
             controller: controller,
             style: const TextStyle(),
             decoration: InputDecoration(

@@ -32,7 +32,7 @@ Widget TextLessBoldBlack(String text, {Color? color, TextAlign? textAlign}) {
   );
 }
 
-Widget TextBoldBlack(String text, {TextAlign textAlign = TextAlign.center}) {
+Widget TextBoldBlack(String text, {TextAlign textAlign = TextAlign.start}) {
   return Text(
     text,
     textAlign: textAlign,

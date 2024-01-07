@@ -34,4 +34,8 @@ class HelperSharedPreferences {
   static Future<void> setWalletAmount(double value) async {
     await instance.setDouble("walletAmount", value);
   }
+
+  static Future<void> clearSharedPreferences() async {
+    instance.clear();
+  }
 }

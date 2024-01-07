@@ -1,16 +1,14 @@
 import 'package:applicx/components/card_text_next.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_main.dart';
 import 'package:flutter/material.dart';
 
 Widget ScreenIntro4(BuildContext context, Function onBackClick) {
-  TextEditingController controller = TextEditingController();
-
   return Container(
     width: double.maxFinite,
+    height: MediaQuery.of(context).size.height,
     color: const Color(0xff9ECCFA),
     child: Stack(
       children: [
@@ -37,19 +35,6 @@ Widget ScreenIntro4(BuildContext context, Function onBackClick) {
                   child: TextGrey(
                       "We will share with you the specific username for your store")),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: CardTextNext("Enter your username", controller, () async {
-                if (controller.text.isNotEmpty) {
-                  // if user has entered a username
-                  await HelperSharedPreferences.setUsername(controller.text);
-                  Navigator.of(context)
-                      .push(MyCustomRoute((BuildContext context) {
-                    return ScreenMain();
-                  }, RouteSettings(), ScreenMain()));
-                } else {}
-              }),
-            )
           ],
         ),
         Padding(
