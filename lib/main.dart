@@ -1,7 +1,16 @@
+import 'package:applicx/components/button.dart';
+import 'package:applicx/components/text.dart';
+import 'package:applicx/firebase_options.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_intros.dart';
 import 'package:applicx/screens/screen_main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late String username;
@@ -10,6 +19,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HelperSharedPreferences.instance = await SharedPreferences.getInstance();
   username = await HelperSharedPreferences.getUsername();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  HelperFirebaseFirestore.firebaseFirestore = FirebaseFirestore.instance;
   runApp(const MyApp());
 }
 

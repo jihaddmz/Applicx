@@ -1,11 +1,17 @@
+import 'dart:io';
+
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_home.dart';
 import 'package:applicx/screens/screen_reports.dart';
 import 'package:applicx/screens/screen_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ScreenMain extends StatefulWidget {
   @override
@@ -32,6 +38,35 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       upperBound: 1.0,
       value: 1.0,
       duration: const Duration(milliseconds: 500));
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 4), () async {
+      if (!await isAppVersionLatest()) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                elevation: 0,
+                title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+                content: TextGrey("Please update your app, and relaunch it.",
+                    textAlign: TextAlign.center),
+              );
+            });
+      }
+    });
+  }
+
+  Future<bool> isAppVersionLatest() async {
+    String appVersionFromFirebase =
+        await HelperFirebaseFirestore.getAppVersion();
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    return appVersionFromFirebase == packageInfo.version;
+  }
 
   @override
   Widget build(BuildContext context) {
