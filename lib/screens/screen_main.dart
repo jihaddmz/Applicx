@@ -1,15 +1,15 @@
-import 'dart:io';
-
 import 'package:applicx/components/button.dart';
+import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
+import 'package:applicx/models/model_notification.dart';
 import 'package:applicx/screens/screen_home.dart';
+import 'package:applicx/screens/screen_notifications.dart';
 import 'package:applicx/screens/screen_reports.dart';
 import 'package:applicx/screens/screen_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -25,6 +25,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   String _iconReports = "assets/svgs/vector_reports.svg";
   String _iconSettings = "assets/svgs/vector_settings.svg";
   int _historyReportsNumber = 0;
+  List<ModelNotification> _listOfNotifications = [];
+  bool fetchedNotifications = false;
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 1),
     vsync: this,
@@ -45,6 +47,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
 
     Future.delayed(const Duration(seconds: 4), () async {
       if (!await isAppVersionLatest()) {
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -56,6 +59,28 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               );
             });
       }
+    });
+
+    Future.doWhile(() async {
+      await fetchNotifications();
+      await Future.delayed(const Duration(seconds: 60), () {});
+      return true;
+    });
+  }
+
+  Future<void> fetchNotifications() async {
+    Map<String, dynamic> map =
+        await HelperFirebaseFirestore.fetchNotifications();
+    List<ModelNotification> result = [];
+    map.forEach((key, value) {
+      if (!value["cleared"]) {
+        result.add(ModelNotification(
+            message: value["msg"], date: key, cleared: value["cleared"]));
+      }
+    });
+
+    setState(() {
+      _listOfNotifications = result;
     });
   }
 
@@ -289,7 +314,39 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                   visible: _selectedIndex == 0,
                   child: FadeTransition(
                       opacity: _controllerFade,
-                      child: ScreenHome(context, _walletAmount))),
+                      child: ScreenHome(
+                          context, _walletAmount, _listOfNotifications,
+                          () async {
+                        if (await HelperUtils.isConnected()) {
+                          final result = await Navigator.of(context).push(
+                            MyCustomRoute((BuildContext context) {
+                              return ScreenNotifications();
+                            }, const RouteSettings(), ScreenNotifications()),
+                          ) as List<ModelNotification>;
+                          setState(() {
+                            _listOfNotifications = result;
+                          });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  elevation: 0,
+                                  title: TextBoldBlack("Attention!",
+                                      textAlign: TextAlign.center),
+                                  content: TextGrey(
+                                      "You don't have network access, please connect and try again.",
+                                      textAlign: TextAlign.center),
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  actions: [
+                                    ButtonSmall("OK", () {
+                                      Navigator.pop(context);
+                                    })
+                                  ],
+                                );
+                              });
+                        }
+                      }))),
               Visibility(
                   visible: _selectedIndex == 1,
                   child: FadeTransition(

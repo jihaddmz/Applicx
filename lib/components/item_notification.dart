@@ -32,7 +32,7 @@ Widget ItemNotification(BuildContext context,
                   ),
                   Container(
                     width: constraints.maxWidth * 0.2,
-                    child: TextGrey(modelNotification.date),
+                    child: TextGrey(modelNotification.date.split(" ")[0]),
                   )
                 ],
               );

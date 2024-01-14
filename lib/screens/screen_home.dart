@@ -1,14 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:applicx/components/card_text_image.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/models/model_notification.dart';
 import 'package:applicx/screens/screen_buy_credits.dart';
 import 'package:applicx/screens/screen_chargealfa.dart';
 import 'package:applicx/screens/screen_chargetouch.dart';
-import 'package:applicx/screens/screen_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget ScreenHome(BuildContext context, double walletAmount) {
+Widget ScreenHome(BuildContext context, double walletAmount,
+    List<ModelNotification> list, Function onBellIconClick) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -20,13 +23,10 @@ Widget ScreenHome(BuildContext context, double walletAmount) {
             TextBoldBlack("Carrier \nSelection"),
             GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .push(MyCustomRoute((BuildContext context) {
-                  return ScreenNotifications();
-                }, RouteSettings(), ScreenNotifications()));
+                onBellIconClick();
               },
               child: Badge.count(
-                count: 2,
+                count: list.length,
                 child: SvgPicture.asset(
                   "assets/svgs/vector_bell.svg",
                   semanticsLabel: "Settings",
@@ -53,7 +53,7 @@ Widget ScreenHome(BuildContext context, double walletAmount) {
                 walletAmount: walletAmount,
               );
             },
-                RouteSettings(),
+                const RouteSettings(),
                 ScreenChargeAlfa(
                   walletAmount: walletAmount,
                 )));

@@ -1,14 +1,14 @@
-import 'dart:ffi';
-
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/item_notification.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/helpers/helper_logging.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_notification.dart';
 import 'package:flutter/material.dart';
 
 class ScreenNotifications extends StatefulWidget {
+  ScreenNotifications();
+
   @override
   _ScreenNotifications createState() => _ScreenNotifications();
 }
@@ -16,7 +16,8 @@ class ScreenNotifications extends StatefulWidget {
 class _ScreenNotifications extends State<ScreenNotifications>
     with SingleTickerProviderStateMixin {
   int _index = 0;
-  late List<ModelNotification> _list;
+  List<ModelNotification> _list = [];
+  List<ModelNotification> initiaList = [];
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 200),
@@ -30,7 +31,27 @@ class _ScreenNotifications extends State<ScreenNotifications>
   void initState() {
     super.initState();
 
-    fetchRecentNotifications();
+    Future.delayed(const Duration(seconds: 1), () {
+      fetchAllNotifications().then((value) {
+        Navigator.of(context).pop();
+
+        getNewNotifications();
+      });
+    });
+  }
+
+  void showProgressDialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0,
+            title: TextBoldBlack(msg),
+            content: const CircularProgressIndicator(
+              color: Color(0xff243141),
+            ),
+          );
+        });
   }
 
   @override
@@ -38,8 +59,11 @@ class _ScreenNotifications extends State<ScreenNotifications>
     return Scaffold(
       floatingActionButton: FadeTransition(
         opacity: _fadeAnimation,
-        child: Button("Clear All", () {
+        child: Button("Clear All", () async {
           if (_index == 0) {
+            if (_list.isNotEmpty) {
+              await clearAllNewNotifications();
+            }
           } else {
             // don't do anything
           }
@@ -49,7 +73,8 @@ class _ScreenNotifications extends State<ScreenNotifications>
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(
+                context, _list.where((element) => !element.cleared).toList());
           },
           child: Image.asset("assets/images/image_back.png"),
         ),
@@ -67,7 +92,8 @@ class _ScreenNotifications extends State<ScreenNotifications>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextBoldBlack("Notifications"),
-                TextGrey("You have ${_list.length} new notifications"),
+                TextGrey(
+                    "You have ${_index == 0 ? _list.length : 0} new notifications"),
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: Align(
@@ -80,22 +106,43 @@ class _ScreenNotifications extends State<ScreenNotifications>
                           _index = index;
                         });
                         if (index == 0) {
-                          fetchRecentNotifications();
+                          getNewNotifications();
                           _controller.reverse();
                         } else {
-                          fetchClearedNotifications();
+                          getClearedNotifications();
                           _controller.forward();
                         }
                       },
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: listOfNotifications(),
+                Visibility(
+                  visible: _list.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Column(
+                      children: listOfNotifications(),
+                    ),
                   ),
-                )
+                ),
+                Visibility(
+                    visible: _list.isEmpty,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            TextGrey("No Notifications Found"),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Image.asset(
+                                  "assets/images/image_chatbot_noresults.png"),
+                            )
+                          ],
+                        ),
+                      ),
+                    ))
               ],
             ),
           )
@@ -110,34 +157,71 @@ class _ScreenNotifications extends State<ScreenNotifications>
       list.add(Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ItemNotification(context, element,
-            _index == 0 ? Color(0xffFF6F77) : Color(0xff243141)),
+            _index == 0 ? const Color(0xffFF6F77) : const Color(0xff243141)),
       ));
     }
 
     return list;
   }
 
-  void fetchRecentNotifications() {
-    _list = [
-      ModelNotification(
-          id: 0, message: "Subscription is now at 5\$", date: "Just Now"),
-      ModelNotification(
-          id: 1, message: "Subscription is now at 5\$", date: "5 Hours"),
-      ModelNotification(
-          id: 2, message: "100\$ Successfully deposit", date: "Yesterday")
-    ];
+  Future<void> fetchAllNotifications() async {
+    showProgressDialog("Fetching...");
+    Map<String, dynamic> map =
+        await HelperFirebaseFirestore.fetchNotifications();
+
+    map.forEach((key, value) {
+      initiaList.add(ModelNotification(
+          message: value["msg"], date: key, cleared: value["cleared"]));
+    });
+
+    setState(() {
+      _list = initiaList;
+    });
   }
 
-  void fetchClearedNotifications() {
-    _list = [
-      ModelNotification(
-          id: 0, message: "Subscription is now at 5\$", date: "Just Now"),
-      ModelNotification(
-          id: 1,
-          message: "App is disabled, pay to re-enable",
-          date: "10 Hours"),
-      ModelNotification(
-          id: 2, message: "100\$ Successfully deposit", date: "Yesterday")
-    ];
+  Future<void> getNewNotifications() async {
+    setState(() {
+      _list = initiaList.where((element) => !element.cleared).toList();
+    });
+
+    _list.sort((a, b) {
+      // sorting the list from the newest to the oldest
+      DateTime dateTime1 = DateTime.parse(a.date);
+      DateTime dateTime2 = DateTime.parse(b.date);
+      return dateTime2.compareTo(dateTime1);
+    });
+  }
+
+  Future<void> getClearedNotifications() async {
+    setState(() {
+      _list = initiaList.where((element) => element.cleared).toList();
+    });
+
+    _list.sort((a, b) {
+      // sorting the list from the newest to the oldest
+      DateTime dateTime1 = DateTime.parse(a.date);
+      DateTime dateTime2 = DateTime.parse(b.date);
+      return dateTime2.compareTo(dateTime1);
+    });
+  }
+
+  Future<void> clearAllNewNotifications() async {
+    showProgressDialog("Clearing Notifications...");
+    Map<String, dynamic> map = {};
+    for (var element in _list) {
+      map[element.date] = {"cleared": true, "msg": element.message};
+    }
+
+    setState(() {
+      _list.clear();
+    });
+
+    for (var element in initiaList) {
+      if (!element.cleared) element.cleared = true;
+    }
+
+    await HelperFirebaseFirestore.setNotificationsAsCleared(map);
+
+    Navigator.pop(context);
   }
 }

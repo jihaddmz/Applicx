@@ -1,5 +1,4 @@
 import 'package:applicx/components/button.dart';
-import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/textfield_border.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';

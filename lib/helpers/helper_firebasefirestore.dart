@@ -16,4 +16,25 @@ class HelperFirebaseFirestore {
 
     return appVersion;
   }
+
+  static Future<Map<String, dynamic>> fetchNotifications() async {
+    Map<String, dynamic> list = {};
+    await firebaseFirestore
+        .collection("notifications")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      list = value.get("map");
+    });
+
+    return list;
+  }
+
+  static Future<void> setNotificationsAsCleared(
+      Map<String, dynamic> map) async {
+    await firebaseFirestore
+        .collection("notifications")
+        .doc(await HelperSharedPreferences.getUsername())
+        .set({"map": map}, SetOptions(merge: true));
+  }
 }
