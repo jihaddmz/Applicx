@@ -37,4 +37,26 @@ class HelperFirebaseFirestore {
         .doc(await HelperSharedPreferences.getUsername())
         .set({"map": map}, SetOptions(merge: true));
   }
+
+  static Future<String> fetchExpDate() async {
+    String result = "";
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      result = value.get("expDate");
+    });
+
+    return result;
+  }
+
+  static Future<void> setExpDate(String value) async {
+    Map<String, String> map = Map();
+    map["expDate"] = value;
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .set(map, SetOptions(merge: true));
+  }
 }

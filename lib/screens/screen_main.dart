@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
@@ -25,6 +27,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   String _iconReports = "assets/svgs/vector_reports.svg";
   String _iconSettings = "assets/svgs/vector_settings.svg";
   int _historyReportsNumber = 0;
+  bool _toRenew =
+      false; // variable indicating if user has to renew his/her subscription
   List<ModelNotification> _listOfNotifications = [];
   bool fetchedNotifications = false;
   late final AnimationController _controller = AnimationController(
@@ -45,11 +49,12 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 4), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       if (!await isAppVersionLatest()) {
-        // ignore: use_build_context_synchronously
+        // if the app is not update to the latest latest, tell the user to update
         showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
                 elevation: 0,
@@ -58,6 +63,9 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                     textAlign: TextAlign.center),
               );
             });
+      } else {
+        // if the app is updated to the latest release, ensure that the expiration date is not crossed
+        await isAppExpired();
       }
     });
 
@@ -66,6 +74,49 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       await Future.delayed(const Duration(seconds: 60), () {});
       return true;
     });
+  }
+
+  Future<void> isAppExpired() async {
+    await HelperFirebaseFirestore.fetchExpDate().then((value) async {
+      await HelperSharedPreferences.setExpDate(value);
+    });
+
+    String expDate = await HelperSharedPreferences.getExpDate();
+    DateTime dateTime = DateTime.parse(expDate);
+    if (DateTime.now().isAfter(dateTime)) {
+      // if the exDate is crossed, tell the user to renew his subscription
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              elevation: 0,
+              title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+              content: TextGrey(
+                  "Please renew your subscription to continue using the app.",
+                  textAlign: TextAlign.center),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                ButtonSmall("OK", () async {
+                  Navigator.pop(context);
+                  setState(() {
+                    _toRenew = true;
+                    _selectedIndex = 2;
+                    _iconHome = "assets/svgs/vector_home.svg";
+                    _iconSettings = "assets/svgs/vector_settings_black.svg";
+                    _offsetAnimation = Tween<Offset>(
+                            begin: const Offset(-15, 0), end: Offset.zero)
+                        .animate(CurvedAnimation(
+                            parent: _controller, curve: Curves.decelerate));
+                  });
+
+                  _controller.reset();
+                  _controller.forward();
+                })
+              ],
+            );
+          });
+    }
   }
 
   Future<void> fetchNotifications() async {
@@ -364,6 +415,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                       opacity: _controllerFade,
                       child: ScreenSettings(
                         walletAmount: _walletAmount,
+                        toRenew: _toRenew,
                       ))),
             ],
           )),
