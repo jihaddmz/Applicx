@@ -25,7 +25,7 @@ class HelperFirebaseFirestore {
         .get()
         .then((value) {
       list = value.get("map");
-    });
+    }).onError((error, stackTrace) {});
 
     return list;
   }
