@@ -25,6 +25,7 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
   void initState() {
     super.initState();
     _controllerUsername.text = widget.username;
+
     HelperSharedPreferences.getAddress().then((value) {
       _controllerAddress.text = value;
     });
@@ -41,7 +42,7 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
       floatingActionButton: FractionallySizedBox(
         widthFactor: 0.6,
         child: Visibility(
-          visible: MediaQuery.of(context).viewInsets.bottom == 0,
+          visible: false,
           child: Button(_editingEnabled ? "Save" : "Edit", () async {
             if (_editingEnabled) {
               await HelperSharedPreferences.setAddress(_controllerAddress.text);
@@ -85,7 +86,7 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
                     TextBoldBlack("Profile"),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
-                      child: TextGrey("Check and update your \nprofile "),
+                      child: TextGrey("Check your profile "),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30),

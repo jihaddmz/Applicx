@@ -14,6 +14,7 @@ import 'package:applicx/screens/screen_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScreenMain extends StatefulWidget {
   @override
@@ -27,6 +28,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   String _iconReports = "assets/svgs/vector_reports.svg";
   String _iconSettings = "assets/svgs/vector_settings.svg";
   int _historyReportsNumber = 0;
+  bool _isDialogDisabledShown = false;
   bool _toRenew =
       false; // variable indicating if user has to renew his/her subscription
   List<ModelNotification> _listOfNotifications = [];
@@ -55,9 +57,51 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       return true;
     });
 
-    Future.delayed(const Duration(seconds: 1), () async {
-      if (!await isAppVersionLatest()) {
-        // if the app is not update to the latest latest, tell the user to update
+    Future.doWhile(() async {
+      await fetchUserInformation();
+      var isActive = await isUserAccountActive();
+      if (isActive) {
+        if (!await isAppVersionLatest()) {
+          // if the app is not update to the latest latest, tell the user to update
+
+          if (!_isDialogDisabledShown) {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    elevation: 0,
+                    title: TextBoldBlack("Attention!",
+                        textAlign: TextAlign.center),
+                    content: TextGrey(
+                        "Please update your app, and relaunch it.",
+                        textAlign: TextAlign.center),
+                  );
+                });
+            setState(() {
+              _isDialogDisabledShown = true;
+            });
+          }
+        } else {
+          // if the app is updated to the latest release, ensure that the expiration date is not crossed
+          await isAppExpired();
+        }
+      }
+      await Future.delayed(const Duration(seconds: 10), () {});
+      return isActive;
+    });
+
+    Future.doWhile(() async {
+      await fetchNotifications();
+      await Future.delayed(const Duration(seconds: 60), () {});
+      return true;
+    });
+  }
+
+  Future<bool> isUserAccountActive() async {
+    var result = true;
+    await HelperSharedPreferences.isActive().then((value) {
+      if (!value) {
         showDialog(
             context: context,
             barrierDismissible: false,
@@ -65,20 +109,38 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               return AlertDialog(
                 elevation: 0,
                 title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
-                content: TextGrey("Please update your app, and relaunch it.",
+                content: TextGrey(
+                    "Your account has been disabled, please contact Applicx support team.",
                     textAlign: TextAlign.center),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
+                  ButtonSmall("Contact US", () async {
+                    final Uri url =
+                        Uri.parse('https://wa.me/qr/LC33BHI4P7U3O1');
+                    if (!await launchUrl(url)) {
+                      throw Exception('Could not launch');
+                    }
+                  })
+                ],
               );
             });
+        result = false;
       } else {
-        // if the app is updated to the latest release, ensure that the expiration date is not crossed
-        await isAppExpired();
+        result = true;
       }
     });
+    return result;
+  }
 
-    Future.doWhile(() async {
-      await fetchNotifications();
-      await Future.delayed(const Duration(seconds: 60), () {});
-      return true;
+  Future<void> fetchUserInformation() async {
+    await HelperFirebaseFirestore.fetchUserInformation().then((value) async {
+      await HelperSharedPreferences.setAddress(value.get("address"));
+      await HelperSharedPreferences.setPhoneNumber(value.get("phoneNumber"));
+      await HelperSharedPreferences.setIsActive(value.get("isActive"));
+      await HelperSharedPreferences.setNbreOfDevicesSignedIn(
+          value.get("nbreOfDevicesSignedIn"));
+      await HelperSharedPreferences.setSubscriptionFees(
+          double.parse(value.get("subscriptionFees")));
     });
   }
 
@@ -103,37 +165,43 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
     DateTime dateTime = DateTime.parse(expDate);
     if (DateTime.now().isAfter(dateTime)) {
       // if the exDate is crossed, tell the user to renew his subscription
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              elevation: 0,
-              title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
-              content: TextGrey(
-                  "Please renew your subscription to continue using the app.",
-                  textAlign: TextAlign.center),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                ButtonSmall("OK", () async {
-                  Navigator.pop(context);
-                  setState(() {
-                    _toRenew = true;
-                    _selectedIndex = 2;
-                    _iconHome = "assets/svgs/vector_home.svg";
-                    _iconSettings = "assets/svgs/vector_settings_black.svg";
-                    _offsetAnimation = Tween<Offset>(
-                            begin: const Offset(-15, 0), end: Offset.zero)
-                        .animate(CurvedAnimation(
-                            parent: _controller, curve: Curves.decelerate));
-                  });
+      if (!_isDialogDisabledShown) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                elevation: 0,
+                title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+                content: TextGrey(
+                    "Please renew your subscription to continue using the app.",
+                    textAlign: TextAlign.center),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
+                  ButtonSmall("OK", () async {
+                    Navigator.pop(context);
+                    setState(() {
+                      _toRenew = true;
+                      _selectedIndex = 2;
+                      _iconHome = "assets/svgs/vector_home.svg";
+                      _iconSettings = "assets/svgs/vector_settings_black.svg";
+                      _offsetAnimation = Tween<Offset>(
+                              begin: const Offset(-15, 0), end: Offset.zero)
+                          .animate(CurvedAnimation(
+                              parent: _controller, curve: Curves.decelerate));
+                    });
 
-                  _controller.reset();
-                  _controller.forward();
-                })
-              ],
-            );
-          });
+                    _controller.reset();
+                    _controller.forward();
+                  })
+                ],
+              );
+            });
+
+        setState(() {
+          _isDialogDisabledShown = true;
+        });
+      }
     }
   }
 
@@ -317,6 +385,9 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
         selectedItemColor: const Color(0xff243141),
         onTap: (index) {
           if (index == 0) {
+            if (_toRenew) {
+              return;
+            }
             if (_selectedIndex == 1) {
               _offsetAnimation =
                   Tween<Offset>(begin: const Offset(7, 0), end: Offset.zero)
@@ -332,6 +403,9 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
             _iconReports = "assets/svgs/vector_reports.svg";
             _iconSettings = "assets/svgs/vector_settings.svg";
           } else if (index == 1) {
+            if (_toRenew) {
+              return;
+            }
             if (_selectedIndex == 0) {
               _offsetAnimation =
                   Tween<Offset>(begin: const Offset(-7, 0), end: Offset.zero)

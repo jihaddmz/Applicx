@@ -2,6 +2,7 @@ import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/item_notification.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_notification.dart';
 import 'package:flutter/material.dart';
@@ -38,20 +39,6 @@ class _ScreenNotifications extends State<ScreenNotifications>
         getNewNotifications();
       });
     });
-  }
-
-  void showProgressDialog(String msg) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            elevation: 0,
-            title: TextBoldBlack(msg),
-            content: const CircularProgressIndicator(
-              color: Color(0xff243141),
-            ),
-          );
-        });
   }
 
   @override
@@ -165,7 +152,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
   }
 
   Future<void> fetchAllNotifications() async {
-    showProgressDialog("Fetching...");
+    HelperDialog.showLoadingDialog(context, "Fetching...");
     Map<String, dynamic> map =
         await HelperFirebaseFirestore.fetchNotifications();
 
@@ -206,7 +193,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
   }
 
   Future<void> clearAllNewNotifications() async {
-    showProgressDialog("Clearing Notifications...");
+    HelperDialog.showLoadingDialog(context, "Clearing Notifications...");
     Map<String, dynamic> map = {};
     for (var element in _list) {
       map[element.date] = {"cleared": true, "msg": element.message};

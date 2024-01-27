@@ -1,6 +1,5 @@
 import 'package:applicx/components/text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class MyDropDown extends StatefulWidget {
   MyDropDown(

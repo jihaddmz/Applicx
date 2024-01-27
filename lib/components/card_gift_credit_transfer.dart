@@ -1,5 +1,3 @@
-import 'package:applicx/components/drop_down.dart';
-import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';

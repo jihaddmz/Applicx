@@ -20,4 +20,37 @@ class HelperDialog {
           );
         });
   }
+
+  static void showLoadingDialog(BuildContext context, String msg) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0,
+            title: TextBoldBlack(msg),
+            content: const CircularProgressIndicator(
+              color: Color(0xff243141),
+            ),
+          );
+        });
+  }
+
+  static void showDialogNotConnectedToInternet(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0,
+            title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+            content: TextGrey(
+                "You don't have network access, pls connect and try again!", textAlign: TextAlign.center),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              ButtonSmall("Ok", () {
+                Navigator.pop(context);
+              })
+            ],
+          );
+        });
+  }
 }

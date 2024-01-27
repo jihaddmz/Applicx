@@ -134,6 +134,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "flutter_phoenix",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_phoenix-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "flutter_slidable",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.1",
       "packageUri": "lib/",
@@ -440,6 +446,54 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher-6.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_ios-6.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_macos-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_web-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "vector_graphics",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9+1",
       "packageUri": "lib/",
@@ -500,7 +554,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-01-13T17:33:20.962813Z",
+  "generated": "2024-01-27T14:15:34.003526Z",
   "generator": "pub",
   "generatorVersion": "3.1.3"
 }

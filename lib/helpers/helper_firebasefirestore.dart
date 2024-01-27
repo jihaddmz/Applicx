@@ -83,4 +83,47 @@ class HelperFirebaseFirestore {
         .doc(await HelperSharedPreferences.getUsername())
         .set(map, SetOptions(merge: true));
   }
+
+  static Future<DocumentSnapshot<Map<String, dynamic>>>
+      fetchUserInformation() async {
+    DocumentSnapshot<Map<String, dynamic>>? result;
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      result = value;
+    });
+
+    return result!;
+  }
+
+  static Future<int> fetchNumberOfDevicesSignedIn(String userName) async {
+    int nbOfDevices = 0;
+    await firebaseFirestore
+        .collection("users")
+        .doc(userName)
+        .get()
+        .then((value) {
+      nbOfDevices = value.get("nbreOfDevicesSignedIn");
+    }).onError((error, stackTrace) {
+      nbOfDevices = -1;
+    });
+
+    return nbOfDevices;
+  }
+
+  static Future<void> updateNumberOfDevicesSignedIn(
+      String username, int number) async {
+    Map<String, dynamic> map = {};
+
+    map["nbreOfDevicesSignedIn"] = number;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(username)
+        .set(map, SetOptions(merge: true))
+        .onError((error, stackTrace) => null)
+        .then((value) => null);
+  }
 }

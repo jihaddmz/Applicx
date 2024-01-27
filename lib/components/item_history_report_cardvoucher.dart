@@ -3,7 +3,6 @@ import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
 import 'package:applicx/components/oval_letter.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

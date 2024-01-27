@@ -1,8 +1,4 @@
-import 'package:applicx/components/card_text_next.dart';
-import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
-import 'package:applicx/helpers/helper_sharedpreferences.dart';
-import 'package:applicx/screens/screen_main.dart';
 import 'package:flutter/material.dart';
 
 Widget ScreenIntro4(BuildContext context, Function onBackClick) {

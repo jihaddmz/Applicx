@@ -6,6 +6,7 @@ import 'package:applicx/screens/screen_main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late String username;
@@ -18,7 +19,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   HelperFirebaseFirestore.firebaseFirestore = FirebaseFirestore.instance;
-  runApp(const MyApp());
+  runApp(Phoenix(child: const MyApp()) );
 }
 
 class MyApp extends StatelessWidget {

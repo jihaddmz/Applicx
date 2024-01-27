@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget CardTextNext(String hintText, TextEditingController controller,
-    Function()? onNextClick, BuildContext context) {
+Widget CardTextNext(
+    String hintText,
+    TextEditingController controller,
+    Function()? onNextClick,
+    Function(String) onTextChange,
+    BuildContext context,
+    String iconPath) {
   return SizedBox(
     height: 80,
     child: Card(
@@ -16,6 +21,12 @@ Widget CardTextNext(String hintText, TextEditingController controller,
           TextField(
             cursorColor: const Color(0xff243141),
             controller: controller,
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            onChanged: (value) {
+              onTextChange(value);
+            },
             style: const TextStyle(),
             decoration: InputDecoration(
                 hintText: hintText,
@@ -29,7 +40,7 @@ Widget CardTextNext(String hintText, TextEditingController controller,
               child: GestureDetector(
                 onTap: onNextClick,
                 child: SvgPicture.asset(
-                  "assets/svgs/vector_circleforward.svg",
+                  iconPath,
                   semanticsLabel: 'Next',
                   height: 85,
                 ),

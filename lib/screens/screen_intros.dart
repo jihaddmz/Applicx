@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_text_next.dart';
 import 'package:applicx/components/custom_route.dart';
+import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/screens/screen_intro1.dart';
 import 'package:applicx/screens/screen_intro2.dart';
@@ -7,7 +13,6 @@ import 'package:applicx/screens/screen_intro3.dart';
 import 'package:applicx/screens/screen_intro4.dart';
 import 'package:applicx/screens/screen_main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 /*
@@ -31,6 +36,7 @@ class _ScreenIntros extends State<ScreenIntros>
       value: 1.0,
       duration: const Duration(milliseconds: 500));
   TextEditingController controller = TextEditingController();
+  String _iconPath = "assets/svgs/vector_circleforward_disabled.svg";
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +95,81 @@ class _ScreenIntros extends State<ScreenIntros>
                     CardTextNext("Enter your username", controller, () async {
                   if (controller.text.isNotEmpty) {
                     // if user has entered a username
-                    await HelperSharedPreferences.setUsername(controller.text);
-                    Navigator.of(context)
-                        .push(MyCustomRoute((BuildContext context) {
-                      return ScreenMain();
-                    }, RouteSettings(), ScreenMain()));
+
+                    HelperDialog.showLoadingDialog(context, "Signing In...");
+
+                    int nbreOfDevicesSignedIn = await HelperFirebaseFirestore
+                        .fetchNumberOfDevicesSignedIn(controller.text);
+
+                    if (nbreOfDevicesSignedIn == -1) {
+                      Navigator.pop(context);
+
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              elevation: 0,
+                              title: TextBoldBlack("Attention!",
+                                  textAlign: TextAlign.center),
+                              content: TextGrey("Incorrect Username!",
+                                  textAlign: TextAlign.center),
+                              actionsAlignment: MainAxisAlignment.center,
+                              actions: [
+                                ButtonSmall("OK", () {
+                                  Navigator.pop(context);
+                                })
+                              ],
+                            );
+                          });
+                    } else if (nbreOfDevicesSignedIn > 0) {
+                      await HelperFirebaseFirestore
+                          .updateNumberOfDevicesSignedIn(
+                              controller.text, nbreOfDevicesSignedIn - 1);
+
+                      await HelperSharedPreferences.setUsername(
+                          controller.text);
+
+                      Navigator.pop(context);
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MyCustomRoute((context) => ScreenMain(),
+                              const RouteSettings(), ScreenMain()),
+                          (route) => false);
+                    } else {
+                      Navigator.pop(context);
+
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              elevation: 0,
+                              title: TextBoldBlack("Attention!",
+                                  textAlign: TextAlign.center),
+                              content: TextGrey(
+                                  "You have reached the max number of devices allowed.",
+                                  textAlign: TextAlign.center),
+                              actionsAlignment: MainAxisAlignment.center,
+                              actions: [
+                                ButtonSmall("OK", () {
+                                  Navigator.pop(context);
+                                })
+                              ],
+                            );
+                          });
+                    }
                   } else {}
-                }, context),
+                }, (value) {
+                  setState(() {
+                    if (value.isNotEmpty) {
+                      _iconPath = "assets/svgs/vector_circleforward.svg";
+                    } else {
+                      _iconPath =
+                          "assets/svgs/vector_circleforward_disabled.svg";
+                    }
+                  });
+                }, context, _iconPath),
               ))
         ],
       ),
