@@ -3,6 +3,7 @@ import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/item_buy_credit.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_buy_credit.dart';
@@ -30,6 +31,14 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   void initState() {
     super.initState();
     _walletAmount = widget.walletAmount;
+
+    HelperFirebaseFirestore.listenForWalletAmountChanges((p0) {
+      if (!mounted) return;
+      setState(() {
+        _walletAmount = p0;
+      });
+    });
+
     listOfCreditsToBuy = [
       ModelBuyCredit(credits: 1, cost: 1.3, fees: 0.16),
       ModelBuyCredit(credits: 2, cost: 2.3, fees: 0.16),
@@ -39,7 +48,6 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -335,6 +343,10 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                             setState(() {
                               _walletAmount -= modelBuyCredit.cost;
                             });
+
+                            await HelperFirebaseFirestore.setWalletAmount(
+                                _walletAmount);
+
                             await HelperSharedPreferences.setWalletAmount(
                                 _walletAmount);
                             Navigator.pop(context);

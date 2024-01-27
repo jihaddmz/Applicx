@@ -126,4 +126,15 @@ class HelperFirebaseFirestore {
         .onError((error, stackTrace) => null)
         .then((value) => null);
   }
+
+  static Future<void> listenForWalletAmountChanges(
+      Function(double) onWalletAmountChange) async {
+    firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .snapshots()
+        .listen((event) {
+      onWalletAmountChange(double.parse(event.get("walletAmount")));
+    });
+  }
 }

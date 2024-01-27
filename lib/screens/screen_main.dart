@@ -457,9 +457,9 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                   visible: _selectedIndex == 0,
                   child: FadeTransition(
                       opacity: _controllerFade,
-                      child: ScreenHome(
-                          context, _walletAmount, _listOfNotifications,
-                          () async {
+                      child: ScreenHome(walletAmount:
+                          _walletAmount, list: _listOfNotifications,
+                           onBellIconClick: () async {
                         if (await HelperUtils.isConnected()) {
                           final result = await Navigator.of(context).push(
                             MyCustomRoute((BuildContext context) {
