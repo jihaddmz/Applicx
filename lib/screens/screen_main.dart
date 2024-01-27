@@ -49,6 +49,12 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    Future.doWhile(() async {
+      await fetchWalletAmount();
+      await Future.delayed(const Duration(seconds: 5), () {});
+      return true;
+    });
+
     Future.delayed(const Duration(seconds: 1), () async {
       if (!await isAppVersionLatest()) {
         // if the app is not update to the latest latest, tell the user to update
@@ -73,6 +79,18 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       await fetchNotifications();
       await Future.delayed(const Duration(seconds: 60), () {});
       return true;
+    });
+  }
+
+  Future<void> fetchWalletAmount() async {
+    await HelperFirebaseFirestore.fetchWalletAmount().then((value) async {
+      await HelperSharedPreferences.setWalletAmount(value);
+    });
+
+    HelperSharedPreferences.getWalletAmount().then((value) {
+      setState(() {
+        _walletAmount = value;
+      });
     });
   }
 

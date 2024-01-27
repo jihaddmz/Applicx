@@ -1,3 +1,4 @@
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -54,6 +55,29 @@ class HelperFirebaseFirestore {
   static Future<void> setExpDate(String value) async {
     Map<String, String> map = Map();
     map["expDate"] = value;
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .set(map, SetOptions(merge: true));
+  }
+
+  static Future<double> fetchWalletAmount() async {
+    String result = "";
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      result = value.get("walletAmount");
+    });
+
+    return double.parse(result);
+  }
+
+  static Future<void> setWalletAmount(double value) async {
+    Map<String, String> map = Map();
+    HelperLogging.logD("wallet2 $value");
+    map["walletAmount"] = "$value";
     await firebaseFirestore
         .collection("users")
         .doc(await HelperSharedPreferences.getUsername())

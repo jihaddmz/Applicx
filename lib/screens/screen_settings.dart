@@ -5,8 +5,8 @@ import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/drop_down.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/screens/screen_intros.dart';
 import 'package:applicx/screens/screen_settings_deposit.dart';
 import 'package:applicx/screens/screen_settings_editprofile.dart';
@@ -34,6 +34,8 @@ class _ScreenSettings extends State<ScreenSettings> {
   @override
   void initState() {
     super.initState();
+
+    _isSubscriptionActive = !widget.toRenew;
 
     HelperSharedPreferences.getExpDate().then((value) {
       setState(() {
@@ -241,7 +243,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       null,
                                       "assets/svgs/vector_tap.svg",
                                       const Color(0xffFDD848),
-                                      ButtonSmall("Renew", () {
+                                      ButtonSmall("Renew", () async {
                                         renewSubscription();
                                       }, color: const Color(0xffF2F2F2))),
                                 ),
@@ -359,110 +361,128 @@ class _ScreenSettings extends State<ScreenSettings> {
     );
   }
 
-  void renewSubscription() {
-    {
-      if (_walletAmount >= 20) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                elevation: 0,
-                title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
-                content: TextGrey(
-                    "Are you sure you want to renew your subscription for 20\$?",
-                    textAlign: TextAlign.center),
-                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                actions: [
-                  ButtonSmall("No", () {
-                    Navigator.pop(context);
+  Future<void> renewSubscription() async {
+    if (_walletAmount >= 20) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              elevation: 0,
+              title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+              content: TextGrey(
+                  "Are you sure you want to renew your subscription for 20\$?",
+                  textAlign: TextAlign.center),
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                ButtonSmall("No", () {
+                  Navigator.pop(context);
 
-                    if (widget.toRenew) {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              elevation: 0,
-                              title: TextBoldBlack("Attention!",
-                                  textAlign: TextAlign.center),
-                              content: TextGrey(
-                                  "Please renew your subscription to continue using the app.",
-                                  textAlign: TextAlign.center),
-                              actionsAlignment: MainAxisAlignment.center,
-                              actions: [
-                                ButtonSmall("OK", () async {
-                                  Navigator.pop(context);
-                                  renewSubscription();
-                                })
-                              ],
-                            );
-                          });
-                    }
-                  }),
-                  ButtonSmall("Yes", () async {
-                    // setState(() {
-                    //   _walletAmount -= 20;
-                    // });
-                    String newExpDate = DateTime.parse(_expDate)
-                        .add(const Duration(days: 33))
-                        .toString();
-                    setState(() {
-                      _expDate = newExpDate;
-                    });
-                    await HelperFirebaseFirestore.setExpDate(newExpDate);
-                    await HelperSharedPreferences.setExpDate(newExpDate);
-                    // await HelperSharedPreferences.setWalletAmount(
-                    //     _walletAmount);
+                  if (widget.toRenew) {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            elevation: 0,
+                            title: TextBoldBlack("Attention!",
+                                textAlign: TextAlign.center),
+                            content: TextGrey(
+                                "Please renew your subscription to continue using the app.",
+                                textAlign: TextAlign.center),
+                            actionsAlignment: MainAxisAlignment.center,
+                            actions: [
+                              ButtonSmall("OK", () async {
+                                Navigator.pop(context);
+                                renewSubscription();
+                              })
+                            ],
+                          );
+                        });
+                  }
+                }),
+                ButtonSmall("Yes", () async {
+                  if (!await HelperUtils.isConnected()) {
                     Navigator.pop(context);
-
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             elevation: 0,
-                            title: TextBoldBlack("Successfully Renewed!!",
+                            title: TextBoldBlack("Attention!",
                                 textAlign: TextAlign.center),
                             content: TextGrey(
-                                "You have successfully renewed your subscription. Continue using the app.",
-                                textAlign: TextAlign.center),
+                                "You don't have network access, pls connect and try again!"),
                             actionsAlignment: MainAxisAlignment.center,
                             actions: [
-                              ButtonSmall("Done", () {
+                              ButtonSmall("Ok", () {
                                 Navigator.pop(context);
                               })
                             ],
                           );
                         });
-                  }, color: const Color(0xffAAD59E))
-                ],
-              );
-            });
+                    return;
+                  }
+                  double newWallet = _walletAmount - 20;
+                  String newExpDate = DateTime.parse(_expDate)
+                      .add(const Duration(days: 33))
+                      .toString();
+                  setState(() {
+                    _walletAmount = newWallet;
+                    _expDate = newExpDate;
+                  });
+                  await HelperFirebaseFirestore.setExpDate(newExpDate);
+                  await HelperSharedPreferences.setExpDate(newExpDate);
+                  await HelperFirebaseFirestore.setWalletAmount(newWallet);
+                  await HelperSharedPreferences.setWalletAmount(newWallet);
+                  Navigator.pop(context);
 
-        // if (widget.toRenew) {
-        //   // if the user has come to here to renew their subscription
-        //   // when a dialog appeared in the screen main. So the user will be redirected to the
-        //   // screen main, and passing an argument of true to tell the system user has renewed
-        //   Navigator.pop(context, true);
-        // }
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                elevation: 0,
-                title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
-                content: TextGrey(
-                    "You don't have enough money in your wallet! Please charge your wallet.",
-                    textAlign: TextAlign.center),
-                actionsAlignment: MainAxisAlignment.center,
-                actions: [
-                  ButtonSmall("OK", () {
-                    Navigator.pop(context);
-                  })
-                ],
-              );
-            });
-      }
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          elevation: 0,
+                          title: TextBoldBlack("Successfully Renewed!!",
+                              textAlign: TextAlign.center),
+                          content: TextGrey(
+                              "You have successfully renewed your subscription. Continue using the app.",
+                              textAlign: TextAlign.center),
+                          actionsAlignment: MainAxisAlignment.center,
+                          actions: [
+                            ButtonSmall("Done", () {
+                              Navigator.pop(context);
+                            })
+                          ],
+                        );
+                      });
+                }, color: const Color(0xffAAD59E))
+              ],
+            );
+          });
+
+      // if (widget.toRenew) {
+      //   // if the user has come to here to renew their subscription
+      //   // when a dialog appeared in the screen main. So the user will be redirected to the
+      //   // screen main, and passing an argument of true to tell the system user has renewed
+      //   Navigator.pop(context, true);
+      // }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              elevation: 0,
+              title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
+              content: TextGrey(
+                  "You don't have enough money in your wallet! Please charge your wallet.",
+                  textAlign: TextAlign.center),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                ButtonSmall("OK", () {
+                  Navigator.pop(context);
+                })
+              ],
+            );
+          });
     }
   }
 

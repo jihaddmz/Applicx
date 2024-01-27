@@ -36,7 +36,7 @@ class HelperSharedPreferences {
   }
 
   static Future<double> getWalletAmount() async {
-    return instance.getDouble("walletAmount") ?? 20;
+    return instance.getDouble("walletAmount") ?? 0;
   }
 
   static Future<void> setWalletAmount(double value) async {
