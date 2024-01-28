@@ -1,5 +1,6 @@
 import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HelperFirebaseFirestore {
@@ -136,5 +137,32 @@ class HelperFirebaseFirestore {
         .listen((event) {
       onWalletAmountChange(double.parse(event.get("walletAmount")));
     });
+  }
+
+  static Future<void> fetchAlfaCardVouchers(
+      Function(QuerySnapshot<Map<String, dynamic>>) onChange) async {
+    firebaseFirestore
+        .collection("services")
+        .doc("cardVouchers")
+        .collection("alfa")
+        .snapshots()
+        .listen((event) {
+      onChange(event);
+    });
+  }
+  static Future<ModelCartVoucher> removeCardVoucher(
+      ModelCartVoucher modelCartVoucher) async {
+    Map<String, dynamic> map = Map.from(modelCartVoucher.map);
+
+    map.remove(map.keys.elementAt(0));
+
+    await firebaseFirestore
+        .collection("services")
+        .doc("cardVouchers")
+        .collection(modelCartVoucher.isAlfa ? "alfa" : "touch")
+        .doc(modelCartVoucher.id)
+        .set({"cost" : modelCartVoucher.cost.toString(), "list": map}, SetOptions(merge: false));
+
+    return modelCartVoucher;
   }
 }

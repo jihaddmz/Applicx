@@ -1,11 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/item_buy_credit.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_buy_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
@@ -339,17 +343,22 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                         ButtonSmall(
                             "Pay ${modelBuyCredit.cost + modelBuyCredit.fees}\$",
                             () async {
-                          if (_walletAmount >= modelBuyCredit.cost) {
-                            setState(() {
-                              _walletAmount -= modelBuyCredit.cost;
-                            });
+                          if (await HelperUtils.isConnected()) {
+                            if (_walletAmount >= modelBuyCredit.cost) {
+                              setState(() {
+                                _walletAmount -= modelBuyCredit.cost;
+                              });
 
-                            await HelperFirebaseFirestore.setWalletAmount(
-                                _walletAmount);
+                              await HelperFirebaseFirestore.setWalletAmount(
+                                  _walletAmount);
 
-                            await HelperSharedPreferences.setWalletAmount(
-                                _walletAmount);
-                            Navigator.pop(context);
+                              await HelperSharedPreferences.setWalletAmount(
+                                  _walletAmount);
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            HelperDialog.showDialogNotConnectedToInternet(
+                                context);
                           }
                         }, color: const Color(0xffAAD59E)),
                       ],

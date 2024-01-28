@@ -56,110 +56,110 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           totalFees: 0),
     ];
 
-    listOfCartVouchers = [
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 1.00,
-          availability: 0,
-          dolars: 2,
-          imagePath: "assets/images/image_cart_1.png",
-          color: const Color(0xffFDD848),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 1.67,
-          availability: 0,
-          dolars: 3,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffFFB1B6),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 3.79,
-          availability: 10,
-          dolars: 4,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffBCDBD7),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 4.50,
-          availability: 30,
-          dolars: 4,
-          imagePath: "assets/images/image_cart_4.png",
-          color: const Color(0xffCDBCDB),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 7.58,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_5.png",
-          color: const Color(0xffAAD59E),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "magic",
-          cost: 15.15,
-          availability: 60,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_6.png",
-          color: const Color(0xffAAD59E),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#")
-    ];
+    // listOfCartVouchers = [
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 1.00,
+    //       daysAvailability: 0,
+    //       dolars: 2,
+    //       imagePath: "assets/images/image_cart_1.png",
+    //       color: const Color(0xffFDD848),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 1.67,
+    //       daysAvailability: 0,
+    //       dolars: 3,
+    //       imagePath: "assets/images/image_cart_2.png",
+    //       color: const Color(0xffFFB1B6),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 3.79,
+    //       daysAvailability: 10,
+    //       dolars: 4,
+    //       imagePath: "assets/images/image_cart_2.png",
+    //       color: const Color(0xffBCDBD7),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 4.50,
+    //       daysAvailability: 30,
+    //       dolars: 4,
+    //       imagePath: "assets/images/image_cart_4.png",
+    //       color: const Color(0xffCDBCDB),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 7.58,
+    //       daysAvailability: 30,
+    //       dolars: 5,
+    //       imagePath: "assets/images/image_cart_5.png",
+    //       color: const Color(0xffAAD59E),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "magic",
+    //       cost: 15.15,
+    //       daysAvailability: 60,
+    //       dolars: 5,
+    //       imagePath: "assets/images/image_cart_6.png",
+    //       color: const Color(0xffAAD59E),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#")
+    // ];
 
-    listOfCartVouchersOthers = [
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "Start",
-          cost: 4.50,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_4.png",
-          color: const Color(0xffFDD848),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "Smart",
-          cost: 7.50,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffFFB1B6),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: false,
-          title: "Super",
-          cost: 13.50,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_6.png",
-          color: const Color(0xffBCDBD7),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#")
-    ];
+    // listOfCartVouchersOthers = [
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "Start",
+    //       cost: 4.50,
+    //       daysAvailability: 30,
+    //       dolars: 5,
+    //       imagePath: "assets/images/image_cart_4.png",
+    //       color: const Color(0xffFDD848),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "Smart",
+    //       cost: 7.50,
+    //       daysAvailability: 30,
+    //       dolars: 5,
+    //       imagePath: "assets/images/image_cart_2.png",
+    //       color: const Color(0xffFFB1B6),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#"),
+    //   ModelCartVoucher(
+    //       isAlfa: false,
+    //       title: "Super",
+    //       cost: 13.50,
+    //       daysAvailability: 30,
+    //       dolars: 5,
+    //       imagePath: "assets/images/image_cart_6.png",
+    //       color: const Color(0xffBCDBD7),
+    //       actCode: "12312312243241123123213321321312",
+    //       expDate: "2023-02-15 12:00:00 AM",
+    //       instruction: "Dial *14*ActivationCode#")
+    // ];
 
     _listOfChosenVouchers = listOfCartVouchers;
   }
@@ -179,26 +179,29 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Padding(padding: const EdgeInsets.only(left: 20), child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextBoldBlack("Services"),
-                      FractionallySizedBox(
-                        widthFactor: 0.7,
-                        child: TextGrey("Specify the service you want"),
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Positioned(
-                        right: 0,
-                        child: Image.asset("assets/images/logo_touch.png")),
-                  ),
-                ],
-              ),) ,
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextBoldBlack("Services"),
+                        FractionallySizedBox(
+                          widthFactor: 0.7,
+                          child: TextGrey("Specify the service you want"),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Positioned(
+                          right: 0,
+                          child: Image.asset("assets/images/logo_touch.png")),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: SizedBox(
@@ -225,8 +228,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                   child: GestureDetector(
                                     onTap: () async {
                                       if (await HelperPermission
-                                          .requestContactPermission(
-                                              context)) {
+                                          .requestContactPermission(context)) {
                                         final PhoneContact contact =
                                             await FlutterContactPicker
                                                 .pickPhoneContact();
@@ -358,8 +360,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                     floatingLabelAlignment:
                                         FloatingLabelAlignment.center,
                                     disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(15),
                                         borderSide: const BorderSide(
                                             color: Color(0xff009CBC),
                                             width: 5)),
@@ -391,7 +392,8 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                             }),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
                         child: Column(
                           children: listOfCartVouchersWidgets(),
                         ),
@@ -562,18 +564,18 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                                   )
                                                                 ],
                                                               ),
-                                                              TextGrey(
-                                                                  modelCartVoucher
-                                                                      .actCode),
-                                                              TextNormalBlack(
-                                                                  "Expiration Date"),
-                                                              TextGrey(
-                                                                  modelCartVoucher
-                                                                      .expDate),
-                                                              TextNormalBlack(
-                                                                  "Instruction"),
-                                                              TextGrey(
-                                                                  "Dial *14*${modelCartVoucher.actCode}#"),
+                                                              // TextGrey(
+                                                              //     modelCartVoucher
+                                                              //         .actCode),
+                                                              // TextNormalBlack(
+                                                              //     "Expiration Date"),
+                                                              // TextGrey(
+                                                              //     modelCartVoucher
+                                                              //         .expDate),
+                                                              // TextNormalBlack(
+                                                              //     "Instruction"),
+                                                              // TextGrey(
+                                                              //     "Dial *14*${modelCartVoucher.actCode}#"),
                                                               Align(
                                                                 alignment: Alignment
                                                                     .bottomRight,

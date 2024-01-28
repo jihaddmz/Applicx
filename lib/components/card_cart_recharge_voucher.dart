@@ -19,6 +19,9 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (widget.modelCartVoucher.map.isEmpty) {
+          return;
+        }
         setState(() {
           widget.modelCartVoucher.isCardClicked = true;
         });
@@ -73,51 +76,59 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
                 right: 0,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
-                  child:
-                      TextGrey("${widget.modelCartVoucher.availability} Days"),
+                  child: TextGrey(
+                      "${widget.modelCartVoucher.daysAvailability} Days"),
                 ),
               ),
               Visibility(
-                  visible: widget.modelCartVoucher.isCardClicked,
+                  visible: widget.modelCartVoucher.isCardClicked ||
+                      widget.modelCartVoucher.map.isEmpty,
                   child: SizedBox(
                     height: 150,
                     width: double.infinity,
                     child: Card(
-                      color: const Color(0xffF9F9F9),
+                      color: widget.modelCartVoucher.map.isEmpty
+                          ? const Color.fromRGBO(255, 255, 255, 0.8)
+                          : const Color(0xffF9F9F9),
                       elevation: 2,
                       child: Stack(
                         children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    widget.modelCartVoucher.isCardClicked =
-                                        false;
-                                  });
-                                },
-                                icon: const Icon(Icons.close_rounded)),
-                          ),
+                          Visibility(
+                              visible: widget.modelCartVoucher.map.isNotEmpty,
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.modelCartVoucher.isCardClicked =
+                                            false;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.close_rounded)),
+                              )),
                           Align(
                             alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Button("Buy", () {
-                                  widget.onActionPerformed(
-                                      widget.modelCartVoucher, "buy");
-                                }, color: const Color(0xffAAD59E)),
-                                Button("Direct", () {
-                                  widget.onActionPerformed(
-                                      widget.modelCartVoucher, "direct");
-                                }, color: const Color(0xffAAD59E)),
-                              ],
-                            ),
+                            child: widget.modelCartVoucher.map.isEmpty
+                                ? TextLessBoldBlack("Not Available")
+                                : Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Button("Buy", () {
+                                        widget.onActionPerformed(
+                                            widget.modelCartVoucher, "buy");
+                                      }, color: const Color(0xffAAD59E)),
+                                      Button("Direct", () {
+                                        widget.onActionPerformed(
+                                            widget.modelCartVoucher, "direct");
+                                      }, color: const Color(0xffAAD59E)),
+                                    ],
+                                  ),
                           )
                         ],
                       ),
                     ),
-                  ))
+                  )),
             ],
           ),
         ),

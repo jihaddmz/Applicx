@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:collection';
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_cart_recharge_voucher.dart';
 import 'package:applicx/components/card_gift_credit_transfer.dart';
@@ -28,15 +30,17 @@ class ScreenChargeAlfa extends StatefulWidget {
 
 class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerPhoneNumber = TextEditingController();
+  final TextEditingController _controllerPhoneNumber =
+      TextEditingController(text: "987");
   String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
-  late final List<ModelCartVoucher> listOfCartVouchers;
-  late final List<ModelCartVoucher> listOfCartVouchersWaffer;
-  late List<ModelCartVoucher> _listOfChosenVouchers;
+  final List<ModelCartVoucher> listOfCartVouchers = [];
+  late List<ModelCartVoucher> listOfCartVouchersWaffer = [];
+  List<ModelCartVoucher> _listOfChosenVouchers = [];
   double _walletAmount = 0;
+  late BuildContext mContext;
 
   @override
   void initState() {
@@ -49,6 +53,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
         _walletAmount = p0;
       });
     });
+
+    fetchAlfaCardVouchers();
 
     list = [
       ModelGift(
@@ -103,91 +109,95 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           cost: 1.34,
           color: const Color(0xffFACA9E)),
     ];
+  }
 
-    listOfCartVouchers = [
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 1.22,
-          availability: 0,
-          dolars: 2,
-          imagePath: "assets/images/image_cart_1.png",
-          color: const Color(0xffFDD848),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 3.03,
-          availability: 13,
-          dolars: 3,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffFFB1B6),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 4.50,
-          availability: 35,
-          dolars: 4,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffBCDBD7),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 7.58,
-          availability: 35,
-          dolars: 4,
-          imagePath: "assets/images/image_cart_4.png",
-          color: const Color(0xffCDBCDB),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "",
-          cost: 15.15,
-          availability: 65,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_5.png",
-          color: const Color(0xffAAD59E),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-    ];
+  Future<void> fetchAlfaCardVouchers() async {
+    HelperFirebaseFirestore.fetchAlfaCardVouchers((event) {
+      listOfCartVouchers.clear();
+      listOfCartVouchersWaffer.clear();
+      for (var element in event.docs) {
+        double credits = double.parse(element.id.toString().split("_")[2]);
+        int daysAvailability = int.parse(element.id.split("_")[1]);
+        String imagePath = credits == 1.22
+            ? "assets/images/image_cart_1.png"
+            : credits == 3.03
+                ? "assets/images/image_cart_2.png"
+                : credits == 4.50
+                    ? "assets/images/image_cart_3.png"
+                    : credits == 7.58
+                        ? "assets/images/image_cart_4.png"
+                        : credits == 13.5
+                            ? "assets/images/image_cart_2.png"
+                            : credits == 7.5
+                                ? "assets/images/image_cart_4.png"
+                                : "assets/images/image_cart_5.png";
+        Color color = credits == 1.22
+            ? Color(0xffFDD848)
+            : credits == 3.30
+                ? const Color(0xffFFB1B6)
+                : credits == 4.50
+                    ? Color(0xffBCDBD7)
+                    : credits == 7.58
+                        ? Color(0xffCDBCDB)
+                        : credits == 13.5 || credits == 7.50
+                            ? Color(0xffD9D9D9)
+                            : Color(0xffAAD59E);
+        String instruction = "Dial *14*ActivationCode#";
+        Map<String, dynamic> map = element.get("list");
 
-    listOfCartVouchersWaffer = [
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "وفّر",
-          cost: 7.50,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_4.png",
-          color: const Color(0xffD9D9D9),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#"),
-      ModelCartVoucher(
-          isAlfa: true,
-          title: "وفّر",
-          cost: 13.50,
-          availability: 30,
-          dolars: 5,
-          imagePath: "assets/images/image_cart_2.png",
-          color: const Color(0xffD9D9D9),
-          actCode: "12312312243241123123213321321312",
-          expDate: "2023-02-15 12:00:00 AM",
-          instruction: "Dial *14*ActivationCode#")
-    ];
+        List<MapEntry<String, dynamic>> list = map.entries.toList()
+          ..sort((a, b) => DateTime.parse(a.value.toString())
+              .compareTo(DateTime.parse(b.value.toString())));
 
-    _listOfChosenVouchers = listOfCartVouchers;
+        Map<String, dynamic> sortedMap = Map.fromEntries(list);
+
+        if (element.id.contains("W")) {
+          listOfCartVouchersWaffer.add(ModelCartVoucher(
+              isAlfa: true,
+              id: element.id,
+              title: "وفّر",
+              cost: double.parse(element.get("cost")),
+              daysAvailability: daysAvailability,
+              availability: map.length,
+              dolars: credits,
+              imagePath: imagePath,
+              color: color,
+              map: map,
+              instruction: instruction));
+          // if the card is waffer
+        } else {
+          // if the card is not waffer
+          listOfCartVouchers.add(ModelCartVoucher(
+              id: element.id,
+              isAlfa: true,
+              title: "",
+              cost: double.parse(element.get("cost")),
+              daysAvailability: daysAvailability,
+              availability: map.length,
+              dolars: credits,
+              imagePath: imagePath,
+              color: color,
+              map: sortedMap,
+              instruction: instruction));
+        }
+      }
+
+      listOfCartVouchersWaffer.sort(
+        (a, b) => b.id.split("_")[2].compareTo(a.id.split("_")[2]),
+      );
+
+      setListVoucherCardsChosen();
+    });
+  }
+
+  void setListVoucherCardsChosen() {
+    setState(() {
+      if (_tabIndexVoucherType == 0) {
+        _listOfChosenVouchers = listOfCartVouchers;
+      } else {
+        _listOfChosenVouchers = listOfCartVouchersWaffer;
+      }
+    });
   }
 
   @override
@@ -197,6 +207,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
 
   @override
   Widget build(BuildContext context) {
+    mContext = context;
+
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
@@ -210,26 +222,29 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: const EdgeInsets.only(left: 30), child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextBoldBlack("Services"),
-                      FractionallySizedBox(
-                        widthFactor: 0.7,
-                        child: TextGrey("Specify the service you want"),
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Positioned(
-                        right: 0,
-                        child: Image.asset("assets/images/logo_alfa.png")),
-                  )
-                ],
-              ),) ,
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextBoldBlack("Services"),
+                        FractionallySizedBox(
+                          widthFactor: 0.7,
+                          child: TextGrey("Specify the service you want"),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Positioned(
+                          right: 0,
+                          child: Image.asset("assets/images/logo_alfa.png")),
+                    )
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: SizedBox(
@@ -256,8 +271,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                   child: GestureDetector(
                                     onTap: () async {
                                       if (await HelperPermission
-                                          .requestContactPermission(
-                                              context)) {
+                                          .requestContactPermission(context)) {
                                         final PhoneContact contact =
                                             await FlutterContactPicker
                                                 .pickPhoneContact();
@@ -268,8 +282,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                         if (contact.phoneNumber != null) {
                                           setState(() {
                                             _controllerPhoneNumber.text =
-                                                contact.phoneNumber!
-                                                        .number ??
+                                                contact.phoneNumber!.number ??
                                                     "";
                                           });
                                         }
@@ -331,6 +344,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                       onToggle: (index) {
                         setState(() {
                           _tabIndex = index;
+                          _tabIndexVoucherType = 0;
+                          setListVoucherCardsChosen();
                         });
                       }),
                 ),
@@ -350,14 +365,17 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                       ),
                     ),
                   )),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Visibility(
-                  visible: _tabIndex == 0,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: Column(
-                      children: listOfGiftCards(),
-                    ),
-                  )),) ,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Visibility(
+                    visible: _tabIndex == 0,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Column(
+                        children: listOfGiftCards(),
+                      ),
+                    )),
+              ),
               Visibility(
                   visible: _tabIndex == 1,
                   child: Column(
@@ -390,8 +408,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                     floatingLabelAlignment:
                                         FloatingLabelAlignment.center,
                                     disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(15),
                                         borderSide: const BorderSide(
                                             color: Color(0xffFF6F77),
                                             width: 5)),
@@ -423,7 +440,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                             }),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
                         child: Column(
                           children: listOfCartVouchersWidgets(),
                         ),
@@ -454,7 +472,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
-                    context: context,
+                    context: mContext,
                     builder: (context) {
                       return AlertDialog(
                           backgroundColor: const Color(0xffF2F2F2),
@@ -506,7 +524,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                       setState(() {
                                         modelCartVoucher.isCardClicked = false;
                                       });
-                                      Navigator.pop(context);
+                                      Navigator.pop(mContext);
                                     }, color: const Color(0xffFF6F77)),
                                     ButtonSmall(
                                         "Pay ${modelCartVoucher.cost}\$",
@@ -528,10 +546,16 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                             modelCartVoucher.isCardClicked =
                                                 false;
                                           });
-                                          Navigator.pop(context);
+                                          Navigator.pop(mContext);
+
+                                          var modelCardVoucher1 =
+                                              await HelperFirebaseFirestore
+                                                  .removeCardVoucher(
+                                                      modelCartVoucher);
 
                                           showDialog(
-                                              context: context,
+                                              context: mContext,
+                                              barrierDismissible: false,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   elevation: 0,
@@ -553,7 +577,9 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: TextGrey(
-                                                            "You will share the purchased cart as an image"),
+                                                            "You will share the purchased cart as an image",
+                                                            textAlign: TextAlign
+                                                                .center),
                                                       ),
                                                       Padding(
                                                         padding:
@@ -573,20 +599,15 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
+                                                                Stack(
                                                                   children: [
-                                                                    TextNormalBlack(
-                                                                        "Activation Code"),
                                                                     Align(
                                                                       alignment:
                                                                           Alignment
                                                                               .topRight,
                                                                       child: Image
                                                                           .asset(
-                                                                        !modelCartVoucher.isAlfa
+                                                                        !modelCardVoucher1.isAlfa
                                                                             ? "assets/images/logo_touch.png"
                                                                             : "assets/images/logo_alfa.png",
                                                                         width:
@@ -594,31 +615,40 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                                         height:
                                                                             40,
                                                                       ),
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        TextNormalBlack(
+                                                                            "Activation Code"),
+                                                                        TextGrey(modelCardVoucher1
+                                                                            .map
+                                                                            .keys
+                                                                            .elementAt(0)),
+                                                                        TextNormalBlack(
+                                                                            "Expiration Date"),
+                                                                        TextGrey(modelCardVoucher1
+                                                                            .map
+                                                                            .values
+                                                                            .elementAt(0)
+                                                                            .toString()),
+                                                                        TextNormalBlack(
+                                                                            "Instruction"),
+                                                                        TextGrey(
+                                                                            "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                        Padding(padding: const EdgeInsets.only(right: 10), child: Align(
+                                                                          alignment:
+                                                                              Alignment.bottomRight,
+                                                                          child: TextNormalBlack(
+                                                                              "${modelCardVoucher1.cost}\$",
+                                                                              textAlign: TextAlign.right),
+                                                                        ),) 
+                                                                      ],
                                                                     )
                                                                   ],
                                                                 ),
-                                                                TextGrey(
-                                                                    modelCartVoucher
-                                                                        .actCode),
-                                                                TextNormalBlack(
-                                                                    "Expiration Date"),
-                                                                TextGrey(
-                                                                    modelCartVoucher
-                                                                        .expDate),
-                                                                TextNormalBlack(
-                                                                    "Instruction"),
-                                                                TextGrey(
-                                                                    "Dial *14*${modelCartVoucher.actCode}#"),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .bottomRight,
-                                                                  child: TextNormalBlack(
-                                                                      "${modelCartVoucher.cost}\$",
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .right),
-                                                                )
                                                               ],
                                                             ),
                                                           ),
@@ -628,7 +658,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                   ),
                                                   actions: [
                                                     ButtonSmall("Save", () {
-                                                      Navigator.pop(context);
+                                                      Navigator.pop(mContext);
                                                     },
                                                         color: const Color(
                                                             0xff9ECCFA)),
@@ -645,14 +675,14 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                           HelperDialog.showDialogInfo(
                                               "Attention!",
                                               "There is no enough money in your wallet",
-                                              context, () {
-                                            Navigator.of(context).pop();
+                                              mContext, () {
+                                            Navigator.of(mContext).pop();
                                           });
                                         }
                                       } else {
                                         HelperDialog
                                             .showDialogNotConnectedToInternet(
-                                                context);
+                                                mContext);
                                       }
                                     }, color: const Color(0xffAAD59E))
                                   ],
@@ -665,7 +695,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                 // action clicked is direct
                 showDialog(
                     barrierDismissible: false,
-                    context: context,
+                    context: mContext,
                     builder: (context) {
                       return AlertDialog(
                         elevation: 0,
@@ -735,7 +765,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               }),
                               ButtonSmall("Pay ${modelCartVoucher.cost}\$",
                                   () async {
-                                if (!await HelperUtils.isConnected()) {
+                                if (await HelperUtils.isConnected()) {
                                   if (_walletAmount >= modelCartVoucher.cost) {
                                     setState(() {
                                       modelCartVoucher.isCardClicked = false;

@@ -3,6 +3,8 @@
 import 'package:applicx/components/card_text_image.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_notification.dart';
 import 'package:applicx/screens/screen_buy_credits.dart';
 import 'package:applicx/screens/screen_chargealfa.dart';
@@ -109,12 +111,17 @@ class _ScreenHome extends State<ScreenHome> {
             children: [
               TextGrey("Not enough credits?"),
               GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MyCustomRoute(
-                      (BuildContext context) {
-                    return ScreenBuyCredits(walletAmount: widget.walletAmount);
-                  }, const RouteSettings(),
-                      ScreenBuyCredits(walletAmount: widget.walletAmount)));
+                onTap: () async {
+                  if (await HelperUtils.isConnected()) {
+                    Navigator.of(context).push(MyCustomRoute(
+                        (BuildContext context) {
+                      return ScreenBuyCredits(
+                          walletAmount: widget.walletAmount);
+                    }, const RouteSettings(),
+                        ScreenBuyCredits(walletAmount: widget.walletAmount)));
+                  } else {
+                    HelperDialog.showDialogNotConnectedToInternet(context);
+                  }
                 },
                 child: TextLink("Buy Credits"),
               )
