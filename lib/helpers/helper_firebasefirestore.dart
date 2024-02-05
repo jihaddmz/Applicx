@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
+import 'package:applicx/models/model_gift.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HelperFirebaseFirestore {
@@ -150,6 +154,7 @@ class HelperFirebaseFirestore {
       onChange(event);
     });
   }
+
   static Future<ModelCartVoucher> removeCardVoucher(
       ModelCartVoucher modelCartVoucher) async {
     Map<String, dynamic> map = Map.from(modelCartVoucher.map);
@@ -161,8 +166,52 @@ class HelperFirebaseFirestore {
         .doc("cardVouchers")
         .collection(modelCartVoucher.isAlfa ? "alfa" : "touch")
         .doc(modelCartVoucher.id)
-        .set({"cost" : modelCartVoucher.cost.toString(), "list": map}, SetOptions(merge: false));
+        .set({"cost": modelCartVoucher.cost.toString(), "list": map},
+            SetOptions(merge: false));
 
     return modelCartVoucher;
+  }
+
+  static Future<void> createCardVoucherHistory(
+      ModelCartVoucher modelCartVoucher,
+      String username,
+      String phoneNumber) async {
+    Map<String, dynamic> map = {
+      "username": username,
+      "phoneNumber": phoneNumber,
+      "actCode": modelCartVoucher.map.keys.elementAt(0),
+      "expDate": modelCartVoucher.map.values.elementAt(0),
+      "cartInfo":
+          "${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$",
+      "paid": true,
+      "alfa": modelCartVoucher.isAlfa,
+      "date": DateTime.now().toString()
+    };
+    await firebaseFirestore
+        .collection("servicesHistory")
+        .doc("cardVouchers")
+        .collection(await HelperSharedPreferences.getUsername())
+        .doc("${Random().nextInt(1000000)}_${Random().nextDouble() * 10000}")
+        .set(map);
+  }
+
+  static Future<void> createGiftVoucherHistory(ModelGift modelGift,
+      String username, bool isAlfa, String phoneNumber) async {
+    if (await HelperUtils.isConnected()) {
+      Map<String, dynamic> map = {
+        "username": username,
+        "phoneNumber": phoneNumber,
+        "service": "${modelGift.title} ${modelGift.chosen ?? ""}".trim(),
+        "paid": true,
+        "alfa": isAlfa,
+        "date": DateTime.now().toString()
+      };
+      await firebaseFirestore
+          .collection("servicesHistory")
+          .doc("gifts")
+          .collection(await HelperSharedPreferences.getUsername())
+          .doc("${Random().nextInt(1000000)}_${Random().nextDouble() * 10000}")
+          .set(map);
+    }
   }
 }

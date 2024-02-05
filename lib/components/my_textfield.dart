@@ -51,8 +51,12 @@ class _MyTextField extends State<MyTextField> {
         enabled: widget.enabled,
         keyboardType: widget.inputType,
         controller: widget.controller,
+        onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
         decoration: InputDecoration(
             errorText: widget.errorText,
+            
             hintText: widget.showLabel == false ? widget.hintText : null,
             hintStyle: const TextStyle(fontWeight: FontWeight.w100),
             labelText: widget.showLabel ? widget.hintText : null,

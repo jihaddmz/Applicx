@@ -1,5 +1,6 @@
 import 'package:applicx/components/drop_down.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -87,14 +88,17 @@ class _CardGiftOthers extends State<CardGiftOthers> {
                           child: showDropDown
                               ? MyDropDown(
                                   list: widget.list!,
-                                  label: widget.modelGift.msg.contains("GB")
-                                      ? "GB"
-                                      : "Service",
+                                  label: "",
+                                  initialSelected: widget.modelGift.chosen,
                                   onSelect: (item) => {
                                         setState(() {
-                                          widget.modelGift.chosen = item;
+                                          widget.modelGift.chosen =
+                                              item!.split(":").isNotEmpty
+                                                  ? item.split(":")[0]
+                                                  : item;
                                           widget.modelGift.cost =
-                                              double.parse(item!);
+                                              double.parse(item.split(":")[1]) ;
+                                          
                                         })
                                       })
                               : GestureDetector(
@@ -117,7 +121,7 @@ class _CardGiftOthers extends State<CardGiftOthers> {
                             Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: TextGrey(
-                                    "Availability: ${widget.modelGift.availability}")),
+                                    "Availability: ${widget.modelGift.title == "Data Booster" ? daysAvailabilityInDataBooster() : widget.modelGift.availability}")),
                             TextGrey("Cost: ${widget.modelGift.cost}\$"),
                           ],
                         )
@@ -131,5 +135,22 @@ class _CardGiftOthers extends State<CardGiftOthers> {
         ],
       ),
     );
+  }
+
+  String daysAvailabilityInDataBooster() {
+    if (widget.modelGift.chosen == "Unlimited") {
+      HelperLogging.logD("entered1");
+      return "2 Hours";
+    } else if (widget.modelGift.chosen == "0.05") {
+      HelperLogging.logD("entered2");
+
+      return "24 Hours";
+    } else if (widget.modelGift.chosen == "0.6") {
+      HelperLogging.logD("entered3");
+
+      return "3 Days";
+    } else {
+      return "... days";
+    }
   }
 }

@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:collection';
-
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_cart_recharge_voucher.dart';
 import 'package:applicx/components/card_gift_credit_transfer.dart';
@@ -11,6 +9,7 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
@@ -31,7 +30,7 @@ class ScreenChargeAlfa extends StatefulWidget {
 class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPhoneNumber =
-      TextEditingController(text: "987");
+      TextEditingController(text: "765");
   String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
@@ -69,7 +68,19 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           availability: "30 Days",
           cost: 0,
           color: const Color(0xffFFB1B6),
-          listOfOptions: const ["2", "5", "7"]),
+          listOfOptions: const [
+            "0.5:3.5",
+            "1.5:5.50",
+            "5:7.50",
+            "10:10",
+            "20:13",
+            "30:15.50",
+            "40:19.50",
+            "60:23",
+            "70:26",
+            "100:35.50",
+            "200:64.50"
+          ]),
       ModelGift(
           isServiceCreditTransfer: 0,
           title: "Weekly Data Bundle",
@@ -77,7 +88,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           availability: "7 Days",
           cost: 0,
           color: const Color(0xffCDBCDB),
-          listOfOptions: const ["2", "5", "7"]),
+          listOfOptions: const ["0.5:1.67", "1.5:2.34", "5:5"]),
       ModelGift(
           isServiceCreditTransfer: 0,
           title: "Data Booster",
@@ -85,7 +96,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           availability: "... Days",
           cost: 0,
           color: const Color(0xffFDD848),
-          listOfOptions: const ["2", "5", "7"]),
+          listOfOptions: const ["Unlimited:1.67", "0.05:0.34", "0.6:1"]),
       ModelGift(
           isServiceCreditTransfer: 0,
           title: "Alfa 4x4 / 5x5",
@@ -93,7 +104,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           availability: "30 Days",
           cost: 0,
           color: const Color(0xffBCDBD7),
-          listOfOptions: const ["1", "2"]),
+          listOfOptions: const ["4x4:4", "5x5:1.67"]),
       ModelGift(
           isServiceCreditTransfer: 0,
           title: "Minutes Booster 20 Min",
@@ -462,13 +473,6 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
         child: CardCartRechargeVoucher(
             modelCartVoucher: element,
             onActionPerformed: (modelCartVoucher, action) {
-              if (_controllerPhoneNumber.text.isEmpty) {
-                setState(() {
-                  _textNumberError = "Please enter a phone number";
-                  modelCartVoucher.isCardClicked = false;
-                });
-                return;
-              }
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
@@ -552,6 +556,20 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                               await HelperFirebaseFirestore
                                                   .removeCardVoucher(
                                                       modelCartVoucher);
+
+                                          await HelperFirebaseFirestore
+                                              .createCardVoucherHistory(
+                                                  modelCardVoucher1,
+                                                  _controllerName.text.isEmpty
+                                                      ? await HelperSharedPreferences
+                                                          .getUsername()
+                                                      : _controllerName.text,
+                                                  _controllerPhoneNumber
+                                                          .text.isEmpty
+                                                      ? await HelperSharedPreferences
+                                                          .getPhoneNumber()
+                                                      : _controllerPhoneNumber
+                                                          .text);
 
                                           showDialog(
                                               context: mContext,
@@ -638,13 +656,18 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                                             "Instruction"),
                                                                         TextGrey(
                                                                             "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
-                                                                        Padding(padding: const EdgeInsets.only(right: 10), child: Align(
-                                                                          alignment:
-                                                                              Alignment.bottomRight,
-                                                                          child: TextNormalBlack(
-                                                                              "${modelCardVoucher1.cost}\$",
-                                                                              textAlign: TextAlign.right),
-                                                                        ),) 
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .only(
+                                                                              right: 10),
+                                                                          child:
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment.bottomRight,
+                                                                            child:
+                                                                                TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
+                                                                          ),
+                                                                        )
                                                                       ],
                                                                     )
                                                                   ],
@@ -692,6 +715,13 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                           ));
                     });
               } else {
+                if (_controllerPhoneNumber.text.isEmpty) {
+                  setState(() {
+                    _textNumberError = "Please enter a phone number";
+                    modelCartVoucher.isCardClicked = false;
+                  });
+                  return;
+                }
                 // action clicked is direct
                 showDialog(
                     barrierDismissible: false,
@@ -761,7 +791,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                 setState(() {
                                   modelCartVoucher.isCardClicked = false;
                                 });
-                                Navigator.pop(context);
+                                Navigator.pop(mContext);
                               }),
                               ButtonSmall("Pay ${modelCartVoucher.cost}\$",
                                   () async {
@@ -775,18 +805,33 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                         .setWalletAmount(_walletAmount);
                                     await HelperSharedPreferences
                                         .setWalletAmount(_walletAmount);
-                                    Navigator.pop(context);
+
+                                    await HelperFirebaseFirestore
+                                        .removeCardVoucher(modelCartVoucher);
+
+                                    await HelperFirebaseFirestore
+                                        .createCardVoucherHistory(
+                                            modelCartVoucher,
+                                            _controllerName.text.isEmpty
+                                                ? "N/A"
+                                                : _controllerName.text,
+                                            _controllerPhoneNumber.text);
+
+                                    HelperLogging.logD(
+                                        "card is ${modelCartVoucher.map.keys.elementAt(0)}");
+
+                                    Navigator.pop(mContext);
                                   } else {
                                     HelperDialog.showDialogInfo(
                                         "Attention!",
                                         "There is no enough money in your wallet.",
-                                        context, () {
-                                      Navigator.pop(context);
+                                        mContext, () {
+                                      Navigator.pop(mContext);
                                     });
                                   }
                                 } else {
                                   HelperDialog.showDialogNotConnectedToInternet(
-                                      context);
+                                      mContext);
                                 }
                               }, color: const Color(0xffAAD59E)),
                             ],
@@ -808,7 +853,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
       if (element.isServiceCreditTransfer == 1) {
         result.add(CardGiftCreditTransfer(
           modelGift: element,
-          onConfirmClick: (modelGift) {
+          onConfirmClick: (modelGift, controller) {
             if (_controllerPhoneNumber.text.isEmpty) {
               setState(() {
                 _textNumberError = "Please enter a phone number";
@@ -874,17 +919,29 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                           children: [
                             ButtonSmall("No", () {
                               setState(() {
-                                modelGift.totalFees = 0;
-                                modelGift.chosen = null;
+                                modelGift.showConfirm = false;
+                                modelGift.totalFees = 0.0;
+                                modelGift.transfeerFees = 0.0;
+                                controller.clear();
                               });
-                              Navigator.pop(context);
+                              Navigator.pop(mContext);
                             }),
-                            ButtonSmall("Pay ${modelGift.totalFees}\$", () {
+                            ButtonSmall("Yes", () async {
                               setState(() {
-                                modelGift.totalFees = 0;
-                                modelGift.chosen = null;
+                                modelGift.showConfirm = false;
+                                modelGift.totalFees = 0.0;
+                                modelGift.transfeerFees = 0.0;
+                                controller.clear();
                               });
-                              Navigator.pop(context);
+                              await HelperFirebaseFirestore
+                                  .createGiftVoucherHistory(
+                                      modelGift,
+                                      _controllerName.text.isEmpty
+                                          ? "N/A"
+                                          : _controllerName.text,
+                                      true,
+                                      _controllerPhoneNumber.text);
+                              Navigator.pop(mContext);
                             }, color: const Color(0xffAAD59E)),
                           ],
                         )
@@ -919,47 +976,51 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextGrey(
-                              "Are you sure you want to purchase this cart?",
+                              "Are you sure you want to proceed with this charge?",
                               textAlign: TextAlign.center),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              color: Colors.white,
-                              elevation: 0,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                      right: 0,
-                                      child: Image.asset(
-                                          "assets/images/logo_alfa.png")),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 10, 0, 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        FractionallySizedBox(
-                                          widthFactor: 0.7,
-                                          child: TextGrey(
-                                              "Cart: ${modelGift.title}"),
-                                        ),
-                                        Visibility(
-                                            visible: modelGift.chosen != null,
-                                            child: TextGrey(modelGift.msg
-                                                    .contains("GB")
-                                                ? "GB: ${modelGift.chosen}"
-                                                : "Service: ${modelGift.chosen}")),
-                                        TextGrey(
-                                            "Number: ${_controllerPhoneNumber.text}"),
-                                        TextGrey(
-                                            "User: ${_controllerName.text}"),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: Colors.white,
+                                elevation: 0,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                        right: 0,
+                                        top: 5,
+                                        child: Image.asset(
+                                            "assets/images/logo_alfa.png")),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 10, 0, 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          FractionallySizedBox(
+                                            widthFactor: 0.7,
+                                            child: TextGrey(
+                                                "Service: ${modelGift.title}"),
+                                          ),
+                                          Visibility(
+                                              visible: modelGift.chosen != null,
+                                              child: TextGrey(modelGift.msg
+                                                      .contains("GB")
+                                                  ? "GB: ${modelGift.chosen}"
+                                                  : "Service: ${modelGift.chosen}")),
+                                          TextGrey(
+                                              "Number: ${_controllerPhoneNumber.text}"),
+                                          TextGrey(
+                                              "User: ${_controllerName.text}"),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           )
@@ -980,7 +1041,15 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               });
                               Navigator.pop(context);
                             }),
-                            ButtonSmall("Pay ${modelGift.cost}\$", () {
+                            ButtonSmall("Yes", () async {
+                              await HelperFirebaseFirestore
+                                  .createGiftVoucherHistory(
+                                      modelGift,
+                                      _controllerName.text.isEmpty
+                                          ? "N/A"
+                                          : _controllerName.text,
+                                      true,
+                                      _controllerPhoneNumber.text);
                               setState(() {
                                 if (modelGift.msg.contains("Specify")) {
                                   setState(() {

@@ -722,7 +722,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
       if (element.isServiceCreditTransfer == 1) {
         result.add(CardGiftCreditTransfer(
           modelGift: element,
-          onConfirmClick: (modelGift) {
+          onConfirmClick: (modelGift, controller) {
             if (_controllerPhoneNumber.text.isEmpty) {
               setState(() {
                 _textNumberError = "Please enter a phone number";

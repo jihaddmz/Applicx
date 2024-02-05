@@ -11,20 +11,16 @@ class MyDropDown extends StatefulWidget {
   final List<String> list;
   final String label;
   final Function(String?) onSelect;
-  final String? initialSelected;
+  String? initialSelected;
 
   @override
   _MyDropDown createState() => _MyDropDown();
 }
 
 class _MyDropDown extends State<MyDropDown> {
-  String? _selected;
-
   @override
   void initState() {
     super.initState();
-
-    _selected = widget.initialSelected;
   }
 
   @override
@@ -34,17 +30,17 @@ class _MyDropDown extends State<MyDropDown> {
         DropdownButton<String>(
           underline: const SizedBox(),
           icon: Card(
-            elevation: 0,
+            elevation: 4,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(_selected ?? "..."),
+                  Text(widget.initialSelected ?? "...  "),
                   Image.asset("assets/images/image_dropdown.png")
                 ],
               ),
@@ -53,12 +49,12 @@ class _MyDropDown extends State<MyDropDown> {
           items: widget.list.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(value.split(":").isNotEmpty ? value.split(":")[0] : value),
             );
           }).toList(),
           onChanged: (value) {
             setState(() {
-              _selected = value;
+              widget.initialSelected = value;
             });
             widget.onSelect(value);
           },

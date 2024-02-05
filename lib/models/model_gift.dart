@@ -7,14 +7,18 @@ class ModelGift {
   double? totalFees;
   final String? availability;
   double? cost;
+  double transfeerFees;
   final Color? color;
   final List<String>? listOfOptions;
   String? chosen;
+  bool showConfirm;
 
   ModelGift(
       {required this.isServiceCreditTransfer,
       required this.title,
       required this.msg,
+      this.transfeerFees = 0.0,
+      this.showConfirm = false,
       this.totalFees,
       this.availability,
       this.cost,
