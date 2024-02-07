@@ -30,13 +30,13 @@ class ScreenChargeAlfa extends StatefulWidget {
 class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPhoneNumber =
-      TextEditingController(text: "765");
+      TextEditingController();
   String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
   final List<ModelCartVoucher> listOfCartVouchers = [];
-  late List<ModelCartVoucher> listOfCartVouchersWaffer = [];
+   List<ModelCartVoucher> listOfCartVouchersWaffer = [];
   List<ModelCartVoucher> _listOfChosenVouchers = [];
   double _walletAmount = 0;
   late BuildContext mContext;
@@ -123,7 +123,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   }
 
   Future<void> fetchAlfaCardVouchers() async {
-    HelperFirebaseFirestore.fetchAlfaCardVouchers((event) {
+    HelperFirebaseFirestore.fetchCardVouchers((event) {
       listOfCartVouchers.clear();
       listOfCartVouchersWaffer.clear();
       for (var element in event.docs) {
@@ -198,7 +198,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
       );
 
       setListVoucherCardsChosen();
-    });
+    }, true);
   }
 
   void setListVoucherCardsChosen() {
@@ -816,9 +816,6 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                 ? "N/A"
                                                 : _controllerName.text,
                                             _controllerPhoneNumber.text);
-
-                                    HelperLogging.logD(
-                                        "card is ${modelCartVoucher.map.keys.elementAt(0)}");
 
                                     Navigator.pop(mContext);
                                   } else {

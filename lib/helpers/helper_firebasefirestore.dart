@@ -143,12 +143,12 @@ class HelperFirebaseFirestore {
     });
   }
 
-  static Future<void> fetchAlfaCardVouchers(
-      Function(QuerySnapshot<Map<String, dynamic>>) onChange) async {
+  static Future<void> fetchCardVouchers(
+      Function(QuerySnapshot<Map<String, dynamic>>) onChange, bool isAlfa) async {
     firebaseFirestore
         .collection("services")
         .doc("cardVouchers")
-        .collection("alfa")
+        .collection( isAlfa ? "alfa" : "touch")
         .snapshots()
         .listen((event) {
       onChange(event);

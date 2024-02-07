@@ -7,9 +7,12 @@ import 'package:applicx/components/card_gift_others.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +34,11 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
-  late final List<ModelCartVoucher> listOfCartVouchers;
-  late final List<ModelCartVoucher> listOfCartVouchersOthers;
+  final List<ModelCartVoucher> listOfCartVouchers = [];
+  final List<ModelCartVoucher> listOfCartVouchersOthers = [];
   late List<ModelCartVoucher> _listOfChosenVouchers;
   double _walletAmount = 0;
+  late BuildContext mContext;
 
   @override
   void initState() {
@@ -56,116 +60,108 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           totalFees: 0),
     ];
 
-    // listOfCartVouchers = [
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 1.00,
-    //       daysAvailability: 0,
-    //       dolars: 2,
-    //       imagePath: "assets/images/image_cart_1.png",
-    //       color: const Color(0xffFDD848),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 1.67,
-    //       daysAvailability: 0,
-    //       dolars: 3,
-    //       imagePath: "assets/images/image_cart_2.png",
-    //       color: const Color(0xffFFB1B6),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 3.79,
-    //       daysAvailability: 10,
-    //       dolars: 4,
-    //       imagePath: "assets/images/image_cart_2.png",
-    //       color: const Color(0xffBCDBD7),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 4.50,
-    //       daysAvailability: 30,
-    //       dolars: 4,
-    //       imagePath: "assets/images/image_cart_4.png",
-    //       color: const Color(0xffCDBCDB),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 7.58,
-    //       daysAvailability: 30,
-    //       dolars: 5,
-    //       imagePath: "assets/images/image_cart_5.png",
-    //       color: const Color(0xffAAD59E),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "magic",
-    //       cost: 15.15,
-    //       daysAvailability: 60,
-    //       dolars: 5,
-    //       imagePath: "assets/images/image_cart_6.png",
-    //       color: const Color(0xffAAD59E),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#")
-    // ];
-
-    // listOfCartVouchersOthers = [
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "Start",
-    //       cost: 4.50,
-    //       daysAvailability: 30,
-    //       dolars: 5,
-    //       imagePath: "assets/images/image_cart_4.png",
-    //       color: const Color(0xffFDD848),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "Smart",
-    //       cost: 7.50,
-    //       daysAvailability: 30,
-    //       dolars: 5,
-    //       imagePath: "assets/images/image_cart_2.png",
-    //       color: const Color(0xffFFB1B6),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#"),
-    //   ModelCartVoucher(
-    //       isAlfa: false,
-    //       title: "Super",
-    //       cost: 13.50,
-    //       daysAvailability: 30,
-    //       dolars: 5,
-    //       imagePath: "assets/images/image_cart_6.png",
-    //       color: const Color(0xffBCDBD7),
-    //       actCode: "12312312243241123123213321321312",
-    //       expDate: "2023-02-15 12:00:00 AM",
-    //       instruction: "Dial *14*ActivationCode#")
-    // ];
+    fetchTouchCardVouchers();
 
     _listOfChosenVouchers = listOfCartVouchers;
   }
 
+  Future<void> fetchTouchCardVouchers() async {
+    HelperFirebaseFirestore.fetchCardVouchers((event) {
+      listOfCartVouchers.clear();
+      listOfCartVouchersOthers.clear();
+      for (var element in event.docs) {
+        double credits = double.parse(element.id.toString().split("_")[2]);
+        int daysAvailability = int.parse(element.id.split("_")[1]);
+        String imagePath = credits == 4.5
+            ? "assets/images/image_cart_4.png"
+            : credits == 7.5
+                ? "assets/images/image_cart_2.png"
+                : credits == 13.5
+                    ? "assets/images/image_cart_6.png"
+                    : credits == 1.0
+                        ? "assets/images/image_cart_1.png"
+                        : credits == 1.67
+                            ? "assets/images/image_cart_2.png"
+                            : credits == 3.79
+                                ? "assets/images/image_cart_3.png"
+                                : credits == 4.5
+                                    ? "assets/images/image_cart_4.png"
+                                    : credits == 7.58
+                                        ? "assets/images/image_cart_2.png"
+                                        : "assets/images/image_cart_5.png";
+        Color color = credits == 1.0 || credits == 4.5
+            ? const Color(0xffFDD848)
+            : credits == 1.67 || credits == 7.5
+                ? const Color(0xffFFB1B6)
+                : credits == 3.79 || credits == 13.5
+                    ? const Color(0xffBCDBD7)
+                    : credits == 4.50
+                        ? const Color(0xffCDBCDB)
+                        : credits == 7.58
+                            ? const Color(0xffAAD59E)
+                            : const Color(0xff9ECCFA);
+        String instruction = "Dial *14*ActivationCode#";
+        Map<String, dynamic> map = element.get("list");
+
+        List<MapEntry<String, dynamic>> list = map.entries.toList()
+          ..sort((a, b) => DateTime.parse(a.value.toString())
+              .compareTo(DateTime.parse(b.value.toString())));
+
+        Map<String, dynamic> sortedMap = Map.fromEntries(list);
+
+        if (!element.id.contains("CV")) {
+          listOfCartVouchersOthers.add(ModelCartVoucher(
+              isAlfa: false,
+              id: element.id,
+              title: element.id.split("_")[0],
+              cost: double.parse(element.get("cost")),
+              daysAvailability: daysAvailability,
+              availability: map.length,
+              dolars: credits,
+              imagePath: imagePath,
+              color: color,
+              map: map,
+              instruction: instruction));
+          // if the card is waffer
+        } else {
+          // if the card is not waffer
+          listOfCartVouchers.add(ModelCartVoucher(
+              id: element.id,
+              isAlfa: false,
+              title: "magic",
+              cost: double.parse(element.get("cost")),
+              daysAvailability: daysAvailability,
+              availability: map.length,
+              dolars: credits,
+              imagePath: imagePath,
+              color: color,
+              map: sortedMap,
+              instruction: instruction));
+        }
+      }
+
+      listOfCartVouchersOthers.sort(
+        (a, b) => double.parse(a.id.split("_")[2]).compareTo(double.parse(b.id.split("_")[2])),
+      );
+
+      setListVoucherCardsChosen();
+    }, false);
+  }
+
+  void setListVoucherCardsChosen() {
+    setState(() {
+      if (_tabIndexVoucherType == 0) {
+        _listOfChosenVouchers = listOfCartVouchers;
+      } else {
+        _listOfChosenVouchers = listOfCartVouchersOthers;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    mContext = context;
+
     return Scaffold(
         appBar: AppBar(
           leading: GestureDetector(
@@ -301,7 +297,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                       onToggle: (index) {
                         setState(() {
                           _tabIndex = index;
+                          _tabIndexVoucherType = 0;
                         });
+                        setListVoucherCardsChosen();
                       }),
                 ),
               ),
@@ -424,7 +422,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
-                    context: context,
+                    context: mContext,
                     builder: (context) {
                       return AlertDialog(
                           backgroundColor: const Color(0xffF2F2F2),
@@ -477,136 +475,180 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                       setState(() {
                                         modelCartVoucher.isCardClicked = false;
                                       });
-                                      Navigator.pop(context);
+                                      Navigator.pop(mContext);
                                     }, color: const Color(0xffFF6F77)),
                                     ButtonSmall(
                                         "Pay ${modelCartVoucher.cost}\$",
                                         () async {
-                                      if (_walletAmount >=
-                                          modelCartVoucher.cost) {
-                                        setState(() {
-                                          modelCartVoucher.isCardClicked =
-                                              false;
-                                          _walletAmount -=
-                                              modelCartVoucher.cost;
-                                        });
-                                        await HelperSharedPreferences
-                                            .setWalletAmount(_walletAmount);
+                                      if (await HelperUtils.isConnected()) {
+                                        if (_walletAmount >=
+                                            modelCartVoucher.cost) {
+                                          setState(() {
+                                            modelCartVoucher.isCardClicked =
+                                                false;
+                                            _walletAmount -=
+                                                modelCartVoucher.cost;
+                                          });
+                                          await HelperSharedPreferences
+                                              .setWalletAmount(_walletAmount);
 
-                                        await HelperFirebaseFirestore
-                                            .setWalletAmount(_walletAmount);
+                                          await HelperFirebaseFirestore
+                                              .setWalletAmount(_walletAmount);
 
-                                        Navigator.pop(context);
+                                          setState(() {
+                                            modelCartVoucher.isCardClicked =
+                                                false;
+                                          });
 
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                elevation: 0,
-                                                backgroundColor:
-                                                    const Color(0xffF2F2F2),
-                                                title: Align(
-                                                  alignment: Alignment.center,
-                                                  child: TextBoldBlack(
-                                                      "Share Info"),
-                                                ),
-                                                content: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: TextGrey(
-                                                          "You will share the purchased cart as an image"),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 20),
-                                                      child: Card(
-                                                        elevation: 2,
-                                                        color: const Color(
-                                                            0xffffffff),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 10),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  TextNormalBlack(
-                                                                      "Activation Code"),
-                                                                  Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .topRight,
-                                                                    child: Image
-                                                                        .asset(
-                                                                      !modelCartVoucher
-                                                                              .isAlfa
-                                                                          ? "assets/images/logo_touch.png"
-                                                                          : "assets/images/logo_alfa.png",
-                                                                      width: 40,
-                                                                      height:
-                                                                          40,
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                              // TextGrey(
-                                                              //     modelCartVoucher
-                                                              //         .actCode),
-                                                              // TextNormalBlack(
-                                                              //     "Expiration Date"),
-                                                              // TextGrey(
-                                                              //     modelCartVoucher
-                                                              //         .expDate),
-                                                              // TextNormalBlack(
-                                                              //     "Instruction"),
-                                                              // TextGrey(
-                                                              //     "Dial *14*${modelCartVoucher.actCode}#"),
-                                                              Align(
-                                                                alignment: Alignment
-                                                                    .bottomRight,
-                                                                child: TextNormalBlack(
-                                                                    "${modelCartVoucher.cost}\$",
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .right),
-                                                              )
-                                                            ],
+                                          Navigator.pop(mContext);
+
+                                          var modelCardVoucher1 =
+                                              await HelperFirebaseFirestore
+                                                  .removeCardVoucher(
+                                                      modelCartVoucher);
+
+                                          await HelperFirebaseFirestore
+                                              .createCardVoucherHistory(
+                                                  modelCardVoucher1,
+                                                  _controllerName.text.isEmpty
+                                                      ? await HelperSharedPreferences
+                                                          .getUsername()
+                                                      : _controllerName.text,
+                                                  _controllerPhoneNumber
+                                                          .text.isEmpty
+                                                      ? await HelperSharedPreferences
+                                                          .getPhoneNumber()
+                                                      : _controllerPhoneNumber
+                                                          .text);
+
+                                          showDialog(
+                                              context: mContext,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  elevation: 0,
+                                                  backgroundColor:
+                                                      const Color(0xffF2F2F2),
+                                                  title: Align(
+                                                    alignment: Alignment.center,
+                                                    child: TextBoldBlack(
+                                                        "Share Info"),
+                                                  ),
+                                                  content: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: TextGrey(
+                                                            "You will share the purchased cart as an image"),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 20),
+                                                        child: Card(
+                                                          elevation: 2,
+                                                          color: const Color(
+                                                              0xffffffff),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 10),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    TextNormalBlack(
+                                                                        "Activation Code"),
+                                                                    Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topRight,
+                                                                      child: Image
+                                                                          .asset(
+                                                                        !modelCardVoucher1.isAlfa
+                                                                            ? "assets/images/logo_touch.png"
+                                                                            : "assets/images/logo_alfa.png",
+                                                                        width:
+                                                                            40,
+                                                                        height:
+                                                                            40,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                TextGrey(
+                                                                    modelCardVoucher1
+                                                                        .map
+                                                                        .keys
+                                                                        .elementAt(
+                                                                            0)),
+                                                                TextNormalBlack(
+                                                                    "Expiration Date"),
+                                                                TextGrey(modelCardVoucher1
+                                                                    .map.values
+                                                                    .elementAt(
+                                                                        0)
+                                                                    .toString()),
+                                                                TextNormalBlack(
+                                                                    "Instruction"),
+                                                                TextGrey(
+                                                                    "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomRight,
+                                                                  child: TextNormalBlack(
+                                                                      "${modelCardVoucher1.cost}\$",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .right),
+                                                                )
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    )
+                                                      )
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    ButtonSmall("Save", () {
+                                                      Navigator.pop(mContext);
+                                                    },
+                                                        color: const Color(
+                                                            0xff9ECCFA)),
+                                                    ButtonSmall("Share", () {},
+                                                        color: const Color(
+                                                            0xffAAD59E))
                                                   ],
-                                                ),
-                                                actions: [
-                                                  ButtonSmall("Save", () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                      color: const Color(
-                                                          0xff9ECCFA)),
-                                                  ButtonSmall("Share", () {},
-                                                      color: const Color(
-                                                          0xffAAD59E))
-                                                ],
-                                                actionsAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                              );
-                                            });
+                                                  actionsAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                );
+                                              });
+                                        } else {
+                                          HelperDialog.showDialogInfo(
+                                              "Attention!",
+                                              "There is no enough money in your wallet",
+                                              mContext, () {
+                                            Navigator.of(mContext).pop();
+                                          });
+                                        }
+                                      } else {
+                                        HelperDialog
+                                            .showDialogNotConnectedToInternet(
+                                                context);
                                       }
                                     }, color: const Color(0xffAAD59E))
                                   ],
@@ -700,6 +742,17 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                   await HelperFirebaseFirestore.setWalletAmount(
                                       _walletAmount);
 
+                                      await HelperFirebaseFirestore
+                                        .removeCardVoucher(modelCartVoucher);
+
+                                    await HelperFirebaseFirestore
+                                        .createCardVoucherHistory(
+                                            modelCartVoucher,
+                                            _controllerName.text.isEmpty
+                                                ? "N/A"
+                                                : _controllerName.text,
+                                            _controllerPhoneNumber.text);
+
                                   Navigator.pop(context);
                                 }
                               }, color: const Color(0xffAAD59E)),
@@ -788,120 +841,29 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                           children: [
                             ButtonSmall("No", () {
                               setState(() {
-                                modelGift.totalFees = 0;
-                                modelGift.chosen = null;
+                                modelGift.showConfirm = false;
+                                modelGift.totalFees = 0.0;
+                                modelGift.transfeerFees = 0.0;
+                                controller.clear();
                               });
                               Navigator.pop(context);
                             }),
-                            ButtonSmall("Pay ${modelGift.totalFees}\$", () {
+                            ButtonSmall("Yes", () async {
                               setState(() {
-                                modelGift.totalFees = 0;
-                                modelGift.chosen = null;
+                                modelGift.showConfirm = false;
+                                modelGift.totalFees = 0.0;
+                                modelGift.transfeerFees = 0.0;
+                                controller.clear();
                               });
-                              Navigator.pop(context);
-                            }, color: const Color(0xffAAD59E)),
-                          ],
-                        )
-                      ],
-                    );
-                  });
-            }
-          },
-        ));
-      } else {
-        result.add(CardGiftOthers(
-          modelGift: element,
-          color: element.color!,
-          list: element.msg.contains("Specify") ? element.listOfOptions! : null,
-          onConfirmClick: (modelGift) {
-            if (_controllerPhoneNumber.text.isEmpty) {
-              setState(() {
-                _textNumberError = "Please enter a phone number";
-              });
-            } else {
-              showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      elevation: 0,
-                      backgroundColor: const Color(0xffF2F2F2),
-                      title: Center(
-                        child: TextBoldBlack("Attention!"),
-                      ),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextGrey("Are you sure you want to charge this?",
-                              textAlign: TextAlign.center),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              color: Colors.white,
-                              elevation: 2,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                      right: 0,
-                                      child: Image.asset(
-                                          "assets/images/logo_alfa.png")),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 10, 0, 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        FractionallySizedBox(
-                                          widthFactor: 0.7,
-                                          child: TextGrey(
-                                              "Cart: ${modelGift.title}"),
-                                        ),
-                                        Visibility(
-                                            visible: modelGift.chosen != null,
-                                            child: TextGrey(modelGift.msg
-                                                    .contains("GB")
-                                                ? "GB: ${modelGift.chosen}"
-                                                : "Service: ${modelGift.chosen}")),
-                                        TextGrey(
-                                            "Number: ${_controllerPhoneNumber.text}"),
-                                        TextGrey(
-                                            "User: ${_controllerName.text}"),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      actions: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ButtonSmall("No", () {
-                              setState(() {
-                                if (modelGift.msg.contains("Specify")) {
-                                  setState(() {
-                                    modelGift.cost = 0;
-                                    modelGift.chosen = null;
-                                  });
-                                }
-                              });
-                              Navigator.pop(context);
-                            }),
-                            ButtonSmall("Pay ${modelGift.cost}\$", () {
-                              setState(() {
-                                if (modelGift.msg.contains("Specify")) {
-                                  setState(() {
-                                    modelGift.cost = 0;
-                                    modelGift.chosen = null;
-                                  });
-                                }
-                              });
+                              await HelperFirebaseFirestore
+                                  .createGiftVoucherHistory(
+                                      modelGift,
+                                      _controllerName.text.isEmpty
+                                          ? "N/A"
+                                          : _controllerName.text,
+                                      false,
+                                      _controllerPhoneNumber.text);
+
                               Navigator.pop(context);
                             }, color: const Color(0xffAAD59E)),
                           ],
@@ -913,6 +875,111 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           },
         ));
       }
+      // else {
+      //   result.add(CardGiftOthers(
+      //     modelGift: element,
+      //     color: element.color!,
+      //     list: element.msg.contains("Specify") ? element.listOfOptions! : null,
+      //     onConfirmClick: (modelGift) {
+      //       if (_controllerPhoneNumber.text.isEmpty) {
+      //         setState(() {
+      //           _textNumberError = "Please enter a phone number";
+      //         });
+      //       } else {
+      //         showDialog(
+      //             barrierDismissible: false,
+      //             context: context,
+      //             builder: (context) {
+      //               return AlertDialog(
+      //                 elevation: 0,
+      //                 backgroundColor: const Color(0xffF2F2F2),
+      //                 title: Center(
+      //                   child: TextBoldBlack("Attention!"),
+      //                 ),
+      //                 content: Column(
+      //                   mainAxisSize: MainAxisSize.min,
+      //                   children: [
+      //                     TextGrey("Are you sure you want to charge this?",
+      //                         textAlign: TextAlign.center),
+      //                     SizedBox(
+      //                       width: MediaQuery.of(context).size.width,
+      //                       child: Card(
+      //                         shape: RoundedRectangleBorder(
+      //                             borderRadius: BorderRadius.circular(10)),
+      //                         color: Colors.white,
+      //                         elevation: 2,
+      //                         child: Stack(
+      //                           children: [
+      //                             Positioned(
+      //                                 right: 0,
+      //                                 child: Image.asset(
+      //                                     "assets/images/logo_alfa.png")),
+      //                             Padding(
+      //                               padding: const EdgeInsets.fromLTRB(
+      //                                   10, 10, 0, 10),
+      //                               child: Column(
+      //                                 crossAxisAlignment:
+      //                                     CrossAxisAlignment.start,
+      //                                 children: [
+      //                                   FractionallySizedBox(
+      //                                     widthFactor: 0.7,
+      //                                     child: TextGrey(
+      //                                         "Cart: ${modelGift.title}"),
+      //                                   ),
+      //                                   Visibility(
+      //                                       visible: modelGift.chosen != null,
+      //                                       child: TextGrey(modelGift.msg
+      //                                               .contains("GB")
+      //                                           ? "GB: ${modelGift.chosen}"
+      //                                           : "Service: ${modelGift.chosen}")),
+      //                                   TextGrey(
+      //                                       "Number: ${_controllerPhoneNumber.text}"),
+      //                                   TextGrey(
+      //                                       "User: ${_controllerName.text}"),
+      //                                 ],
+      //                               ),
+      //                             )
+      //                           ],
+      //                         ),
+      //                       ),
+      //                     )
+      //                   ],
+      //                 ),
+      //                 actions: [
+      //                   Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //                     children: [
+      //                       ButtonSmall("No", () {
+      //                         setState(() {
+      //                           if (modelGift.msg.contains("Specify")) {
+      //                             setState(() {
+      //                               modelGift.cost = 0;
+      //                               modelGift.chosen = null;
+      //                             });
+      //                           }
+      //                         });
+      //                         Navigator.pop(context);
+      //                       }),
+      //                       ButtonSmall("Pay ${modelGift.cost}\$", () {
+      //                         setState(() {
+      //                           if (modelGift.msg.contains("Specify")) {
+      //                             setState(() {
+      //                               modelGift.cost = 0;
+      //                               modelGift.chosen = null;
+      //                             });
+      //                           }
+      //                         });
+      //                         Navigator.pop(context);
+      //                       }, color: const Color(0xffAAD59E)),
+      //                     ],
+      //                   )
+      //                 ],
+      //               );
+      //             });
+      //       }
+      //     },
+      //   ));
+      // }
     }
 
     return result;
