@@ -10,7 +10,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 Widget ItemHistoryReportCardVoucher(
     ModelHistoryReportCardVoucher modelHistoryReportCardVoucher,
     BuildContext context,
-    String currentPhoneNumber) {
+    String currentPhoneNumber,
+    Function(ModelHistoryReportCardVoucher, int) onYesChangeStatusClick) {
   return Slidable(
       endActionPane: ActionPane(motion: ScrollMotion(), children: [
         GestureDetector(
@@ -27,22 +28,15 @@ Widget ItemHistoryReportCardVoucher(
                         "Are you sure you want to set the user status as ${modelHistoryReportCardVoucher.isPaid == 0 ? "paid" : "unpaid"}?",
                         textAlign: TextAlign.center),
                     actions: [
-                      ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xffFF6F77))),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: TextNormalBlack("No")),
-                      ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xffAAD59E))),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: TextNormalBlack("Yes"))
+                      ButtonSmall("No", () {
+                        Navigator.pop(context);
+                      }),
+                      ButtonSmall("Yes", () {
+                        Navigator.pop(context);
+                        // if this item is already paid, change its status to unpaid, otherwise change it to paid
+                        onYesChangeStatusClick(modelHistoryReportCardVoucher,
+                            modelHistoryReportCardVoucher.isPaid == 0 ? 1 : 0);
+                      }, color: const Color(0xffAAD59E))
                     ],
                     actionsAlignment: MainAxisAlignment.spaceEvenly,
                   );

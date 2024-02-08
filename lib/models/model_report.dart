@@ -1,13 +1,14 @@
 class ModelHistoryReportGift {
+  String id;
   String? name;
   final String phoneNumber;
   final String service;
   final String date;
   final int isTouch;
-  final int isPaid;
+  int isPaid;
 
   ModelHistoryReportGift(
-      {this.name,
+      {required this.id, this.name,
       required this.phoneNumber,
       required this.service,
       required this.date,

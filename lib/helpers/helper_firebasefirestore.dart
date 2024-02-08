@@ -144,11 +144,12 @@ class HelperFirebaseFirestore {
   }
 
   static Future<void> fetchCardVouchers(
-      Function(QuerySnapshot<Map<String, dynamic>>) onChange, bool isAlfa) async {
+      Function(QuerySnapshot<Map<String, dynamic>>) onChange,
+      bool isAlfa) async {
     firebaseFirestore
         .collection("services")
         .doc("cardVouchers")
-        .collection( isAlfa ? "alfa" : "touch")
+        .collection(isAlfa ? "alfa" : "touch")
         .snapshots()
         .listen((event) {
       onChange(event);
@@ -213,5 +214,31 @@ class HelperFirebaseFirestore {
           .doc("${Random().nextInt(1000000)}_${Random().nextDouble() * 10000}")
           .set(map);
     }
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>?> fetchHistory(
+      bool isGifts) async {
+    QuerySnapshot<Map<String, dynamic>>? result;
+    await firebaseFirestore
+        .collection("servicesHistory")
+        .doc(isGifts ? "gifts" : "cardVouchers")
+        .collection(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) => result = value)
+        .catchError((error) {});
+
+    return result;
+  }
+
+  static Future<void> updateHistoryItemStatus(
+      int status, String docID, bool isGifts) async {
+    Map<String, dynamic> map = {};
+    map["paid"] = status == 0 ? false : true;
+    await firebaseFirestore
+        .collection("servicesHistory")
+        .doc(isGifts ? "gifts" : "cardVouchers")
+        .collection(await HelperSharedPreferences.getUsername())
+        .doc(docID)
+        .set(map, SetOptions(merge: true)).then((value) => null).onError((error, stackTrace) => null);
   }
 }

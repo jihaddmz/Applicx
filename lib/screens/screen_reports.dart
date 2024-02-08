@@ -6,6 +6,8 @@ import 'package:applicx/components/item_history_report.dart';
 import 'package:applicx/components/item_history_report_cardvoucher.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:applicx/models/model_report.dart';
@@ -24,9 +26,9 @@ class ScreenReports extends StatefulWidget {
 class _ScreenReports extends State<ScreenReports> {
   int _tabIndex = 0;
   final TextEditingController _controllerSearch = TextEditingController();
-  late List<ModelHistoryReportGift> initialHistoryGiftReportList;
-  late List<ModelHistoryReportCardVoucher> initialHistoryCardVoucherReportList;
-  late List<dynamic> _list;
+  List<ModelHistoryReportGift> initialHistoryGiftReportList = [];
+  List<ModelHistoryReportCardVoucher> initialHistoryCardVoucherReportList = [];
+  List<dynamic> _list = [];
   bool _showFilter = false;
   String _filterPath = "assets/svgs/vector_filter.svg";
   bool _isFilterStatusPaid = true;
@@ -39,61 +41,78 @@ class _ScreenReports extends State<ScreenReports> {
 
     fetchUserName();
 
-    initialHistoryGiftReportList = [
-      ModelHistoryReportGift(
-          name: "Jihad Mahfouz",
-          phoneNumber: "81909560",
-          service: "Credit Transfer",
-          date: "12/05/2023 12:00:00",
-          isTouch: 1,
-          isPaid: 1),
-      ModelHistoryReportGift(
-          phoneNumber: "70909560",
-          service: "1 month gift",
-          date: "12/05/2023 12:00:00",
-          isTouch: 0,
-          isPaid: 0),
-      ModelHistoryReportGift(
-          name: "Nomair Raya",
-          phoneNumber: "81909560",
-          service: "Alfa Gift 5GB",
-          date: "12/05/2023 12:00:00",
-          isTouch: 0,
-          isPaid: 1),
-      ModelHistoryReportGift(
-          name: "Nomair Raya",
-          phoneNumber: "81909560",
-          service: "Alfa Gift 5GB",
-          date: "12/05/2023 12:00:00",
-          isTouch: 0,
-          isPaid: 1)
-    ];
-    initialHistoryCardVoucherReportList = [
-      ModelHistoryReportCardVoucher(
-          name: "Jihad Mahfouz",
-          phoneNumber: "81909560",
-          activationCode: "9458945095095009301904934",
-          expDate: "12/12/2024 12:00:00",
-          info: "Alfa 7.5\$ waffer",
-          date: "12/12/2024 12:00:00",
-          isPaid: 1,
-          isTouch: 1),
-      ModelHistoryReportCardVoucher(
-          name: "Nomair Raya",
-          phoneNumber: "70909560",
-          activationCode: "9458945095095009301904934",
-          expDate: "12/12/2024 12:00:00",
-          info: "Alfa 7.5\$ waffer",
-          date: "12/12/2024 12:00:00",
-          isPaid: 0,
-          isTouch: 0)
-    ];
+    Future.delayed(const Duration(milliseconds: 500), () {
+      fetchGiftsHistory();
+    });
+
+  }
+
+  Future<void> fetchGiftsHistory() async {
+    HelperDialog.showLoadingDialog(context, "Fetching Gifts");
+
+    initialHistoryGiftReportList.clear();
+
+    await HelperFirebaseFirestore.fetchHistory(true).then((coll) {
+      if (coll != null) {
+        for (var doc in coll.docs) {
+          initialHistoryGiftReportList.add(ModelHistoryReportGift(
+              id: doc.id,
+              name: doc.get("username"),
+              phoneNumber: doc.get("phoneNumber"),
+              service: doc.get("service"),
+              date: doc.get("date").toString().split(".")[0],
+              isTouch: doc.get("alfa") ? 0 : 1,
+              isPaid: doc.get("paid") ? 1 : 0));
+        }
+      }
+    });
+
+    initialHistoryGiftReportList.sort(
+      (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)),
+    );
+
     setState(() {
       _list = initialHistoryGiftReportList;
     });
-    Future.delayed(const Duration(milliseconds: 500), () {
-      widget.changeNumberOfReports(_list.length);
+
+     widget.changeNumberOfReports(_list.length);
+
+    Navigator.pop(context);
+  }
+
+  Future<void> fetchCardsVoucherHistory() async {
+    HelperDialog.showLoadingDialog(context, "Fetching Cards Voucher");
+
+    initialHistoryCardVoucherReportList.clear();
+
+    await HelperFirebaseFirestore.fetchHistory(false).then((coll) {
+      if (coll != null) {
+        for (var doc in coll.docs) {
+          initialHistoryCardVoucherReportList.add(ModelHistoryReportCardVoucher(
+              id: doc.id,
+              name: doc.get("username"),
+              phoneNumber: doc.get("phoneNumber"),
+              activationCode: doc.get("actCode"),
+              expDate: doc.get("expDate"),
+              info: doc.get("cartInfo"),
+              date: doc.get("date").toString().split(".")[0],
+              isPaid: doc.get("paid") ? 1 : 0,
+              isTouch: doc.get("alfa") ? 0 : 1));
+        }
+      }
     });
+
+    initialHistoryCardVoucherReportList.sort(
+      (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)),
+    );
+
+    setState(() {
+      _list = initialHistoryCardVoucherReportList;
+    });
+
+     widget.changeNumberOfReports(_list.length);
+
+    Navigator.pop(context);
   }
 
   void fetchUserName() async {
@@ -214,19 +233,15 @@ class _ScreenReports extends State<ScreenReports> {
                         child: CardToggler(
                             textLeft: "Gifts",
                             textRight: "Cards Voucher",
-                            onToggle: (index) {
+                            onToggle: (index) async {
+                              if (index == 0) {
+                                await fetchGiftsHistory();
+                              } else {
+                                await fetchCardsVoucherHistory();
+                              }
                               setState(() {
                                 _tabIndex = index;
                               });
-                              if (index == 0) {
-                                setState(() {
-                                  _list = initialHistoryGiftReportList;
-                                });
-                              } else {
-                                setState(() {
-                                  _list = initialHistoryCardVoucherReportList;
-                                });
-                              }
                               widget.changeNumberOfReports(_list.length);
                             }),
                       ),
@@ -281,7 +296,15 @@ class _ScreenReports extends State<ScreenReports> {
     for (var element in _list) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: ItemHistoryReportGift(element, context, _currentPhoneNumber),
+        child: ItemHistoryReportGift(element, context, _currentPhoneNumber,
+            (modelHistoryReportGift, newStatus) {
+          setState(() {
+            modelHistoryReportGift.isPaid = newStatus;
+          });
+          HelperFirebaseFirestore.updateHistoryItemStatus(
+              modelHistoryReportGift.isPaid, modelHistoryReportGift.id, true);
+          // todo here
+        }),
       ));
     }
 
@@ -294,7 +317,17 @@ class _ScreenReports extends State<ScreenReports> {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
         child:
-            ItemHistoryReportCardVoucher(element, context, _currentPhoneNumber),
+            ItemHistoryReportCardVoucher(element, context, _currentPhoneNumber,
+                (modelHistoryReportCardVoucher, newStatus) {
+          setState(() {
+            modelHistoryReportCardVoucher.isPaid = newStatus;
+          });
+          HelperFirebaseFirestore.updateHistoryItemStatus(
+              modelHistoryReportCardVoucher.isPaid,
+              modelHistoryReportCardVoucher.id,
+              false);
+          // todo here
+        }),
       ));
     }
 

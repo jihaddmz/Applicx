@@ -1,3 +1,4 @@
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
 import 'package:applicx/components/oval_letter.dart';
@@ -6,8 +7,11 @@ import 'package:applicx/models/model_report.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
 
-Widget ItemHistoryReportGift(ModelHistoryReportGift modelReport,
-    BuildContext context, String currentPhoneNumber) {
+Widget ItemHistoryReportGift(
+    ModelHistoryReportGift modelReport,
+    BuildContext context,
+    String currentPhoneNumber,
+    Function(ModelHistoryReportGift, int) onYesChangeStatusClick) {
   return SwipeTo(
     onLeftSwipe: (details) => {
       showDialog(
@@ -21,22 +25,15 @@ Widget ItemHistoryReportGift(ModelHistoryReportGift modelReport,
                   "Are you sure you want to set the user status as ${modelReport.isPaid == 0 ? "paid" : "unpaid"}?",
                   textAlign: TextAlign.center),
               actions: [
-                ElevatedButton(
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Color(0xffFF6F77))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextNormalBlack("No")),
-                ElevatedButton(
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Color(0xffAAD59E))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextNormalBlack("Yes"))
+                ButtonSmall("No", () {
+                  Navigator.pop(context);
+                }),
+                ButtonSmall("Yes", () {
+                  Navigator.pop(context);
+                  // if this item is already paid, change its status to unpaid, otherwise change it to paid
+                  onYesChangeStatusClick(
+                      modelReport, modelReport.isPaid == 0 ? 1 : 0);
+                }, color: const Color(0xffAAD59E))
               ],
               actionsAlignment: MainAxisAlignment.spaceEvenly,
             );
