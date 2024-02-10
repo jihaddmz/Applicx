@@ -1,33 +1,51 @@
+import 'package:applicx/colors.dart';
 import 'package:applicx/components/text.dart';
+import 'package:applicx/helpers/helper_dialog.dart';
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ScreenSettingsPayments extends StatefulWidget {
+  ScreenSettingsPayments({required this.walletAmount});
+
+  final double walletAmount;
+
   @override
   _ScreenSettingsPayments createState() => _ScreenSettingsPayments();
 }
 
 class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
-  double _walletAmount = 100;
-  int _PaymentsLength = 10;
-  late final List<ModelPayment> _list;
+  List<ModelPayment> _list = [];
 
   @override
   void initState() {
     super.initState();
-    _list = [
-      ModelPayment(
-          title: "Subscription Fees", cost: 10, date: "10/05/2023 12:00:00 AM"),
-      ModelPayment(
-          title: "Alfa Cart", cost: 30, date: "10/05/2023 12:00:00 AM"),
-      ModelPayment(
-          title: "Credit Transfer", cost: 100, date: "10/05/2023 12:00:00 AM"),
-      ModelPayment(
-          title: "Alfa Cart", cost: 10, date: "10/05/2023 12:00:00 AM"),
-      ModelPayment(
-          title: "Alfa Cart", cost: 10, date: "10/05/2023 12:00:00 AM"),
-    ];
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      fetchPayments();
+    });
+  }
+
+  Future<void> fetchPayments() async {
+    HelperDialog.showLoadingDialog(context, "Fetching Payments History");
+    List<ModelPayment> result = [];
+    await HelperFirebaseFirestore.fetchPayments().then((value) {
+      if (value != null) {
+        for (var element in value) {
+          result.add(ModelPayment(
+              title: element["serviceTitle"],
+              cost: double.parse(element["amountPaid"]),
+              date: element["date"]));
+        }
+      }
+    });
+
+    setState(() {
+      _list = result;
+    });
+
+    Navigator.pop(context);
   }
 
   @override
@@ -56,8 +74,8 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
                   width: MediaQuery.of(context).size.width,
                   height: 50,
                   child: TextField(
-                    controller:
-                        TextEditingController(text: "${_walletAmount} \$"),
+                    controller: TextEditingController(
+                        text: "${widget.walletAmount} \$"),
                     enabled: false,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black),
@@ -83,8 +101,7 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
                   width: MediaQuery.of(context).size.width,
                   height: 50,
                   child: TextField(
-                    controller:
-                        TextEditingController(text: "${_PaymentsLength}"),
+                    controller: TextEditingController(text: "${_list.length}"),
                     enabled: false,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.black),
@@ -137,17 +154,23 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
         SizedBox(
           width: MediaQuery.of(context).size.width - 80,
           child: Card(
-            elevation: 2,
+            elevation: 4,
+            color: colorCard,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 5, 4),
+              padding: const EdgeInsets.fromLTRB(10, 30, 10, 4),
               child: Expanded(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextNormalBlack(
-                      "${modelPayment.cost}\$ ${modelPayment.title}"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextNormalBlack("${modelPayment.cost}\$"),
+                      TextNormalBlack(modelPayment.title)
+                    ],
+                  ),
                   Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomCenter,
                     child: TextGrey(modelPayment.date),
                   )
                 ],

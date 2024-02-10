@@ -278,12 +278,24 @@ class _ScreenSettings extends State<ScreenSettings> {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(MyCustomRoute(
-                                          (BuildContext context) {
-                                        return ScreenSettingsPayments();
-                                      }, const RouteSettings(),
-                                          ScreenSettingsPayments()));
+                                    onTap: () async {
+                                      if (await HelperUtils.isConnected()) {
+                                        Navigator.of(context).push(
+                                            MyCustomRoute(
+                                                (BuildContext context) {
+                                          return ScreenSettingsPayments(
+                                            walletAmount: _walletAmount,
+                                          );
+                                        },
+                                                const RouteSettings(),
+                                                ScreenSettingsPayments(
+                                                  walletAmount: _walletAmount,
+                                                )));
+                                      } else {
+                                        HelperDialog
+                                            .showDialogNotConnectedToInternet(
+                                                context);
+                                      }
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -325,19 +337,20 @@ class _ScreenSettings extends State<ScreenSettings> {
                                               "assets/svgs/vector_arrow_next.svg")),
                                     ),
                                   ),
-                                  GestureDetector(onTap: () {
-                                    
-                                  }, child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: ItemSettingAction(
-                                        "Privacy & Terms",
-                                        null,
-                                        "assets/svgs/vector_privacy.svg",
-                                        const Color(0xff243141),
-                                        SvgPicture.asset(
-                                            "assets/svgs/vector_arrow_next.svg")),
-                                  ),) ,
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: ItemSettingAction(
+                                          "Privacy & Terms",
+                                          null,
+                                          "assets/svgs/vector_privacy.svg",
+                                          const Color(0xff243141),
+                                          SvgPicture.asset(
+                                              "assets/svgs/vector_arrow_next.svg")),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

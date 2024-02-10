@@ -81,8 +81,7 @@ class HelperFirebaseFirestore {
 
   static Future<void> setWalletAmount(double value) async {
     Map<String, String> map = Map();
-    HelperLogging.logD("wallet2 $value");
-    map["walletAmount"] = "$value";
+    map["walletAmount"] = "${value.toStringAsFixed(2)}";
     await firebaseFirestore
         .collection("users")
         .doc(await HelperSharedPreferences.getUsername())
@@ -239,6 +238,24 @@ class HelperFirebaseFirestore {
         .doc(isGifts ? "gifts" : "cardVouchers")
         .collection(await HelperSharedPreferences.getUsername())
         .doc(docID)
-        .set(map, SetOptions(merge: true)).then((value) => null).onError((error, stackTrace) => null);
+        .set(map, SetOptions(merge: true))
+        .then((value) => null)
+        .onError((error, stackTrace) => null);
+  }
+
+  static Future<List<dynamic>?> fetchPayments() async {
+    List<dynamic>? result = [];
+
+    await firebaseFirestore
+        .collection("historyOfPayments")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      result = value.get("list");
+    }).onError((error, stackTrace) {
+      result = null;
+    });
+
+    return result;
   }
 }
