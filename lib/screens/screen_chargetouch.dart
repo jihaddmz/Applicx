@@ -410,13 +410,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
         child: CardCartRechargeVoucher(
             modelCartVoucher: element,
             onActionPerformed: (modelCartVoucher, action) {
-              if (_controllerPhoneNumber.text.isEmpty) {
-                setState(() {
-                  _textNumberError = "Please enter a phone number";
-                  modelCartVoucher.isCardClicked = false;
-                });
-                return;
-              }
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
@@ -657,6 +650,14 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                     });
               } else {
                 // action clicked is direct
+                if (_controllerPhoneNumber.text.isEmpty) {
+                setState(() {
+                  _textNumberError = "Please enter a phone number";
+                  modelCartVoucher.isCardClicked = false;
+                });
+                return;
+              }
+              
                 showDialog(
                     barrierDismissible: false,
                     context: context,

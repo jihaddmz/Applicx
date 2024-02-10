@@ -80,8 +80,8 @@ class HelperFirebaseFirestore {
   }
 
   static Future<void> setWalletAmount(double value) async {
-    Map<String, String> map = Map();
-    map["walletAmount"] = "${value.toStringAsFixed(2)}";
+    Map<String, String> map = {};
+    map["walletAmount"] = value.toStringAsFixed(2);
     await firebaseFirestore
         .collection("users")
         .doc(await HelperSharedPreferences.getUsername())
@@ -176,6 +176,8 @@ class HelperFirebaseFirestore {
       ModelCartVoucher modelCartVoucher,
       String username,
       String phoneNumber) async {
+    String date = DateTime.now().toString().split(".")[0];
+
     Map<String, dynamic> map = {
       "username": username,
       "phoneNumber": phoneNumber,
@@ -185,7 +187,7 @@ class HelperFirebaseFirestore {
           "${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$",
       "paid": true,
       "alfa": modelCartVoucher.isAlfa,
-      "date": DateTime.now().toString()
+      "date": date
     };
     await firebaseFirestore
         .collection("servicesHistory")
@@ -193,6 +195,9 @@ class HelperFirebaseFirestore {
         .collection(await HelperSharedPreferences.getUsername())
         .doc("${Random().nextInt(1000000)}_${Random().nextDouble() * 10000}")
         .set(map);
+
+    await createPaymentEntry(modelCartVoucher.cost.toString(), date,
+        "${modelCartVoucher.dolars} ${modelCartVoucher.title} ${modelCartVoucher.isAlfa ? "Alfa" : "Touch"} cart");
   }
 
   static Future<void> createGiftVoucherHistory(ModelGift modelGift,
@@ -273,5 +278,27 @@ class HelperFirebaseFirestore {
     });
 
     return result;
+  }
+
+  static Future<void> createPaymentEntry(
+      String amountPaid, String date, String serviceTitle) async {
+    List<dynamic>? list = await fetchPayments();
+
+    Map<String, dynamic> map = {
+      "amountPaid": amountPaid,
+      "date": date,
+      "serviceTitle": serviceTitle
+    };
+
+    if (list == null) {
+      list = [map];
+    } else {
+      list.add(map);
+    }
+
+    await firebaseFirestore
+        .collection("historyOfPayments")
+        .doc(await HelperSharedPreferences.getUsername())
+        .set({"list": list}, SetOptions(merge: true));
   }
 }
