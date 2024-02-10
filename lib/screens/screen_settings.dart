@@ -258,12 +258,24 @@ class _ScreenSettings extends State<ScreenSettings> {
                                         }, color: const Color(0xffF2F2F2))),
                                   ),
                                   GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(MyCustomRoute(
-                                          (BuildContext context) {
-                                        return ScreenSettingsDeposit();
-                                      }, RouteSettings(),
-                                          ScreenSettingsDeposit()));
+                                    onTap: () async {
+                                      if (await HelperUtils.isConnected()) {
+                                        Navigator.of(context).push(
+                                            MyCustomRoute(
+                                                (BuildContext context) {
+                                          return ScreenSettingsDeposit(
+                                            walletAmount: _walletAmount,
+                                          );
+                                        },
+                                                RouteSettings(),
+                                                ScreenSettingsDeposit(
+                                                  walletAmount: _walletAmount,
+                                                )));
+                                      } else {
+                                        HelperDialog
+                                            .showDialogNotConnectedToInternet(
+                                                context);
+                                      }
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(

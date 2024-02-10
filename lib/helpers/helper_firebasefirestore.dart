@@ -58,7 +58,7 @@ class HelperFirebaseFirestore {
   }
 
   static Future<void> setExpDate(String value) async {
-    Map<String, String> map = Map();
+    Map<String, String> map = {};
     map["expDate"] = value;
     await firebaseFirestore
         .collection("users")
@@ -248,6 +248,22 @@ class HelperFirebaseFirestore {
 
     await firebaseFirestore
         .collection("historyOfPayments")
+        .doc(await HelperSharedPreferences.getUsername())
+        .get()
+        .then((value) {
+      result = value.get("list");
+    }).onError((error, stackTrace) {
+      result = null;
+    });
+
+    return result;
+  }
+
+  static Future<List<dynamic>?> fetchDeposits() async {
+    List<dynamic>? result = [];
+
+    await firebaseFirestore
+        .collection("historyOfDeposits")
         .doc(await HelperSharedPreferences.getUsername())
         .get()
         .then((value) {
