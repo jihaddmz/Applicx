@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
+import 'package:applicx/models/model_buy_credit.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -300,5 +301,23 @@ class HelperFirebaseFirestore {
         .collection("historyOfPayments")
         .doc(await HelperSharedPreferences.getUsername())
         .set({"list": list}, SetOptions(merge: true));
+  }
+
+  static Future<void> createBuyCreditsEntry(ModelBuyCredit modelBuyCredit,
+      String phoneNumber, String username, bool isAlfa) async {
+    Map<String, dynamic> map = {};
+    map["phoneNumber"] = phoneNumber;
+    map["username"] = username;
+    map["bundle"] = modelBuyCredit.credits.toString();
+    map["paidAmount"] = "${modelBuyCredit.cost + modelBuyCredit.fees}";
+    map["datetime"] = DateTime.now().toString().split(".")[0];
+
+    await HelperFirebaseFirestore.firebaseFirestore
+        .collection(isAlfa ? "buyCreditsAlfa" : "buyCreditsTouch")
+        .doc()
+        .set(map);
+
+    await createPaymentEntry(
+        map["paidAmount"], map["datetime"], "${map["bundle"]} ${isAlfa ? "Alfa" : "Touch"} credits");
   }
 }

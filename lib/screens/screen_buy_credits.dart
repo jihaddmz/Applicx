@@ -269,12 +269,6 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ItemBuyCredit(element, _tabIndex, (modelBuyCredit) {
-          if (_controllerPhoneNumber.text.isEmpty) {
-            setState(() {
-              _textNumberError = "Please enter a phone number";
-            });
-            return;
-          }
           showDialog(
               barrierDismissible: false,
               context: context,
@@ -354,6 +348,17 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
 
                               await HelperSharedPreferences.setWalletAmount(
                                   _walletAmount);
+
+                              await HelperFirebaseFirestore
+                                  .createBuyCreditsEntry(
+                                      modelBuyCredit,
+                                      _controllerPhoneNumber.text.isEmpty
+                                          ? await HelperSharedPreferences
+                                              .getPhoneNumber()
+                                          : _controllerPhoneNumber.text,
+                                      _controllerName.text.isEmpty ? "N\\A" : _controllerName.text,
+                                      _tabIndex == 0 ? true : false);
+
                               Navigator.pop(context);
                             }
                           } else {
