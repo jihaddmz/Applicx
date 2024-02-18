@@ -317,7 +317,23 @@ class HelperFirebaseFirestore {
         .doc()
         .set(map);
 
-    await createPaymentEntry(
-        map["paidAmount"], map["datetime"], "${map["bundle"]} ${isAlfa ? "Alfa" : "Touch"} credits");
+    await createPaymentEntry(map["paidAmount"], map["datetime"],
+        "${map["bundle"]} ${isAlfa ? "Alfa" : "Touch"} credits");
+  }
+
+  static Future<void> createBuyVoucher(
+      ModelCartVoucher modelCartVoucher, String phoneNumber) async {
+    Map<String, dynamic> map = {};
+    map["code"] = modelCartVoucher.map.keys.elementAt(0);
+    map["date"] = DateTime.now().toString().split(".")[0];
+    map["phoneNumber"] = phoneNumber;
+
+    await firebaseFirestore
+        .collection(
+            modelCartVoucher.isAlfa ? "buyVouchersAlfa" : "buyVouchersTouch")
+        .doc()
+        .set(map)
+        .then((value) => null)
+        .catchError((err) {});
   }
 }

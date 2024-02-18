@@ -14,6 +14,7 @@ import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 
 class ScreenChargeTouch extends StatefulWidget {
@@ -139,7 +140,8 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
       }
 
       listOfCartVouchersOthers.sort(
-        (a, b) => double.parse(a.id.split("_")[2]).compareTo(double.parse(b.id.split("_")[2])),
+        (a, b) => double.parse(a.id.split("_")[2])
+            .compareTo(double.parse(b.id.split("_")[2])),
       );
 
       setListVoucherCardsChosen();
@@ -651,13 +653,13 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
               } else {
                 // action clicked is direct
                 if (_controllerPhoneNumber.text.isEmpty) {
-                setState(() {
-                  _textNumberError = "Please enter a phone number";
-                  modelCartVoucher.isCardClicked = false;
-                });
-                return;
-              }
-              
+                  setState(() {
+                    _textNumberError = "Please enter a phone number";
+                    modelCartVoucher.isCardClicked = false;
+                  });
+                  return;
+                }
+
                 showDialog(
                     barrierDismissible: false,
                     context: context,
@@ -742,15 +744,19 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                       _walletAmount);
 
                                       await HelperFirebaseFirestore
-                                        .removeCardVoucher(modelCartVoucher);
-
-                                    await HelperFirebaseFirestore
-                                        .createCardVoucherHistory(
-                                            modelCartVoucher,
-                                            _controllerName.text.isEmpty
-                                                ? "N/A"
-                                                : _controllerName.text,
+                                        .createBuyVoucher(modelCartVoucher,
                                             _controllerPhoneNumber.text);
+
+                                  await HelperFirebaseFirestore
+                                      .removeCardVoucher(modelCartVoucher);
+
+                                  await HelperFirebaseFirestore
+                                      .createCardVoucherHistory(
+                                          modelCartVoucher,
+                                          _controllerName.text.isEmpty
+                                              ? "N/A"
+                                              : _controllerName.text,
+                                          _controllerPhoneNumber.text);
 
                                   Navigator.pop(context);
                                 }
@@ -848,21 +854,29 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               Navigator.pop(context);
                             }),
                             ButtonSmall("Yes", () async {
+                              String result = await sendSMS(
+                                  message:
+                                      "${_controllerPhoneNumber.text}t${controller.text}",
+                                  recipients: ["1199"],
+                                  sendDirect: false);
+
                               setState(() {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
                                 controller.clear();
                               });
-                              await HelperFirebaseFirestore
-                                  .createGiftVoucherHistory(
-                                      modelGift,
-                                      _controllerName.text.isEmpty
-                                          ? "N/A"
-                                          : _controllerName.text,
-                                      false,
-                                      _controllerPhoneNumber.text);
 
+                              if (result == "sent") {
+                                await HelperFirebaseFirestore
+                                    .createGiftVoucherHistory(
+                                        modelGift,
+                                        _controllerName.text.isEmpty
+                                            ? "N/A"
+                                            : _controllerName.text,
+                                        false,
+                                        _controllerPhoneNumber.text);
+                              }
                               Navigator.pop(context);
                             }, color: const Color(0xffAAD59E)),
                           ],

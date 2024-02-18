@@ -182,6 +182,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  flutter_phone_dialer:
+    dependency: "direct main"
+    description:
+      name: flutter_phone_dialer
+      sha256: "0d11c89c0cac5bab1736c6b346fc1eb4ebf476492a22d7f1160c5c1dfe6ad485"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -190,6 +198,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  flutter_sms:
+    dependency: "direct main"
+    description:
+      name: flutter_sms
+      sha256: "2fe5f584f02596343557eeca56348f9b82413fefe83a423fab880cdbdf54d8d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.3"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -645,6 +661,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  ussd_service:
+    dependency: "direct main"
+    description:
+      name: ussd_service
+      sha256: "2eb389b5ac8efa33722939837ef342627d7846a6e1786cae3518f994645168d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   vector_graphics:
     dependency: transitive
     description:

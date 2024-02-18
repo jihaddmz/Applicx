@@ -140,10 +140,22 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "flutter_phone_dialer",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_phone_dialer-0.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_slidable",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_sms",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_sms-2.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_svg",
@@ -494,6 +506,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "ussd_service",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/ussd_service-0.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vector_graphics",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9+1",
       "packageUri": "lib/",
@@ -554,7 +572,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-01-27T14:15:34.003526Z",
+  "generated": "2024-02-18T10:07:22.591028Z",
   "generator": "pub",
   "generatorVersion": "3.1.3"
 }

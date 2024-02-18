@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_cart_recharge_voucher.dart';
 import 'package:applicx/components/card_gift_credit_transfer.dart';
@@ -16,6 +18,8 @@ import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 
 class ScreenChargeAlfa extends StatefulWidget {
@@ -28,15 +32,16 @@ class ScreenChargeAlfa extends StatefulWidget {
 }
 
 class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
+  static const platform = MethodChannel("sendSmss");
+
   final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerPhoneNumber =
-      TextEditingController();
+  final TextEditingController _controllerPhoneNumber = TextEditingController();
   String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
   final List<ModelCartVoucher> listOfCartVouchers = [];
-   List<ModelCartVoucher> listOfCartVouchersWaffer = [];
+  List<ModelCartVoucher> listOfCartVouchersWaffer = [];
   List<ModelCartVoucher> _listOfChosenVouchers = [];
   double _walletAmount = 0;
   late BuildContext mContext;
@@ -807,6 +812,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                         .setWalletAmount(_walletAmount);
 
                                     await HelperFirebaseFirestore
+                                        .createBuyVoucher(modelCartVoucher,
+                                            _controllerPhoneNumber.text);
+
+                                    await HelperFirebaseFirestore
                                         .removeCardVoucher(modelCartVoucher);
 
                                     await HelperFirebaseFirestore
@@ -924,20 +933,32 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               Navigator.pop(mContext);
                             }),
                             ButtonSmall("Yes", () async {
+                              String result = await sendSMS(
+                                  message:
+                                      "${_controllerPhoneNumber.text}t${controller.text}",
+                                  recipients: ["1313"],
+                                  sendDirect: false);
+
+                              // await platform.invokeMethod('sendSmsIn',
+                              //     {"phoneNumber": "+96176554635", "msg": "hello there world!"});
+
                               setState(() {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
                                 controller.clear();
                               });
-                              await HelperFirebaseFirestore
-                                  .createGiftVoucherHistory(
-                                      modelGift,
-                                      _controllerName.text.isEmpty
-                                          ? "N/A"
-                                          : _controllerName.text,
-                                      true,
-                                      _controllerPhoneNumber.text);
+                              if (result == "sent") {
+                                await HelperFirebaseFirestore
+                                    .createGiftVoucherHistory(
+                                        modelGift,
+                                        _controllerName.text.isEmpty
+                                            ? "N/A"
+                                            : _controllerName.text,
+                                        true,
+                                        _controllerPhoneNumber.text);
+                              }
+
                               Navigator.pop(mContext);
                             }, color: const Color(0xffAAD59E)),
                           ],
@@ -1039,22 +1060,72 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               Navigator.pop(context);
                             }),
                             ButtonSmall("Yes", () async {
-                              await HelperFirebaseFirestore
-                                  .createGiftVoucherHistory(
-                                      modelGift,
-                                      _controllerName.text.isEmpty
-                                          ? "N/A"
-                                          : _controllerName.text,
-                                      true,
-                                      _controllerPhoneNumber.text);
-                              setState(() {
-                                if (modelGift.msg.contains("Specify")) {
-                                  setState(() {
-                                    modelGift.cost = 0;
-                                    modelGift.chosen = null;
-                                  });
+                              String result = "";
+
+                              if (modelGift.title == "Mobile Internet") {
+                                result = await sendSMS(
+                                    message:
+                                        "${_controllerPhoneNumber.text}MI${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              } else if (modelGift.title ==
+                                  "Weekly Data Bundle") {
+                                result = await sendSMS(
+                                    message:
+                                        "${_controllerPhoneNumber.text}WDB${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              } else if (modelGift.title == "Data Booster") {
+                                var chosenParameter = "";
+                                if (modelGift.chosen == "Unlimited") {
+                                  chosenParameter = "D5";
+                                } else if (modelGift.chosen == "0.05") {
+                                  chosenParameter = "D1";
+                                } else if (modelGift.chosen == "0.6") {
+                                  chosenParameter = "D3";
                                 }
-                              });
+
+                                result = await sendSMS(
+                                    message:
+                                        "${_controllerPhoneNumber.text}${chosenParameter}",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              } else if (modelGift.title == "Alfa 4x4 / 5x5") {
+                                result = await sendSMS(
+                                    message:
+                                        "${_controllerPhoneNumber.text}${modelGift.chosen == "4x4" ? "A4" : "ND5"}",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              } else if (modelGift.title ==
+                                  "Minutes Booster 20 Min") {
+                                result = await sendSMS(
+                                    message: "${_controllerPhoneNumber.text}M1",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              } else if (modelGift.title == "The Weekender") {
+                                result = await sendSMS(
+                                    message: "${_controllerPhoneNumber.text}TW",
+                                    recipients: ["1050"],
+                                    sendDirect: false);
+                              }
+
+                              if (modelGift.msg.contains("Specify")) {
+                                setState(() {
+                                  modelGift.cost = 0;
+                                  modelGift.chosen = null;
+                                });
+                              }
+                              if (result == "sent") {
+                                await HelperFirebaseFirestore
+                                    .createGiftVoucherHistory(
+                                        modelGift,
+                                        _controllerName.text.isEmpty
+                                            ? "N/A"
+                                            : _controllerName.text,
+                                        true,
+                                        _controllerPhoneNumber.text);
+                              }
+
                               Navigator.pop(context);
                             }, color: const Color(0xffAAD59E)),
                           ],
