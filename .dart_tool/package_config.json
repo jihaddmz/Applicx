@@ -74,6 +74,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cross_file",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/cross_file-0.3.3+7",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/crypto-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6",
       "packageUri": "lib/",
@@ -254,6 +266,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mime",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/mime-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "package_info_plus",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/package_info_plus-4.2.0",
       "packageUri": "lib/",
@@ -276,6 +294,24 @@
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "path_provider",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_provider-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "path_provider_android",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_provider_android-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "path_provider_foundation",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_linux",
@@ -356,6 +392,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "share_plus",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/share_plus-7.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "share_plus_platform_interface",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/share_plus_platform_interface-3.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/shared_preferences-2.2.2",
       "packageUri": "lib/",
@@ -408,6 +456,12 @@
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/source_span-1.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "sprintf",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/sprintf-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "stack_trace",
@@ -512,6 +566,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "uuid",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/uuid-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "vector_graphics",
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9+1",
       "packageUri": "lib/",
@@ -540,6 +600,12 @@
       "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "widgets_to_image",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/widgets_to_image-0.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "win32",
@@ -572,7 +638,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-02-18T10:07:22.591028Z",
+  "generated": "2024-02-18T12:29:59.227217Z",
   "generator": "pub",
   "generatorVersion": "3.1.3"
 }

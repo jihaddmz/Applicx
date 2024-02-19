@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_cart_recharge_voucher.dart';
 import 'package:applicx/components/card_gift_credit_transfer.dart';
@@ -16,6 +18,9 @@ import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 class ScreenChargeTouch extends StatefulWidget {
   ScreenChargeTouch({required this.walletAmount});
@@ -29,6 +34,8 @@ class ScreenChargeTouch extends StatefulWidget {
 class _ScreenChargeTouch extends State<ScreenChargeTouch> {
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPhoneNumber = TextEditingController();
+  WidgetsToImageController controller = WidgetsToImageController();
+
   String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
@@ -543,75 +550,74 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .only(top: 20),
-                                                        child: Card(
-                                                          elevation: 2,
-                                                          color: const Color(
-                                                              0xffffffff),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    left: 10),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    TextNormalBlack(
-                                                                        "Activation Code"),
-                                                                    Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topRight,
-                                                                      child: Image
-                                                                          .asset(
-                                                                        !modelCardVoucher1.isAlfa
-                                                                            ? "assets/images/logo_touch.png"
-                                                                            : "assets/images/logo_alfa.png",
-                                                                        width:
-                                                                            40,
-                                                                        height:
-                                                                            40,
+                                                        child: WidgetsToImage(controller: controller, child: Card(
+                                                            elevation: 0,
+                                                            color: const Color(
+                                                                0xffffffff),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 10),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Stack(
+                                                                    children: [
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.topRight,
+                                                                        child: Image
+                                                                            .asset(
+                                                                          !modelCardVoucher1.isAlfa
+                                                                              ? "assets/images/logo_touch.png"
+                                                                              : "assets/images/logo_alfa.png",
+                                                                          width:
+                                                                              40,
+                                                                          height:
+                                                                              40,
+                                                                        ),
                                                                       ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                TextGrey(
-                                                                    modelCardVoucher1
-                                                                        .map
-                                                                        .keys
-                                                                        .elementAt(
-                                                                            0)),
-                                                                TextNormalBlack(
-                                                                    "Expiration Date"),
-                                                                TextGrey(modelCardVoucher1
-                                                                    .map.values
-                                                                    .elementAt(
-                                                                        0)
-                                                                    .toString()),
-                                                                TextNormalBlack(
-                                                                    "Instruction"),
-                                                                TextGrey(
-                                                                    "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .bottomRight,
-                                                                  child: TextNormalBlack(
-                                                                      "${modelCardVoucher1.cost}\$",
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .right),
-                                                                )
-                                                              ],
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          TextNormalBlack(
+                                                                              "Activation Code"),
+                                                                          TextGrey(modelCardVoucher1
+                                                                              .map
+                                                                              .keys
+                                                                              .elementAt(0)),
+                                                                          TextNormalBlack(
+                                                                              "Expiration Date"),
+                                                                          TextGrey(modelCardVoucher1
+                                                                              .map
+                                                                              .values
+                                                                              .elementAt(0)
+                                                                              .toString()),
+                                                                          TextNormalBlack(
+                                                                              "Instruction"),
+                                                                          TextGrey(
+                                                                              "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(right: 10),
+                                                                            child:
+                                                                                Align(
+                                                                              alignment: Alignment.bottomRight,
+                                                                              child: TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
+                                                          )) ,
                                                       )
                                                     ],
                                                   ),
@@ -621,7 +627,31 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                     },
                                                         color: const Color(
                                                             0xff9ECCFA)),
-                                                    ButtonSmall("Share", () {},
+                                                    ButtonSmall("Share", () {
+                                                      final bytes =
+                                                          controller.capture();
+                                                      bytes.then((bytes) async {
+                                                        if (bytes != null) {
+                                                          getApplicationDocumentsDirectory()
+                                                              .then(
+                                                                  (value) async {
+                                                            File file = File(
+                                                                value.path +
+                                                                    "/image.png");
+                                                            file.writeAsBytes(
+                                                                bytes);
+
+                                                            await Share
+                                                                .shareFiles([
+                                                              file.path
+                                                            ]);
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        }
+                                                      });
+                                                    },
                                                         color: const Color(
                                                             0xffAAD59E))
                                                   ],

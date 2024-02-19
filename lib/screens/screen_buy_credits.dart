@@ -44,9 +44,9 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
     });
 
     listOfCreditsToBuy = [
-      ModelBuyCredit(credits: 1, cost: 1.3, fees: 0.16),
-      ModelBuyCredit(credits: 2, cost: 2.3, fees: 0.16),
-      ModelBuyCredit(credits: 3, cost: 3.3, fees: 0.16),
+      ModelBuyCredit(credits: 1, cost: 1.07, fees: 0.16),
+      ModelBuyCredit(credits: 2, cost: 2.14, fees: 0.16),
+      ModelBuyCredit(credits: 3, cost: 3.21, fees: 0.16),
     ];
   }
 
