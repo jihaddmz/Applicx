@@ -347,8 +347,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               widthFactor: 0.7,
                               child: MyTextField(
                                 inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8),
-                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
                                 ],
                                 controller: _controllerPhoneNumber,
                                 hintText: "76 554 635",
@@ -492,6 +491,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
         child: CardCartRechargeVoucher(
             modelCartVoucher: element,
             onActionPerformed: (modelCartVoucher, action) {
+              String phoneNumber =
+                  _controllerPhoneNumber.text.toString().replaceAll(" ", "");
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
@@ -765,7 +766,9 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                           ));
                     });
               } else {
-                if (_controllerPhoneNumber.text.toString().length != 8) {
+                if (phoneNumber
+                        .length !=
+                    8) {
                   HelperDialog.showDialogInfo("Warning!",
                       "Invalid phone number format", context, () => null);
                   scrollController.animateTo(0,
@@ -829,7 +832,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                 "Cart: ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
                                           ),
                                           TextGrey(
-                                              "Number: ${_controllerPhoneNumber.text}"),
+                                              "Number: ${phoneNumber}"),
                                           TextGrey(
                                               "User: ${_controllerName.text}"),
                                         ],
@@ -866,7 +869,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
 
                                     await HelperFirebaseFirestore
                                         .createBuyVoucher(modelCartVoucher,
-                                            _controllerPhoneNumber.text);
+                                            phoneNumber);
 
                                     await HelperFirebaseFirestore
                                         .removeCardVoucher(modelCartVoucher);
@@ -877,7 +880,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                             _controllerName.text.isEmpty
                                                 ? "N/A"
                                                 : _controllerName.text,
-                                            _controllerPhoneNumber.text);
+                                            phoneNumber);
 
                                     Navigator.pop(mContext);
                                   } else {
@@ -911,9 +914,12 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
     for (var element in list) {
       if (element.isServiceCreditTransfer == 1) {
         result.add(CardGiftCreditTransfer(
+          isAlfa: true,
           modelGift: element,
-          onConfirmClick: (modelGift, controller) {
-            if (_controllerPhoneNumber.text.toString().length != 8) {
+          onConfirmClick: (modelGift) {
+            String phoneNumber =
+                _controllerPhoneNumber.text.toString().replaceAll(" ", "");
+            if (phoneNumber.length != 8) {
               HelperDialog.showDialogInfo("Warning!",
                   "Invalid phone number format", context, () => null);
               scrollController.animateTo(0,
@@ -964,8 +970,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                       children: [
                                         TextGrey(
                                             "Credits: ${modelGift.chosen}"),
-                                        TextGrey(
-                                            "Number: ${_controllerPhoneNumber.text}"),
+                                        TextGrey("Number: ${phoneNumber}"),
                                         TextGrey(
                                             "User: ${_controllerName.text}"),
                                       ],
@@ -986,14 +991,13 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
-                                controller.clear();
+                                modelGift.chosen = null;
                               });
                               Navigator.pop(mContext);
                             }),
                             ButtonSmall("Yes", () async {
                               String result = await sendSMS(
-                                  message:
-                                      "${_controllerPhoneNumber.text}t${controller.text}",
+                                  message: "${phoneNumber}t${modelGift.chosen}",
                                   recipients: ["1313"],
                                   sendDirect: false);
 
@@ -1004,7 +1008,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
-                                controller.clear();
+                                modelGift.chosen = null;
                               });
                               if (result == "sent") {
                                 await HelperFirebaseFirestore
@@ -1014,7 +1018,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                             ? "N/A"
                                             : _controllerName.text,
                                         true,
-                                        _controllerPhoneNumber.text);
+                                        phoneNumber);
                               }
 
                               Navigator.pop(mContext);
@@ -1033,7 +1037,9 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           color: element.color!,
           list: element.msg.contains("Specify") ? element.listOfOptions! : null,
           onConfirmClick: (modelGift) {
-            if (_controllerPhoneNumber.text.toString().length != 8) {
+            String phoneNumber =
+                _controllerPhoneNumber.text.toString().replaceAll(" ", "");
+            if (phoneNumber.length != 8) {
               HelperDialog.showDialogInfo("Warning",
                   "Invalid phone number format", context, () => null);
               scrollController.animateTo(0,
@@ -1093,8 +1099,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                       .contains("GB")
                                                   ? "GB: ${modelGift.chosen}"
                                                   : "Service: ${modelGift.chosen}")),
-                                          TextGrey(
-                                              "Number: ${_controllerPhoneNumber.text}"),
+                                          TextGrey("Number: ${phoneNumber}"),
                                           TextGrey(
                                               "User: ${_controllerName.text}"),
                                         ],
@@ -1128,14 +1133,14 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               if (modelGift.title == "Mobile Internet") {
                                 result = await sendSMS(
                                     message:
-                                        "${_controllerPhoneNumber.text}MI${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
+                                        "${phoneNumber}MI${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               } else if (modelGift.title ==
                                   "Weekly Data Bundle") {
                                 result = await sendSMS(
                                     message:
-                                        "${_controllerPhoneNumber.text}WDB${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
+                                        "${phoneNumber}WDB${modelGift.chosen == "0.5" ? "500" : modelGift.chosen}",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               } else if (modelGift.title == "Data Booster") {
@@ -1149,25 +1154,24 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                 }
 
                                 result = await sendSMS(
-                                    message:
-                                        "${_controllerPhoneNumber.text}${chosenParameter}",
+                                    message: "${phoneNumber}${chosenParameter}",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               } else if (modelGift.title == "Alfa 4x4 / 5x5") {
                                 result = await sendSMS(
                                     message:
-                                        "${_controllerPhoneNumber.text}${modelGift.chosen == "4x4" ? "A4" : "ND5"}",
+                                        "${phoneNumber}${modelGift.chosen == "4x4" ? "A4" : "ND5"}",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               } else if (modelGift.title ==
                                   "Minutes Booster 20 Min") {
                                 result = await sendSMS(
-                                    message: "${_controllerPhoneNumber.text}M1",
+                                    message: "${phoneNumber}M1",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               } else if (modelGift.title == "The Weekender") {
                                 result = await sendSMS(
-                                    message: "${_controllerPhoneNumber.text}TW",
+                                    message: "${phoneNumber}TW",
                                     recipients: ["1050"],
                                     sendDirect: false);
                               }
@@ -1186,7 +1190,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                             ? "N/A"
                                             : _controllerName.text,
                                         true,
-                                        _controllerPhoneNumber.text);
+                                        phoneNumber);
                               }
 
                               Navigator.pop(context);

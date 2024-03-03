@@ -10,6 +10,7 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
@@ -289,8 +290,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               widthFactor: 0.7,
                               child: MyTextField(
                                 inputFormatters: [
-                                  LengthLimitingTextInputFormatter(8),
-                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
                                 ],
                                 controller: _controllerPhoneNumber,
                                 hintText: "76 554 635",
@@ -431,6 +431,8 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
         child: CardCartRechargeVoucher(
             modelCartVoucher: element,
             onActionPerformed: (modelCartVoucher, action) {
+              String phoneNumber =
+                  _controllerPhoneNumber.text.toString().replaceAll(" ", "");
               if (action == "buy") {
                 showDialog(
                     barrierDismissible: false,
@@ -689,7 +691,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                     });
               } else {
                 // action clicked is direct
-                if (_controllerPhoneNumber.text.toString().length != 8) {
+                if (phoneNumber
+                        .length !=
+                    8) {
                   HelperDialog.showDialogInfo("Warning!",
                       "Invalid phone number format", context, () => null);
                   scrollController.animateTo(0,
@@ -753,7 +757,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                 "Cart: ${modelCartVoucher.title} ${modelCartVoucher.cost}\$"),
                                           ),
                                           TextGrey(
-                                              "Number: ${_controllerPhoneNumber.text}"),
+                                              "Number: ${phoneNumber}"),
                                           TextGrey(
                                               "User: ${_controllerName.text}"),
                                         ],
@@ -790,7 +794,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
 
                                   await HelperFirebaseFirestore
                                       .createBuyVoucher(modelCartVoucher,
-                                          _controllerPhoneNumber.text);
+                                          phoneNumber);
 
                                   await HelperFirebaseFirestore
                                       .removeCardVoucher(modelCartVoucher);
@@ -801,7 +805,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                           _controllerName.text.isEmpty
                                               ? "N/A"
                                               : _controllerName.text,
-                                          _controllerPhoneNumber.text);
+                                          phoneNumber);
 
                                   Navigator.pop(context);
                                 }
@@ -824,9 +828,12 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
     for (var element in list) {
       if (element.isServiceCreditTransfer == 1) {
         result.add(CardGiftCreditTransfer(
+          isAlfa: false,
           modelGift: element,
-          onConfirmClick: (modelGift, controller) {
-            if (_controllerPhoneNumber.text.toString().length != 8) {
+          onConfirmClick: (modelGift) {
+            String phoneNumber =
+                _controllerPhoneNumber.text.toString().replaceAll(" ", "");
+            if (phoneNumber.length != 8) {
               HelperDialog.showDialogInfo("Warning!",
                   "Invalid phone number format", context, () => null);
               scrollController.animateTo(0,
@@ -878,7 +885,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                         TextGrey(
                                             "Credits: ${modelGift.chosen}"),
                                         TextGrey(
-                                            "Number: ${_controllerPhoneNumber.text}"),
+                                            "Number: ${phoneNumber}"),
                                         TextGrey(
                                             "User: ${_controllerName.text}"),
                                       ],
@@ -899,14 +906,14 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
-                                controller.clear();
+                                modelGift.chosen = null;
                               });
                               Navigator.pop(context);
                             }),
                             ButtonSmall("Yes", () async {
                               String result = await sendSMS(
                                   message:
-                                      "${_controllerPhoneNumber.text}t${controller.text}",
+                                      "${phoneNumber}t${modelGift.chosen}",
                                   recipients: ["1199"],
                                   sendDirect: false);
 
@@ -914,7 +921,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                 modelGift.showConfirm = false;
                                 modelGift.totalFees = 0.0;
                                 modelGift.transfeerFees = 0.0;
-                                controller.clear();
+                                modelGift.chosen = null;
                               });
 
                               if (result == "sent") {
@@ -925,7 +932,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                             ? "N/A"
                                             : _controllerName.text,
                                         false,
-                                        _controllerPhoneNumber.text);
+                                        phoneNumber);
                               }
                               Navigator.pop(context);
                             }, color: const Color(0xffAAD59E)),
@@ -938,111 +945,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           },
         ));
       }
-      // else {
-      //   result.add(CardGiftOthers(
-      //     modelGift: element,
-      //     color: element.color!,
-      //     list: element.msg.contains("Specify") ? element.listOfOptions! : null,
-      //     onConfirmClick: (modelGift) {
-      //       if (_controllerPhoneNumber.text.isEmpty) {
-      //         setState(() {
-      //           _textNumberError = "Please enter a phone number";
-      //         });
-      //       } else {
-      //         showDialog(
-      //             barrierDismissible: false,
-      //             context: context,
-      //             builder: (context) {
-      //               return AlertDialog(
-      //                 elevation: 0,
-      //                 backgroundColor: const Color(0xffF2F2F2),
-      //                 title: Center(
-      //                   child: TextBoldBlack("Attention!"),
-      //                 ),
-      //                 content: Column(
-      //                   mainAxisSize: MainAxisSize.min,
-      //                   children: [
-      //                     TextGrey("Are you sure you want to charge this?",
-      //                         textAlign: TextAlign.center),
-      //                     SizedBox(
-      //                       width: MediaQuery.of(context).size.width,
-      //                       child: Card(
-      //                         shape: RoundedRectangleBorder(
-      //                             borderRadius: BorderRadius.circular(10)),
-      //                         color: Colors.white,
-      //                         elevation: 2,
-      //                         child: Stack(
-      //                           children: [
-      //                             Positioned(
-      //                                 right: 0,
-      //                                 child: Image.asset(
-      //                                     "assets/images/logo_alfa.png")),
-      //                             Padding(
-      //                               padding: const EdgeInsets.fromLTRB(
-      //                                   10, 10, 0, 10),
-      //                               child: Column(
-      //                                 crossAxisAlignment:
-      //                                     CrossAxisAlignment.start,
-      //                                 children: [
-      //                                   FractionallySizedBox(
-      //                                     widthFactor: 0.7,
-      //                                     child: TextGrey(
-      //                                         "Cart: ${modelGift.title}"),
-      //                                   ),
-      //                                   Visibility(
-      //                                       visible: modelGift.chosen != null,
-      //                                       child: TextGrey(modelGift.msg
-      //                                               .contains("GB")
-      //                                           ? "GB: ${modelGift.chosen}"
-      //                                           : "Service: ${modelGift.chosen}")),
-      //                                   TextGrey(
-      //                                       "Number: ${_controllerPhoneNumber.text}"),
-      //                                   TextGrey(
-      //                                       "User: ${_controllerName.text}"),
-      //                                 ],
-      //                               ),
-      //                             )
-      //                           ],
-      //                         ),
-      //                       ),
-      //                     )
-      //                   ],
-      //                 ),
-      //                 actions: [
-      //                   Row(
-      //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //                     children: [
-      //                       ButtonSmall("No", () {
-      //                         setState(() {
-      //                           if (modelGift.msg.contains("Specify")) {
-      //                             setState(() {
-      //                               modelGift.cost = 0;
-      //                               modelGift.chosen = null;
-      //                             });
-      //                           }
-      //                         });
-      //                         Navigator.pop(context);
-      //                       }),
-      //                       ButtonSmall("Pay ${modelGift.cost}\$", () {
-      //                         setState(() {
-      //                           if (modelGift.msg.contains("Specify")) {
-      //                             setState(() {
-      //                               modelGift.cost = 0;
-      //                               modelGift.chosen = null;
-      //                             });
-      //                           }
-      //                         });
-      //                         Navigator.pop(context);
-      //                       }, color: const Color(0xffAAD59E)),
-      //                     ],
-      //                   )
-      //                 ],
-      //               );
-      //             });
-      //       }
-      //     },
-      //   ));
-      // }
     }
 
     return result;

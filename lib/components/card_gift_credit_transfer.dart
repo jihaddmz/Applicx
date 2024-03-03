@@ -1,22 +1,23 @@
+import 'package:applicx/components/drop_down.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CardGiftCreditTransfer extends StatefulWidget {
   CardGiftCreditTransfer(
-      {required this.modelGift, required this.onConfirmClick});
+      {required this.modelGift,
+      required this.onConfirmClick,
+      required this.isAlfa});
 
   final ModelGift modelGift;
-  final Function(ModelGift, TextEditingController) onConfirmClick;
+  final Function(ModelGift) onConfirmClick;
+  final bool isAlfa;
 
   @override
   _CardGiftCreditTransfer createState() => _CardGiftCreditTransfer();
 }
 
 class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
-  final TextEditingController _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,7 +27,7 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
           GestureDetector(
             onTap: () {
               calculateTotalCreditsFees();
-              widget.onConfirmClick(widget.modelGift, _controller);
+              widget.onConfirmClick(widget.modelGift);
             },
             child: Visibility(
                 visible: widget.modelGift.showConfirm,
@@ -83,73 +84,52 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
                                               MainAxisAlignment.end,
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
-                                            Card(
-                                              surfaceTintColor:
-                                                  const Color(0xffF2F2F2),
-                                              elevation: 4,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      side: BorderSide(
-                                                          color: Colors.white),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5))),
-                                              child: SizedBox(
-                                                width: 60,
-                                                height: 40,
-                                                child: TextField(
-                                                  controller: _controller,
-                                                  textAlign: TextAlign.center,
-                                                  inputFormatters: [
-                                                    LengthLimitingTextInputFormatter(
-                                                        3),
-                                                  ],
-                                                  keyboardType: TextInputType
-                                                      .numberWithOptions(
-                                                          decimal: true),
-                                                  decoration:
-                                                      const InputDecoration(
-                                                          hintText: "...",
-                                                          border:
-                                                              InputBorder.none,
-                                                          hintStyle: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          )),
-                                                  onChanged: (value) {
-                                                    if (value.isNotEmpty &&
-                                                        !doesContainWrongCreditDeciml()) {
-                                                      setState(() {
-                                                        widget.modelGift
-                                                            .showConfirm = true;
-                                                        widget.modelGift
-                                                            .chosen = value;
-                                                        widget.modelGift
-                                                                .totalFees =
-                                                            calculateTotalCreditsFees() +
-                                                                double.parse(widget
-                                                                    .modelGift
-                                                                    .chosen!);
-                                                        widget.modelGift.transfeerFees = double.parse(
-                                                            calculateTotalCreditsFees()
-                                                                .toStringAsFixed(
-                                                                    2));
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        widget.modelGift
-                                                                .showConfirm =
-                                                            false;
-                                                        widget.modelGift
-                                                            .totalFees = 0;
-                                                        widget.modelGift.transfeerFees = 0;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
+                                            MyDropDown(
+                                                list: const [
+                                                  "0.5",
+                                                  "1",
+                                                  "1.5",
+                                                  "2",
+                                                  "2.5",
+                                                  "3"
+                                                ],
+                                                label: "",
+                                                initialSelected:
+                                                    widget.modelGift.chosen,
+                                                onSelect: (value) {
+                                                  if (value != null &&
+                                                      !doesContainWrongCreditDeciml(
+                                                          value)) {
+                                                    setState(() {
+                                                      widget.modelGift
+                                                          .showConfirm = true;
+                                                      widget.modelGift.chosen =
+                                                          value;
+                                                      widget.modelGift
+                                                              .totalFees =
+                                                          calculateTotalCreditsFees() +
+                                                              double.parse(
+                                                                  widget
+                                                                      .modelGift
+                                                                      .chosen!);
+                                                      widget.modelGift
+                                                              .transfeerFees =
+                                                          double.parse(
+                                                              calculateTotalCreditsFees()
+                                                                  .toStringAsFixed(
+                                                                      2));
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      widget.modelGift
+                                                          .showConfirm = false;
+                                                      widget.modelGift
+                                                          .totalFees = 0;
+                                                      widget.modelGift
+                                                          .transfeerFees = 0;
+                                                    });
+                                                  }
+                                                }),
                                           ],
                                         )),
                                   )),
@@ -178,8 +158,8 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
     );
   }
 
-  bool doesContainWrongCreditDeciml() {
-    return RegExp(r'\.(1|2|3|4|6|7|8|9)').hasMatch(_controller.text);
+  bool doesContainWrongCreditDeciml(String text) {
+    return RegExp(r'\.(1|2|3|4|6|7|8|9)').hasMatch(text);
   }
 
   double calculateTotalCreditsFees() {
@@ -195,7 +175,9 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
 
       var results = double.parse(widget.modelGift.chosen!) / 3;
 
-      var transferFees = results.toInt() * 0.14 + moduloCheck * 0.14;
+      var transfeerFeesByCarrier = widget.isAlfa ? 0.14 : 0.16;
+
+      var transferFees = results.toInt() * transfeerFeesByCarrier + moduloCheck * transfeerFeesByCarrier;
 
       return transferFees;
     } else {

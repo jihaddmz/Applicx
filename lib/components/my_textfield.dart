@@ -16,7 +16,8 @@ class MyTextField extends StatefulWidget {
         Icons.clear,
       ),
       required this.onValueChanged,
-      this.errorText, this.inputFormatters});
+      this.errorText,
+      this.inputFormatters});
 
   final TextEditingController controller;
   final Color fillColor;
@@ -36,6 +37,18 @@ class MyTextField extends StatefulWidget {
 
 class _MyTextField extends State<MyTextField> {
   bool _showSuffixIcon = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    widget.controller.addListener(() {
+      if (widget.controller.text.length == 2 || widget.controller.text.length == 6) {
+        widget.controller.text += " ";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
