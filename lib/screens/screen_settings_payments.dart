@@ -5,7 +5,6 @@ import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_payment.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ScreenSettingsPayments extends StatefulWidget {
   ScreenSettingsPayments({required this.walletAmount});

@@ -24,14 +24,6 @@ class _ScreenNotifications extends State<ScreenNotifications>
   List<ModelNotification> initiaList = [];
   final ScrollController scrollController = ScrollController();
 
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 200),
-    vsync: this,
-  );
-  late final Animation<double> _fadeAnimation =
-      Tween<double>(begin: 1.0, end: 0.0)
-          .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
-
   @override
   void initState() {
     super.initState();
@@ -101,10 +93,8 @@ class _ScreenNotifications extends State<ScreenNotifications>
                           });
                           if (index == 0) {
                             getNewNotifications();
-                            _controller.reverse();
                           } else {
                             getClearedNotifications();
-                            _controller.forward();
                           }
                         },
                       ),

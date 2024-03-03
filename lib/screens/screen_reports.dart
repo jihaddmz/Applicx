@@ -1,5 +1,4 @@
 import 'package:applicx/colors.dart';
-import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/card_unpaid_status.dart';

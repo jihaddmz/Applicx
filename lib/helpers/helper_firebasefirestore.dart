@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_buy_credit.dart';
@@ -230,6 +229,7 @@ class HelperFirebaseFirestore {
         .collection(await HelperSharedPreferences.getUsername())
         .get()
         .then((value) => result = value)
+        // ignore: body_might_complete_normally_catch_error
         .catchError((error) {});
 
     return result;

@@ -55,14 +55,15 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: SafeArea(
+          child: SingleChildScrollView(
         controller: scrollController,
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 70, 0, 0),
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
@@ -76,7 +77,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
               ),
               Positioned(
                   right: 0,
-                  top: 130,
+                  top: 40,
                   child: Column(
                     children: [
                       Image.asset(
@@ -92,7 +93,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                     ],
                   )),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 130, 20, 0),
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -100,7 +101,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                     TextGrey(
                         "Buy credits from our agent \nwith the lowest cost"),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: 20),
                       child: SizedBox(
                         width: double.infinity,
                         child: Card(
@@ -176,8 +177,11 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                         widthFactor: 0.7,
                                         child: MyTextField(
                                           controller: _controllerPhoneNumber,
-                                          inputFormatters: [LengthLimitingTextInputFormatter(8),
-                                  FilteringTextInputFormatter.digitsOnly,],
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(8),
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
                                           hintText: "76 554 635",
                                           onValueChanged: (text) {
                                             _textNumberError = null;
@@ -277,7 +281,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -290,8 +294,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
         child: ItemBuyCredit(element, _tabIndex, (modelBuyCredit) async {
           if (_controllerPhoneNumber.text.toString().length != 8) {
             scrollController.animateTo(0,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.linear);
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.linear);
             HelperDialog.showDialogInfo(
                 "Warning!", "Invalid phone number format", context, () => null);
             return;

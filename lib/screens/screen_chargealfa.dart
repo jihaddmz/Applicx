@@ -34,7 +34,6 @@ class ScreenChargeAlfa extends StatefulWidget {
 }
 
 class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
-  static const platform = MethodChannel("sendSmss");
   // WidgetsToImageController to access widget
   WidgetsToImageController controller = WidgetsToImageController();
 

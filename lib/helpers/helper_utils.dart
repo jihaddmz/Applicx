@@ -24,7 +24,7 @@ class HelperUtils {
       message = "*111*3*2*$number*1*$code#";
     }
     if (Platform.isAndroid) {
-      var ussdResponseMessage = await UssdService.makeRequest(
+      await UssdService.makeRequest(
           1, message, const Duration(seconds: 60));
     } else {
       // var ussdResponseMessage =
