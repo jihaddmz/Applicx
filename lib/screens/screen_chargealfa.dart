@@ -11,7 +11,6 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
@@ -41,7 +40,6 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
 
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPhoneNumber = TextEditingController();
-  String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
@@ -50,6 +48,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   List<ModelCartVoucher> _listOfChosenVouchers = [];
   double _walletAmount = 0;
   late BuildContext mContext;
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -231,247 +230,254 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
     mContext = context;
 
     return Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Image.asset("assets/images/image_back.png"),
+        body: SafeArea(
+            child: SingleChildScrollView(
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset(
+                "assets/images/image_back.png",
+                width: 40,
+                height: 40,
+              ),
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 30),
-                child: Stack(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextBoldBlack("Services"),
-                        FractionallySizedBox(
-                          widthFactor: 0.7,
-                          child: TextGrey("Specify the service you want"),
-                        ),
-                      ],
+                    TextBoldBlack("Services"),
+                    FractionallySizedBox(
+                      widthFactor: 0.7,
+                      child: TextGrey("Specify the service you want"),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Positioned(
-                          right: 0,
-                          child: Image.asset("assets/images/logo_alfa.png")),
-                    )
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 4,
-                    surfaceTintColor: const Color(0xffF2F2F2),
-                    color: const Color(0xffF2F2F2),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-                      child: Stack(
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Positioned(
+                      right: 0,
+                      child: Image.asset(
+                        "assets/images/logo_alfa.png",
+                        width: 70,
+                        height: 70,
+                      )),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            child: SizedBox(
+              width: double.infinity,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                elevation: 4,
+                surfaceTintColor: const Color(0xffF2F2F2),
+                color: const Color(0xffF2F2F2),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          bottom: 0,
+                          top: 0,
+                          right: 20,
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircleAvatar(
+                              backgroundColor: const Color(0xffFDD848),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (await HelperPermission
+                                      .requestContactPermission(context)) {
+                                    final PhoneContact contact =
+                                        await FlutterContactPicker
+                                            .pickPhoneContact();
+                                    setState(() {
+                                      _controllerName.text =
+                                          contact.fullName ?? "";
+                                    });
+                                    if (contact.phoneNumber != null) {
+                                      setState(() {
+                                        _controllerPhoneNumber.text =
+                                            contact.phoneNumber!.number ?? "";
+                                      });
+                                    }
+                                  }
+                                },
+                                child: Image.asset(
+                                  "assets/images/image_contacts.png",
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                            ),
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Positioned(
-                              bottom: 0,
-                              top: 0,
-                              right: 20,
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircleAvatar(
-                                  backgroundColor: const Color(0xffFDD848),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      if (await HelperPermission
-                                          .requestContactPermission(context)) {
-                                        final PhoneContact contact =
-                                            await FlutterContactPicker
-                                                .pickPhoneContact();
-                                        setState(() {
-                                          _controllerName.text =
-                                              contact.fullName ?? "";
-                                        });
-                                        if (contact.phoneNumber != null) {
-                                          setState(() {
-                                            _controllerPhoneNumber.text =
-                                                contact.phoneNumber!.number ??
-                                                    "";
-                                          });
-                                        }
-                                      }
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/image_contacts.png",
-                                      width: 40,
-                                      height: 40,
-                                    ),
-                                  ),
-                                ),
-                              )),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FractionallySizedBox(
-                                widthFactor: 0.7,
-                                child: MyTextField(
-                                    controller: _controllerName,
-                                    hintText: "User 123 (Optional)",
-                                    onValueChanged: (text) {},
-                                    prefixIcon:
-                                        const Icon(Icons.account_circle),
-                                    fillColor: Colors.white),
+                          FractionallySizedBox(
+                            widthFactor: 0.7,
+                            child: MyTextField(
+                                controller: _controllerName,
+                                hintText: "User 123 (Optional)",
+                                onValueChanged: (text) {},
+                                prefixIcon: const Icon(Icons.account_circle),
+                                fillColor: Colors.white),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: FractionallySizedBox(
+                              widthFactor: 0.7,
+                              child: MyTextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(8),
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller: _controllerPhoneNumber,
+                                hintText: "76 554 635",
+                                onValueChanged: (text) {},
+                                prefixIcon: const Icon(Icons.phone),
+                                fillColor: Colors.white,
+                                inputType: TextInputType.phone,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: FractionallySizedBox(
-                                  widthFactor: 0.7,
-                                  child: MyTextField(
-                                    controller: _controllerPhoneNumber,
-                                    hintText: "76 554 635",
-                                    onValueChanged: (text) {
-                                      _textNumberError = null;
-                                    },
-                                    prefixIcon: const Icon(Icons.phone),
-                                    fillColor: Colors.white,
-                                    inputType: TextInputType.phone,
-                                    errorText: _textNumberError,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
+                      )
+                    ],
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: CardToggler(
-                      textLeft: "Gifts",
-                      textRight: "Cards Voucher",
-                      onToggle: (index) {
-                        setState(() {
-                          _tabIndex = index;
-                          _tabIndexVoucherType = 0;
-                          setListVoucherCardsChosen();
-                        });
-                      }),
-                ),
-              ),
-              Visibility(
-                  visible: _tabIndex == 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: const Divider(
-                          color: Color(0xff243141),
-                          thickness: 4,
-                        ),
-                      ),
-                    ),
-                  )),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Visibility(
-                    visible: _tabIndex == 0,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Column(
-                        children: listOfGiftCards(),
-                      ),
-                    )),
-              ),
-              Visibility(
-                  visible: _tabIndex == 1,
-                  child: Column(
-                    children: [
-                      /**                                 Wallet Amount          */
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            const Divider(
-                              color: Colors.black,
-                              thickness: 3,
-                              indent: 70,
-                              endIndent: 70,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              height: 50,
-                              child: TextField(
-                                controller: TextEditingController(
-                                    text:
-                                        "${_walletAmount.toStringAsFixed(2)} \$"),
-                                enabled: false,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                    floatingLabelAlignment:
-                                        FloatingLabelAlignment.center,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xffFF6F77),
-                                            width: 5)),
-                                    labelText: "Wallet",
-                                    labelStyle: const TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20,
-                                        color: Colors.black)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: CardToggler(
-                            textLeft: "Original",
-                            textRight: "وفّر",
-                            onToggle: (index) {
-                              setState(() {
-                                _tabIndexVoucherType = index;
-                                if (_tabIndexVoucherType == 0) {
-                                  _listOfChosenVouchers = listOfCartVouchers;
-                                } else {
-                                  _listOfChosenVouchers =
-                                      listOfCartVouchersWaffer;
-                                }
-                              });
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: Column(
-                          children: listOfCartVouchersWidgets(),
-                        ),
-                      )
-                    ],
-                  ))
-            ],
+            ),
           ),
-        ));
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: CardToggler(
+                  textLeft: "Gifts",
+                  textRight: "Cards Voucher",
+                  onToggle: (index) {
+                    setState(() {
+                      _tabIndex = index;
+                      _tabIndexVoucherType = 0;
+                      setListVoucherCardsChosen();
+                    });
+                  }),
+            ),
+          ),
+          Visibility(
+              visible: _tabIndex == 0,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: const Divider(
+                      color: Color(0xff243141),
+                      thickness: 4,
+                    ),
+                  ),
+                ),
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Visibility(
+                visible: _tabIndex == 0,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Column(
+                    children: listOfGiftCards(),
+                  ),
+                )),
+          ),
+          Visibility(
+              visible: _tabIndex == 1,
+              child: Column(
+                children: [
+                  /**                                 Wallet Amount          */
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 3,
+                          indent: 70,
+                          endIndent: 70,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          height: 50,
+                          child: TextField(
+                            controller: TextEditingController(
+                                text: "${_walletAmount.toStringAsFixed(2)} \$"),
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                floatingLabelAlignment:
+                                    FloatingLabelAlignment.center,
+                                disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xffFF6F77), width: 5)),
+                                labelText: "Wallet",
+                                labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 20,
+                                    color: Colors.black)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: CardToggler(
+                        textLeft: "Original",
+                        textRight: "وفّر",
+                        onToggle: (index) {
+                          setState(() {
+                            _tabIndexVoucherType = index;
+                            if (_tabIndexVoucherType == 0) {
+                              _listOfChosenVouchers = listOfCartVouchers;
+                            } else {
+                              _listOfChosenVouchers = listOfCartVouchersWaffer;
+                            }
+                          });
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Column(
+                      children: listOfCartVouchersWidgets(),
+                    ),
+                  )
+                ],
+              ))
+        ],
+      ),
+    )));
   }
 
   List<Widget> listOfCartVouchersWidgets() {
@@ -523,7 +529,14 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                       ),
                                       TextGrey(
                                           "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
-                                      Image.asset("assets/images/logo_alfa.png")
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Image.asset(
+                                          "assets/images/logo_alfa.png",
+                                          width: 50,
+                                          height: 50,
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -641,9 +654,9 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                                               ? "assets/images/logo_touch.png"
                                                                               : "assets/images/logo_alfa.png",
                                                                           width:
-                                                                              40,
+                                                                              50,
                                                                           height:
-                                                                              40,
+                                                                              50,
                                                                         ),
                                                                       ),
                                                                       Column(
@@ -749,9 +762,14 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                           ));
                     });
               } else {
-                if (_controllerPhoneNumber.text.isEmpty) {
+                if (_controllerPhoneNumber.text.toString().length != 8) {
+                  HelperDialog.showDialogInfo("Warning!",
+                      "Invalid phone number format", context, () => null);
+                  scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.linear);
+
                   setState(() {
-                    _textNumberError = "Please enter a phone number";
                     modelCartVoucher.isCardClicked = false;
                   });
                   return;
@@ -791,7 +809,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                     Positioned(
                                         right: 0,
                                         child: Image.asset(
-                                            "assets/images/logo_alfa.png")),
+                                          "assets/images/logo_alfa.png",
+                                          width: 50,
+                                          height: 50,
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 10, 0, 10),
@@ -889,10 +910,12 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
         result.add(CardGiftCreditTransfer(
           modelGift: element,
           onConfirmClick: (modelGift, controller) {
-            if (_controllerPhoneNumber.text.isEmpty) {
-              setState(() {
-                _textNumberError = "Please enter a phone number";
-              });
+            if (_controllerPhoneNumber.text.toString().length != 8) {
+              HelperDialog.showDialogInfo("Warning!",
+                  "Invalid phone number format", context, () => null);
+              scrollController.animateTo(0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear);
             } else {
               showDialog(
                   barrierDismissible: false,
@@ -925,7 +948,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                   Positioned(
                                       right: 0,
                                       child: Image.asset(
-                                          "assets/images/logo_alfa.png")),
+                                        "assets/images/logo_alfa.png",
+                                        width: 50,
+                                        height: 50,
+                                      )),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         10, 10, 0, 10),
@@ -1004,10 +1030,12 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           color: element.color!,
           list: element.msg.contains("Specify") ? element.listOfOptions! : null,
           onConfirmClick: (modelGift) {
-            if (_controllerPhoneNumber.text.isEmpty) {
-              setState(() {
-                _textNumberError = "Please enter a phone number";
-              });
+            if (_controllerPhoneNumber.text.toString().length != 8) {
+              HelperDialog.showDialogInfo("Warning",
+                  "Invalid phone number format", context, () => null);
+              scrollController.animateTo(0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear);
             } else {
               showDialog(
                   barrierDismissible: false,
@@ -1038,9 +1066,12 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                   children: [
                                     Positioned(
                                         right: 0,
-                                        top: 5,
+                                        top: 0,
                                         child: Image.asset(
-                                            "assets/images/logo_alfa.png")),
+                                          "assets/images/logo_alfa.png",
+                                          width: 50,
+                                          height: 50,
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 10, 0, 10),

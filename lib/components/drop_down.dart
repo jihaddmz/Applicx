@@ -41,7 +41,11 @@ class _MyDropDown extends State<MyDropDown> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(widget.initialSelected ?? "...  "),
-                  Image.asset("assets/images/image_dropdown.png")
+                  Image.asset(
+                    "assets/images/image_dropdown.png",
+                    width: 20,
+                    height: 20,
+                  )
                 ],
               ),
             ),
@@ -49,7 +53,8 @@ class _MyDropDown extends State<MyDropDown> {
           items: widget.list.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value.split(":").isNotEmpty ? value.split(":")[0] : value),
+              child: Text(
+                  value.split(":").isNotEmpty ? value.split(":")[0] : value),
             );
           }).toList(),
           onChanged: (value) {

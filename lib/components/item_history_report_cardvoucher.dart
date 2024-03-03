@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
@@ -6,12 +8,17 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 Widget ItemHistoryReportCardVoucher(
     ModelHistoryReportCardVoucher modelHistoryReportCardVoucher,
     BuildContext context,
     String currentPhoneNumber,
     Function(ModelHistoryReportCardVoucher, int) onYesChangeStatusClick) {
+  WidgetsToImageController controller = WidgetsToImageController();
+
   return Slidable(
       endActionPane: ActionPane(motion: ScrollMotion(), children: [
         GestureDetector(
@@ -68,60 +75,94 @@ Widget ItemHistoryReportCardVoucher(
                         Align(
                           alignment: Alignment.center,
                           child: TextGrey(
-                              "You will share the purchased cart as an image",
-                              textAlign: TextAlign.center),
+                              "You will share the purchased cart as an image"),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: Card(
-                            elevation: 2,
-                            color: const Color(0xffffffff),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                          child: WidgetsToImage(
+                              controller: controller,
+                              child: Card(
+                                elevation: 0,
+                                color: const Color(0xffffffff),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      TextNormalBlack("Activation Code"),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Image.asset(
-                                          modelHistoryReportCardVoucher
-                                                      .isTouch ==
-                                                  1
-                                              ? "assets/images/logo_touch.png"
-                                              : "assets/images/logo_alfa.png",
-                                          width: 40,
-                                          height: 40,
-                                        ),
-                                      )
+                                      Stack(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Image.asset(
+                                              modelHistoryReportCardVoucher
+                                                          .isTouch ==
+                                                      1
+                                                  ? "assets/images/logo_touch.png"
+                                                  : "assets/images/logo_alfa.png",
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextNormalBlack(
+                                                  "Activation Code"),
+                                              TextGrey(
+                                                  modelHistoryReportCardVoucher
+                                                      .activationCode),
+                                              TextNormalBlack(
+                                                  "Expiration Date"),
+                                              TextGrey(
+                                                  modelHistoryReportCardVoucher
+                                                      .expDate),
+                                              TextNormalBlack("Instruction"),
+                                              TextGrey(
+                                                  "Dial *14*${modelHistoryReportCardVoucher.activationCode}#"),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 5),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: TextNormalBlack(
+                                                      "${modelHistoryReportCardVoucher.info}",
+                                                      textAlign: TextAlign.end),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                  TextGrey(modelHistoryReportCardVoucher
-                                      .activationCode),
-                                  TextNormalBlack("Expiration Date"),
-                                  TextGrey(
-                                      modelHistoryReportCardVoucher.expDate),
-                                  TextNormalBlack("Instruction"),
-                                  TextGrey(
-                                      "Dial *14*${modelHistoryReportCardVoucher.activationCode}#")
-                                ],
-                              ),
-                            ),
-                          ),
+                                ),
+                              )),
                         )
                       ],
                     ),
                     actions: [
-                      ButtonSmall("Cancel", () {
+                      ButtonSmall("Save", () {
                         Navigator.pop(context);
                       }, color: const Color(0xff9ECCFA)),
                       ButtonSmall("Share", () {
-                        Navigator.pop(context);
-                      }, color: const Color(0xffAAD59E)),
+                        final bytes = controller.capture();
+                        bytes.then((bytes) async {
+                          if (bytes != null) {
+                            getApplicationDocumentsDirectory()
+                                .then((value) async {
+                              File file = File(value.path + "/image.png");
+                              file.writeAsBytes(bytes);
+
+                              await Share.shareFiles([file.path]);
+
+                              Navigator.pop(context);
+                            });
+                          }
+                        });
+                      }, color: const Color(0xffAAD59E))
                     ],
                     actionsAlignment: MainAxisAlignment.spaceEvenly,
                   );
@@ -172,9 +213,7 @@ Widget ItemHistoryReportCardVoucher(
                 child: Card(
               elevation: 2,
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20))),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               color: const Color(0xffFFFFFF),
               child: Padding(
                 padding: const EdgeInsets.only(left: 5),
@@ -209,9 +248,12 @@ Widget ItemHistoryReportCardVoucher(
                     TextGrey(modelHistoryReportCardVoucher.expDate),
                     TextNormalBlack("Cart Info"),
                     TextGrey(modelHistoryReportCardVoucher.info),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: TextGrey(modelHistoryReportCardVoucher.date),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextGrey(modelHistoryReportCardVoucher.date),
+                      ),
                     )
                   ],
                 ),

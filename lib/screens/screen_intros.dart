@@ -50,8 +50,12 @@ class _ScreenIntros extends State<ScreenIntros>
               Visibility(
                   visible: _showSlider,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20 + 10),
-                    child: Image.asset(_imageIntroSlider),
+                    padding: const EdgeInsets.only(left: 45),
+                    child: Image.asset(
+                      _imageIntroSlider,
+                      width: 50,
+                      height: 50,
+                    ),
                   )),
               Visibility(
                   visible: _showSlider,

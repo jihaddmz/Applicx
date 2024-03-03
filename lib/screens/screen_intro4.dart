@@ -11,21 +11,24 @@ Widget ScreenIntro4(BuildContext context, Function onBackClick) {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(90, 100, 0, 0),
-              child: Image.asset("assets/images/image_intro4.png"),
+              padding: const EdgeInsets.fromLTRB(90, 150, 0, 0),
+              child: Image.asset(
+                "assets/images/image_intro4.png",
+                height: 400,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 20, 0, 0),
               child: SizedBox(width: 335, child: TextBoldBlack("Sign In")),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 5, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextNormalBlack("Login using your unique username")),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 5, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(
@@ -39,7 +42,11 @@ Widget ScreenIntro4(BuildContext context, Function onBackClick) {
             onTap: () {
               onBackClick();
             },
-            child: Image.asset("assets/images/image_back.png"),
+            child: Image.asset(
+              "assets/images/image_back.png",
+              width: 40,
+              height: 40,
+            ),
           ),
         ),
       ],

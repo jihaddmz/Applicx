@@ -7,10 +7,13 @@ class HelperDialog {
       String title, String msg, BuildContext context, Function() onClick) {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
-            title: TextBoldBlack(title),
-            content: TextNormalBlack(msg),
+            elevation: 0,
+            title: TextBoldBlack(title, textAlign: TextAlign.center),
+            content: TextNormalBlack(msg, textAlign: TextAlign.center),
+            actionsAlignment: MainAxisAlignment.center,
             actions: [
               ButtonSmall("OK", () {
                 Navigator.pop(context);
@@ -24,6 +27,7 @@ class HelperDialog {
   static void showLoadingDialog(BuildContext context, String msg) {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 0,
@@ -43,7 +47,8 @@ class HelperDialog {
             elevation: 0,
             title: TextBoldBlack("Attention!", textAlign: TextAlign.center),
             content: TextGrey(
-                "You don't have network access, pls connect and try again!", textAlign: TextAlign.center),
+                "You don't have network access, pls connect and try again!",
+                textAlign: TextAlign.center),
             actionsAlignment: MainAxisAlignment.center,
             actions: [
               ButtonSmall("Ok", () {

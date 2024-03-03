@@ -12,6 +12,7 @@ import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_buy_credit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 
 class ScreenBuyCredits extends StatefulWidget {
@@ -30,6 +31,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   int _tabIndex = 0;
   double _walletAmount = 0;
   late final listOfCreditsToBuy;
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -53,29 +55,44 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Image.asset("assets/images/image_back.png"),
-        ),
-      ),
       body: SingleChildScrollView(
+        controller: scrollController,
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 70, 0, 0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset(
+                    "assets/images/image_back.png",
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+              ),
               Positioned(
                   right: 0,
+                  top: 130,
                   child: Column(
                     children: [
-                      Image.asset("assets/images/logo_touch.png"),
-                      Image.asset("assets/images/logo_alfa.png")
+                      Image.asset(
+                        "assets/images/logo_touch.png",
+                        width: 60,
+                        height: 60,
+                      ),
+                      Image.asset(
+                        "assets/images/logo_alfa.png",
+                        width: 60,
+                        height: 60,
+                      )
                     ],
                   )),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.fromLTRB(20, 130, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -159,6 +176,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                         widthFactor: 0.7,
                                         child: MyTextField(
                                           controller: _controllerPhoneNumber,
+                                          inputFormatters: [LengthLimitingTextInputFormatter(8),
+                                  FilteringTextInputFormatter.digitsOnly,],
                                           hintText: "76 554 635",
                                           onValueChanged: (text) {
                                             _textNumberError = null;
@@ -268,7 +287,18 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
     for (var element in listOfCreditsToBuy) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: ItemBuyCredit(element, _tabIndex, (modelBuyCredit) {
+        child: ItemBuyCredit(element, _tabIndex, (modelBuyCredit) async {
+          if (_controllerPhoneNumber.text.toString().length != 8) {
+            scrollController.animateTo(0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear);
+            HelperDialog.showDialogInfo(
+                "Warning!", "Invalid phone number format", context, () => null);
+            return;
+          }
+          String phoneNumber = _controllerPhoneNumber.text.isEmpty
+              ? await HelperSharedPreferences.getPhoneNumber()
+              : _controllerPhoneNumber.text;
           showDialog(
               barrierDismissible: false,
               context: context,
@@ -304,9 +334,13 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                             children: [
                               Positioned(
                                   right: 0,
-                                  child: Image.asset(_tabIndex == 0
-                                      ? "assets/images/logo_alfa.png"
-                                      : "assets/images/logo_touch.png")),
+                                  child: Image.asset(
+                                    _tabIndex == 0
+                                        ? "assets/images/logo_alfa.png"
+                                        : "assets/images/logo_touch.png",
+                                    width: 50,
+                                    height: 50,
+                                  )),
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(10, 10, 0, 10),
@@ -315,8 +349,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                   children: [
                                     TextGrey(
                                         "Credits: ${modelBuyCredit.credits}\$"),
-                                    TextGrey(
-                                        "Number: ${_controllerPhoneNumber.text}"),
+                                    TextGrey("Number: ${phoneNumber}"),
                                     TextGrey("User: ${_controllerName.text}"),
                                   ],
                                 ),
@@ -335,7 +368,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                           Navigator.pop(context);
                         }),
                         ButtonSmall(
-                            "Pay ${modelBuyCredit.cost + modelBuyCredit.fees}\$",
+                            "Pay ${(modelBuyCredit.cost + modelBuyCredit.fees).toStringAsFixed(2)}\$",
                             () async {
                           if (await HelperUtils.isConnected()) {
                             if (_walletAmount >= modelBuyCredit.cost) {
@@ -352,11 +385,10 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                               await HelperFirebaseFirestore
                                   .createBuyCreditsEntry(
                                       modelBuyCredit,
-                                      _controllerPhoneNumber.text.isEmpty
-                                          ? await HelperSharedPreferences
-                                              .getPhoneNumber()
-                                          : _controllerPhoneNumber.text,
-                                      _controllerName.text.isEmpty ? "N\\A" : _controllerName.text,
+                                      phoneNumber,
+                                      _controllerName.text.isEmpty
+                                          ? "N\\A"
+                                          : _controllerName.text,
                                       _tabIndex == 0 ? true : false);
 
                               Navigator.pop(context);

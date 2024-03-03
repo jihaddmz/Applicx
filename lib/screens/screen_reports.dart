@@ -1,3 +1,4 @@
+import 'package:applicx/colors.dart';
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_toggler.dart';
@@ -44,7 +45,6 @@ class _ScreenReports extends State<ScreenReports> {
     Future.delayed(const Duration(milliseconds: 500), () {
       fetchGiftsHistory();
     });
-
   }
 
   Future<void> fetchGiftsHistory() async {
@@ -75,7 +75,7 @@ class _ScreenReports extends State<ScreenReports> {
       _list = initialHistoryGiftReportList;
     });
 
-     widget.changeNumberOfReports(_list.length);
+    widget.changeNumberOfReports(_list.length);
 
     Navigator.pop(context);
   }
@@ -110,7 +110,7 @@ class _ScreenReports extends State<ScreenReports> {
       _list = initialHistoryCardVoucherReportList;
     });
 
-     widget.changeNumberOfReports(_list.length);
+    widget.changeNumberOfReports(_list.length);
 
     Navigator.pop(context);
   }
@@ -138,38 +138,6 @@ class _ScreenReports extends State<ScreenReports> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Visibility(
-                        visible: !_showFilter,
-                        child: GestureDetector(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    elevation: 0,
-                                    title: TextBoldBlack("Attention!",
-                                        textAlign: TextAlign.center),
-                                    content: TextGrey(
-                                        "Are you sure you want to download new history?",
-                                        textAlign: TextAlign.center),
-                                    actionsAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    actions: [
-                                      ButtonSmall("No", () {
-                                        Navigator.pop(context);
-                                      }, color: const Color(0xffFF6F77)),
-                                      ButtonSmall("Yes", () {
-                                        Navigator.pop(context);
-                                      }, color: const Color(0xffAAD59E))
-                                    ],
-                                  );
-                                });
-                          },
-                          child: SvgPicture.asset(
-                            "assets/svgs/vector_fetch.svg",
-                            semanticsLabel: "Filter",
-                          ),
-                        )),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: GestureDetector(
@@ -255,12 +223,28 @@ class _ScreenReports extends State<ScreenReports> {
                             searchReports(value);
                           }),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextLessBoldBlack("Name/Number"),
+                          TextLessBoldBlack(_tabIndex == 0 ? "Service" : "Card")
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      color: colorDarkBlue,
+                      thickness: 3,
+                      indent: 20,
+                      endIndent: 20,
+                    )
                   ],
                 )),
             Visibility(
                 visible: _list.isNotEmpty,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
                   child: Column(
                     children: _tabIndex == 0
                         ? addReportWidgets()
@@ -275,11 +259,14 @@ class _ScreenReports extends State<ScreenReports> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        TextGrey("No Results Found"),
+                        TextNormalBlack("No Results Found"),
                         Padding(
-                          padding: const EdgeInsets.only(top: 30),
+                          padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
                           child: Image.asset(
-                              "assets/images/image_chatbot_noresults.png"),
+                            "assets/images/image_chatbot_noresults.png",
+                            width: 150,
+                            height: 200,
+                          ),
                         )
                       ],
                     ),

@@ -10,10 +10,14 @@ Widget ScreenIntro1(BuildContext context) {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-          child: Image.asset("assets/images/image_intro1.png"),
+          child: Image.asset(
+            "assets/images/image_intro1.png",
+            width: 350,
+            height: 500,
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: SizedBox(
               width: 335,
               child: TextBoldBlack(

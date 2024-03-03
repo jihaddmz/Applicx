@@ -59,7 +59,11 @@ class _ScreenHome extends State<ScreenHome> {
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Image.asset("assets/images/image_chatbot.png"),
+          child: Image.asset(
+            "assets/images/image_chatbot.png",
+            width: 200,
+            height: 250,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),

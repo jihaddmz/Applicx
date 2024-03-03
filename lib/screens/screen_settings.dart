@@ -75,17 +75,21 @@ class _ScreenSettings extends State<ScreenSettings> {
 
     return Scaffold(
       key: _scaffoldKey,
-      body: SingleChildScrollView(
+      body: SafeArea(
+          child: SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: [
               Positioned(
                   right: 0,
-                  child:
-                      Image.asset("assets/images/image_chatbot_settings.png")),
+                  child: Image.asset(
+                    "assets/images/image_chatbot_settings.png",
+                    width: 120,
+                    height: 300,
+                  )),
               Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,41 +100,47 @@ class _ScreenSettings extends State<ScreenSettings> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: SvgPicture.asset(
-                                          "assets/svgs/vector_circle_black.svg"),
-                                    ),
-                                    TextGrey(" App Status:")
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: SvgPicture.asset(
-                                        "assets/svgs/vector_circle_black.svg",
-                                        color: Color(_isSubscriptionActive
-                                            ? 0xffA0F987
-                                            : 0xffE11F2B),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: SvgPicture.asset(
+                                            "assets/svgs/vector_circle_black.svg"),
                                       ),
-                                    ),
-                                    TextGrey(
-                                      _isSubscriptionActive
-                                          ? " Active"
-                                          : " Not Active",
-                                    )
-                                  ],
-                                )
-                              ],
+                                      TextGrey(" App Status:")
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: SvgPicture.asset(
+                                          "assets/svgs/vector_circle_black.svg",
+                                          color: Color(_isSubscriptionActive
+                                              ? 0xffA0F987
+                                              : 0xffE11F2B),
+                                        ),
+                                      ),
+                                      TextGrey(
+                                        _isSubscriptionActive
+                                            ? " Active"
+                                            : " Not Active",
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                             ItemSettingHeadline("Wallet:",
                                 "${_walletAmount.toStringAsFixed(2)}\$"),
@@ -149,7 +159,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 50),
                             child: TextNormalBlack("Profile"),
                           ),
                           Padding(
@@ -435,7 +445,7 @@ class _ScreenSettings extends State<ScreenSettings> {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -583,22 +593,29 @@ class _ScreenSettings extends State<ScreenSettings> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            backgroundColor: color,
-            child: Center(
-              child: SvgPicture.asset(
-                imagePath,
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          Row(
             children: [
-              TextNormalBlack(textTop),
-              Visibility(
-                  visible: textBottom != null,
-                  child: TextGrey(textBottom ?? ""))
+              CircleAvatar(
+                backgroundColor: color,
+                child: Center(
+                  child: SvgPicture.asset(
+                    imagePath,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextNormalBlack(textTop),
+                    Visibility(
+                        visible: textBottom != null,
+                        child: TextGrey(textBottom ?? ""))
+                  ],
+                ),
+              )
             ],
           ),
           action

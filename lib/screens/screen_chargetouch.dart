@@ -16,6 +16,7 @@ import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:applicx/models/model_gift.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,7 +37,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
   final TextEditingController _controllerPhoneNumber = TextEditingController();
   WidgetsToImageController controller = WidgetsToImageController();
 
-  String? _textNumberError;
   int _tabIndex = 0;
   int _tabIndexVoucherType = 0;
   late final List<ModelGift> list;
@@ -45,6 +45,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
   late List<ModelCartVoucher> _listOfChosenVouchers;
   double _walletAmount = 0;
   late BuildContext mContext;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -170,244 +171,251 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
     mContext = context;
 
     return Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Image.asset("assets/images/image_back.png"),
+        body: SafeArea(
+            child: SingleChildScrollView(
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset(
+                "assets/images/image_back.png",
+                width: 40,
+                height: 40,
+              ),
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Stack(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextBoldBlack("Services"),
-                        FractionallySizedBox(
-                          widthFactor: 0.7,
-                          child: TextGrey("Specify the service you want"),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Positioned(
-                          right: 0,
-                          child: Image.asset("assets/images/logo_touch.png")),
+                    TextBoldBlack("Services"),
+                    FractionallySizedBox(
+                      widthFactor: 0.7,
+                      child: TextGrey("Specify the service you want"),
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 4,
-                    surfaceTintColor: const Color(0xffF2F2F2),
-                    color: const Color(0xffF2F2F2),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-                      child: Stack(
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Positioned(
+                      right: 0,
+                      child: Image.asset(
+                        "assets/images/logo_touch.png",
+                        width: 70,
+                        height: 70,
+                      )),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            child: SizedBox(
+              width: double.infinity,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                elevation: 4,
+                surfaceTintColor: const Color(0xffF2F2F2),
+                color: const Color(0xffF2F2F2),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          bottom: 0,
+                          top: 0,
+                          right: 20,
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircleAvatar(
+                              backgroundColor: const Color(0xffFDD848),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (await HelperPermission
+                                      .requestContactPermission(context)) {
+                                    final PhoneContact contact =
+                                        await FlutterContactPicker
+                                            .pickPhoneContact();
+                                    setState(() {
+                                      _controllerName.text =
+                                          contact.fullName ?? "";
+                                    });
+                                    if (contact.phoneNumber != null) {
+                                      setState(() {
+                                        _controllerPhoneNumber.text =
+                                            contact.phoneNumber!.number ?? "";
+                                      });
+                                    }
+                                  }
+                                },
+                                child: Image.asset(
+                                  "assets/images/image_contacts.png",
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                            ),
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Positioned(
-                              bottom: 0,
-                              top: 0,
-                              right: 20,
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircleAvatar(
-                                  backgroundColor: const Color(0xffFDD848),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      if (await HelperPermission
-                                          .requestContactPermission(context)) {
-                                        final PhoneContact contact =
-                                            await FlutterContactPicker
-                                                .pickPhoneContact();
-                                        setState(() {
-                                          _controllerName.text =
-                                              contact.fullName ?? "";
-                                        });
-                                        if (contact.phoneNumber != null) {
-                                          setState(() {
-                                            _controllerPhoneNumber.text =
-                                                contact.phoneNumber!.number ??
-                                                    "";
-                                          });
-                                        }
-                                      }
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/image_contacts.png",
-                                      width: 40,
-                                      height: 40,
-                                    ),
-                                  ),
-                                ),
-                              )),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FractionallySizedBox(
-                                widthFactor: 0.7,
-                                child: MyTextField(
-                                    controller: _controllerName,
-                                    hintText: "User 123 (Optional)",
-                                    onValueChanged: (text) {},
-                                    prefixIcon:
-                                        const Icon(Icons.account_circle),
-                                    fillColor: Colors.white),
+                          FractionallySizedBox(
+                            widthFactor: 0.7,
+                            child: MyTextField(
+                                controller: _controllerName,
+                                hintText: "User 123 (Optional)",
+                                onValueChanged: (text) {},
+                                prefixIcon: const Icon(Icons.account_circle),
+                                fillColor: Colors.white),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: FractionallySizedBox(
+                              widthFactor: 0.7,
+                              child: MyTextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(8),
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller: _controllerPhoneNumber,
+                                hintText: "76 554 635",
+                                onValueChanged: (text) {},
+                                prefixIcon: const Icon(Icons.phone),
+                                fillColor: Colors.white,
+                                inputType: TextInputType.phone,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: FractionallySizedBox(
-                                  widthFactor: 0.7,
-                                  child: MyTextField(
-                                    controller: _controllerPhoneNumber,
-                                    hintText: "76 554 635",
-                                    onValueChanged: (text) {
-                                      _textNumberError = null;
-                                    },
-                                    prefixIcon: const Icon(Icons.phone),
-                                    fillColor: Colors.white,
-                                    inputType: TextInputType.phone,
-                                    errorText: _textNumberError,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
+                      )
+                    ],
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: CardToggler(
-                      textLeft: "Gifts",
-                      textRight: "Cards Voucher",
-                      onToggle: (index) {
-                        setState(() {
-                          _tabIndex = index;
-                          _tabIndexVoucherType = 0;
-                        });
-                        setListVoucherCardsChosen();
-                      }),
-                ),
-              ),
-              Visibility(
-                  visible: _tabIndex == 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: const Divider(
-                          color: Color(0xff243141),
-                          thickness: 4,
-                        ),
-                      ),
-                    ),
-                  )),
-              Visibility(
-                  visible: _tabIndex == 0,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: Column(
-                      children: listOfGiftCards(),
-                    ),
-                  )),
-              Visibility(
-                  visible: _tabIndex == 1,
-                  child: Column(
-                    children: [
-                      /**                                 Wallet Amount          */
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            const Divider(
-                              color: Colors.black,
-                              thickness: 3,
-                              indent: 70,
-                              endIndent: 70,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              height: 50,
-                              child: TextField(
-                                controller: TextEditingController(
-                                    text:
-                                        "${_walletAmount.toStringAsFixed(2)} \$"),
-                                enabled: false,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                    floatingLabelAlignment:
-                                        FloatingLabelAlignment.center,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Color(0xff009CBC),
-                                            width: 5)),
-                                    labelText: "Wallet",
-                                    labelStyle: const TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20,
-                                        color: Colors.black)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: CardToggler(
-                            textLeft: "Magic",
-                            textRight: "Other",
-                            onToggle: (index) {
-                              setState(() {
-                                _tabIndexVoucherType = index;
-                                if (_tabIndexVoucherType == 0) {
-                                  _listOfChosenVouchers = listOfCartVouchers;
-                                } else {
-                                  _listOfChosenVouchers =
-                                      listOfCartVouchersOthers;
-                                }
-                              });
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        child: Column(
-                          children: listOfCartVouchersWidgets(),
-                        ),
-                      )
-                    ],
-                  ))
-            ],
+            ),
           ),
-        ));
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: CardToggler(
+                  textLeft: "Gifts",
+                  textRight: "Cards Voucher",
+                  onToggle: (index) {
+                    setState(() {
+                      _tabIndex = index;
+                      _tabIndexVoucherType = 0;
+                    });
+                    setListVoucherCardsChosen();
+                  }),
+            ),
+          ),
+          Visibility(
+              visible: _tabIndex == 0,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: const Divider(
+                      color: Color(0xff243141),
+                      thickness: 4,
+                    ),
+                  ),
+                ),
+              )),
+          Visibility(
+              visible: _tabIndex == 0,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Column(
+                  children: listOfGiftCards(),
+                ),
+              )),
+          Visibility(
+              visible: _tabIndex == 1,
+              child: Column(
+                children: [
+                  /**                                 Wallet Amount          */
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 3,
+                          indent: 70,
+                          endIndent: 70,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          height: 50,
+                          child: TextField(
+                            controller: TextEditingController(
+                                text: "${_walletAmount.toStringAsFixed(2)} \$"),
+                            enabled: false,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                floatingLabelAlignment:
+                                    FloatingLabelAlignment.center,
+                                disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xff009CBC), width: 5)),
+                                labelText: "Wallet",
+                                labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 20,
+                                    color: Colors.black)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: CardToggler(
+                        textLeft: "Magic",
+                        textRight: "Other",
+                        onToggle: (index) {
+                          setState(() {
+                            _tabIndexVoucherType = index;
+                            if (_tabIndexVoucherType == 0) {
+                              _listOfChosenVouchers = listOfCartVouchers;
+                            } else {
+                              _listOfChosenVouchers = listOfCartVouchersOthers;
+                            }
+                          });
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Column(
+                      children: listOfCartVouchersWidgets(),
+                    ),
+                  )
+                ],
+              ))
+        ],
+      ),
+    )));
   }
 
   List<Widget> listOfCartVouchersWidgets() {
@@ -460,7 +468,10 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                       TextGrey(
                                           "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
                                       Image.asset(
-                                          "assets/images/logo_touch.png")
+                                        "assets/images/logo_touch.png",
+                                        width: 50,
+                                        height: 50,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -522,6 +533,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                           .text);
 
                                           showDialog(
+                                              barrierDismissible: false,
                                               context: mContext,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
@@ -550,74 +562,65 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .only(top: 20),
-                                                        child: WidgetsToImage(controller: controller, child: Card(
-                                                            elevation: 0,
-                                                            color: const Color(
-                                                                0xffffffff),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left: 10),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Stack(
-                                                                    children: [
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.topRight,
-                                                                        child: Image
-                                                                            .asset(
-                                                                          !modelCardVoucher1.isAlfa
-                                                                              ? "assets/images/logo_touch.png"
-                                                                              : "assets/images/logo_alfa.png",
-                                                                          width:
-                                                                              40,
-                                                                          height:
-                                                                              40,
+                                                        child: WidgetsToImage(
+                                                            controller:
+                                                                controller,
+                                                            child: Card(
+                                                              elevation: 0,
+                                                              color: const Color(
+                                                                  0xffffffff),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Stack(
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment:
+                                                                              Alignment.topRight,
+                                                                          child:
+                                                                              Image.asset(
+                                                                            !modelCardVoucher1.isAlfa
+                                                                                ? "assets/images/logo_touch.png"
+                                                                                : "assets/images/logo_alfa.png",
+                                                                            width:
+                                                                                50,
+                                                                            height:
+                                                                                50,
+                                                                          ),
                                                                         ),
-                                                                      ),
-                                                                      Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          TextNormalBlack(
-                                                                              "Activation Code"),
-                                                                          TextGrey(modelCardVoucher1
-                                                                              .map
-                                                                              .keys
-                                                                              .elementAt(0)),
-                                                                          TextNormalBlack(
-                                                                              "Expiration Date"),
-                                                                          TextGrey(modelCardVoucher1
-                                                                              .map
-                                                                              .values
-                                                                              .elementAt(0)
-                                                                              .toString()),
-                                                                          TextNormalBlack(
-                                                                              "Instruction"),
-                                                                          TextGrey(
-                                                                              "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(right: 10),
-                                                                            child:
-                                                                                Align(
-                                                                              alignment: Alignment.bottomRight,
-                                                                              child: TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ],
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            TextNormalBlack("Activation Code"),
+                                                                            TextGrey(modelCardVoucher1.map.keys.elementAt(0)),
+                                                                            TextNormalBlack("Expiration Date"),
+                                                                            TextGrey(modelCardVoucher1.map.values.elementAt(0).toString()),
+                                                                            TextNormalBlack("Instruction"),
+                                                                            TextGrey("Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(right: 10),
+                                                                              child: Align(
+                                                                                alignment: Alignment.bottomRight,
+                                                                                child: TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          )) ,
+                                                            )),
                                                       )
                                                     ],
                                                   ),
@@ -682,9 +685,14 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                     });
               } else {
                 // action clicked is direct
-                if (_controllerPhoneNumber.text.isEmpty) {
+                if (_controllerPhoneNumber.text.toString().length != 8) {
+                  HelperDialog.showDialogInfo("Warning!",
+                      "Invalid phone number format", context, () => null);
+                  scrollController.animateTo(0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.linear);
+
                   setState(() {
-                    _textNumberError = "Please enter a phone number";
                     modelCartVoucher.isCardClicked = false;
                   });
                   return;
@@ -724,7 +732,10 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                     Positioned(
                                         right: 0,
                                         child: Image.asset(
-                                            "assets/images/logo_touch.png")),
+                                          "assets/images/logo_touch.png",
+                                          width: 50,
+                                          height: 50,
+                                        )),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 10, 0, 10),
@@ -773,9 +784,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                   await HelperFirebaseFirestore.setWalletAmount(
                                       _walletAmount);
 
-                                      await HelperFirebaseFirestore
-                                        .createBuyVoucher(modelCartVoucher,
-                                            _controllerPhoneNumber.text);
+                                  await HelperFirebaseFirestore
+                                      .createBuyVoucher(modelCartVoucher,
+                                          _controllerPhoneNumber.text);
 
                                   await HelperFirebaseFirestore
                                       .removeCardVoucher(modelCartVoucher);
@@ -811,10 +822,12 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
         result.add(CardGiftCreditTransfer(
           modelGift: element,
           onConfirmClick: (modelGift, controller) {
-            if (_controllerPhoneNumber.text.isEmpty) {
-              setState(() {
-                _textNumberError = "Please enter a phone number";
-              });
+            if (_controllerPhoneNumber.text.toString().length != 8) {
+              HelperDialog.showDialogInfo("Warning!",
+                  "Invalid phone number format", context, () => null);
+              scrollController.animateTo(0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.linear);
             } else {
               showDialog(
                   barrierDismissible: false,
@@ -847,7 +860,10 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                   Positioned(
                                       right: 0,
                                       child: Image.asset(
-                                          "assets/images/logo_touch.png")),
+                                        "assets/images/logo_touch.png",
+                                        width: 50,
+                                        height: 50,
+                                      )),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         10, 10, 0, 10),

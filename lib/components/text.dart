@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 Widget TextGrey(String text,
     {TextAlign textAlign = TextAlign.start,
-    Color color = const Color(0xff243141)}) {
+    Color color = const Color(0xff243141), double fontSize = 16, FontStyle fontStyle = FontStyle.normal}) {
   return Text(
     text,
     textAlign: textAlign,
-    style: TextStyle(fontSize: 16, color: color, fontWeight: FontWeight.w200),
+    style: TextStyle(fontSize: fontSize, color: color, fontWeight: FontWeight.w200, fontStyle: fontStyle),
   );
 }
 

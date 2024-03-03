@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:applicx/colors.dart';
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
@@ -240,12 +241,12 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
 
     return Scaffold(
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 30),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
         child: Stack(
           alignment: Alignment.center,
           children: [
             const Divider(
-              color: Colors.black,
+              color: colorDarkBlue,
               thickness: 3,
               indent: 70,
               endIndent: 70,
@@ -276,33 +277,36 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                         labelStyle: const TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 20,
-                            color: Colors.black)),
+                            color: colorDarkBlue)),
                   ),
                 )),
 
             /**                                 Reports found          */
-            Visibility(
-                visible: _selectedIndex == 1,
-                child: SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: TextField(
-                    controller: TextEditingController(
-                        text: "$_historyReportsNumber Reports"),
-                    enabled: false,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(0),
-                      fillColor: Colors.white,
-                      filled: true,
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide:
-                              const BorderSide(color: Colors.black, width: 5)),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 0),
+              child: Visibility(
+                  visible: _selectedIndex == 1,
+                  child: SizedBox(
+                    width: 150,
+                    height: 40,
+                    child: TextField(
+                      controller: TextEditingController(
+                          text: "$_historyReportsNumber Reports"),
+                      enabled: false,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(0),
+                        fillColor: Colors.white,
+                        filled: true,
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40),
+                            borderSide: const BorderSide(
+                                color: colorDarkBlue, width: 3)),
+                      ),
                     ),
-                  ),
-                )),
+                  )),
+            ),
           ],
         ),
       ),
@@ -457,39 +461,42 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                   visible: _selectedIndex == 0,
                   child: FadeTransition(
                       opacity: _controllerFade,
-                      child: ScreenHome(walletAmount:
-                          _walletAmount, list: _listOfNotifications,
-                           onBellIconClick: () async {
-                        if (await HelperUtils.isConnected()) {
-                          final result = await Navigator.of(context).push(
-                            MyCustomRoute((BuildContext context) {
-                              return ScreenNotifications();
-                            }, const RouteSettings(), ScreenNotifications()),
-                          ) as List<ModelNotification>;
-                          setState(() {
-                            _listOfNotifications = result;
-                          });
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  elevation: 0,
-                                  title: TextBoldBlack("Attention!",
-                                      textAlign: TextAlign.center),
-                                  content: TextGrey(
-                                      "You don't have network access, please connect and try again.",
-                                      textAlign: TextAlign.center),
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  actions: [
-                                    ButtonSmall("OK", () {
-                                      Navigator.pop(context);
-                                    })
-                                  ],
-                                );
+                      child: ScreenHome(
+                          walletAmount: _walletAmount,
+                          list: _listOfNotifications,
+                          onBellIconClick: () async {
+                            if (await HelperUtils.isConnected()) {
+                              final result = await Navigator.of(context).push(
+                                MyCustomRoute((BuildContext context) {
+                                  return ScreenNotifications();
+                                }, const RouteSettings(),
+                                    ScreenNotifications()),
+                              ) as List<ModelNotification>;
+                              setState(() {
+                                _listOfNotifications = result;
                               });
-                        }
-                      }))),
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      elevation: 0,
+                                      title: TextBoldBlack("Attention!",
+                                          textAlign: TextAlign.center),
+                                      content: TextGrey(
+                                          "You don't have network access, please connect and try again.",
+                                          textAlign: TextAlign.center),
+                                      actionsAlignment:
+                                          MainAxisAlignment.center,
+                                      actions: [
+                                        ButtonSmall("OK", () {
+                                          Navigator.pop(context);
+                                        })
+                                      ],
+                                    );
+                                  });
+                            }
+                          }))),
               Visibility(
                   visible: _selectedIndex == 1,
                   child: FadeTransition(

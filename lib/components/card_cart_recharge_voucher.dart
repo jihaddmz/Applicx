@@ -48,9 +48,13 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
                 padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Image.asset(widget.modelCartVoucher.isAlfa
-                      ? "assets/images/logo_alfa.png"
-                      : "assets/images/logo_touch.png"),
+                  child: Image.asset(
+                    widget.modelCartVoucher.isAlfa
+                        ? "assets/images/logo_alfa.png"
+                        : "assets/images/logo_touch.png",
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
               ),
               Padding(

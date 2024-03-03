@@ -93,7 +93,8 @@ Widget ItemHistoryReportGift(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 5),
               child: Container(
                 alignment: Alignment.bottomRight,
-                child: TextGrey(modelReport.date),
+                child: TextGrey(modelReport.date,
+                    fontSize: 13, fontStyle: FontStyle.italic),
               ),
             )
           ],

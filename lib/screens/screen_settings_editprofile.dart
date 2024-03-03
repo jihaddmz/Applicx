@@ -1,6 +1,7 @@
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/textfield_border.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -61,35 +62,47 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
           }, color: const Color(0xff243141)),
         ),
       ),
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Image.asset("assets/images/image_back.png"),
-        ),
-      ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+          child: SingleChildScrollView(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset(
+                    "assets/images/image_back.png",
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+              ),
               Positioned(
                   right: 0,
                   child: Image.asset(
-                      "assets/images/image_chatbot_editprofile.png")),
+                    "assets/images/image_chatbot_editprofile.png",
+                    width: 150,
+                    height: 200,
+                  )),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextBoldBlack("Profile"),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: 30),
+                      child: TextBoldBlack("Profile"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
                       child: TextGrey("Check your profile "),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(top: 100),
                       child: TextFieldBorder(
                           controller: _controllerUsername,
                           enabled: _editingEnabled,
@@ -109,30 +122,13 @@ class _ScreenSettingsEditProfile extends State<ScreenSettingsEditProfile> {
                           enabled: _editingEnabled,
                           label: "Phone Number"),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: SizedBox(
-                        height: 200,
-                        child: FlutterMap(
-                            options: const MapOptions(
-                                initialZoom: 15,
-                                initialCenter: LatLng(33.872304, 35.498800)),
-                            children: [
-                              TileLayer(
-                                urlTemplate:
-                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                userAgentPackageName: 'com.appsfourlife.com',
-                              ),
-                            ]),
-                      ),
-                    )
                   ],
                 ),
               )
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 }

@@ -14,7 +14,6 @@ Widget ItemNotification(BuildContext context,
       ),
       SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
-        height: 80,
         child: Card(
             elevation: 4,
             surfaceTintColor: const Color(0xffF2F2F2),
@@ -27,11 +26,11 @@ Widget ItemNotification(BuildContext context,
                 children: [
                   Container(
                     width: constraints.maxWidth * 0.6,
-                    margin: const EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.fromLTRB(0, 20, 5, 20),
                     child: TextNormalBlack(modelNotification.message),
                   ),
                   Container(
-                    width: constraints.maxWidth * 0.2,
+                    width: constraints.maxWidth * 0.3,
                     child: TextGrey(modelNotification.date.split(" ")[0]),
                   )
                 ],

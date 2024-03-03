@@ -32,7 +32,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       fetchAllNotifications().then((value) {
         Navigator.of(context).pop();
 
@@ -57,24 +57,37 @@ class _ScreenNotifications extends State<ScreenNotifications>
         }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(
-                context, _list.where((element) => !element.cleared).toList());
-          },
-          child: Image.asset("assets/images/image_back.png"),
-        ),
-      ),
+      appBar: null,
       body: SafeArea(
           child: Stack(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context,
+                      _list.where((element) => !element.cleared).toList());
+                },
+                child: Image.asset(
+                  "assets/images/image_back.png",
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.topRight,
-            child: Image.asset("assets/images/image_chatbot_notifications.png"),
+            child: Image.asset(
+              "assets/images/image_chatbot_notifications.png",
+              width: 130,
+              height: 250,
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -120,11 +133,13 @@ class _ScreenNotifications extends State<ScreenNotifications>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            TextGrey("No Notifications Found"),
+                            TextNormalBlack("No Notifications Found"),
                             Padding(
-                              padding: const EdgeInsets.only(top: 30),
+                              padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
                               child: Image.asset(
-                                  "assets/images/image_chatbot_noresults.png"),
+                                "assets/images/image_chatbot_noresults.png",
+                                height: 250,
+                              ),
                             )
                           ],
                         ),

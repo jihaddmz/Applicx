@@ -22,7 +22,7 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       fetchPayments();
     });
   }
@@ -50,87 +50,103 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Image.asset("assets/images/image_back.png"),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextBoldBlack("Payments"),
-              TextGrey("View your previous payments"),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: TextField(
-                    controller: TextEditingController(
-                        text: "${widget.walletAmount} \$"),
-                    enabled: false,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        floatingLabelAlignment: FloatingLabelAlignment.center,
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Colors.black, width: 3)),
-                        labelText: "Wallet",
-                        labelStyle: const TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 20,
-                            color: Colors.black)),
-                  ),
+      body: SafeArea(
+          child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset(
+                  "assets/images/image_back.png",
+                  width: 40,
+                  height: 40,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: TextField(
-                    controller: TextEditingController(text: "${_list.length}"),
-                    enabled: false,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        floatingLabelAlignment: FloatingLabelAlignment.center,
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Colors.black, width: 3)),
-                        labelText: "Total Payments",
-                        labelStyle: const TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 20,
-                            color: Colors.black)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: TextBoldBlack("Payments"),
                   ),
-                ),
+                  TextGrey("View your previous payments"),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: TextField(
+                        controller: TextEditingController(
+                            text: "${widget.walletAmount} \$"),
+                        enabled: false,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            floatingLabelAlignment:
+                                FloatingLabelAlignment.center,
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 3)),
+                            labelText: "Wallet",
+                            labelStyle: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
+                                color: Colors.black)),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: TextField(
+                        controller:
+                            TextEditingController(text: "${_list.length}"),
+                        enabled: false,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            floatingLabelAlignment:
+                                FloatingLabelAlignment.center,
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 3)),
+                            labelText: "Total Payments",
+                            labelStyle: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
+                                color: Colors.black)),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: Column(
+                      children: widgetsOfPayments(),
+                    ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Column(
-                  children: widgetsOfPayments(),
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
+      )),
     );
   }
 
@@ -150,7 +166,11 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset("assets/svgs/vector_circle_black.svg"),
+        const Card(
+          color: colorDarkBlue,
+          shape: OvalBorder(side: BorderSide.none),
+          child: Padding(padding: EdgeInsets.all(5)),
+        ),
         SizedBox(
           width: MediaQuery.of(context).size.width - 80,
           child: Card(
@@ -163,15 +183,16 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextNormalBlack("${modelPayment.cost}\$"),
                       TextNormalBlack(modelPayment.title)
                     ],
                   ),
                   Align(
-                    alignment: Alignment.bottomCenter,
-                    child: TextGrey(modelPayment.date),
+                    alignment: Alignment.bottomRight,
+                    child: TextGrey(modelPayment.date,
+                        fontStyle: FontStyle.italic, fontSize: 13),
                   )
                 ],
               )),

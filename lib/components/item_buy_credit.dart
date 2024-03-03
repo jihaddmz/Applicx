@@ -53,7 +53,7 @@ Widget ItemBuyCredit(ModelBuyCredit modelBuyCredit, int tabIndex,
                     ),
                     TextNormalBlack("Message Fees: ${modelBuyCredit.fees} \$"),
                     TextNormalBlack(
-                        "Total Cost: ${modelBuyCredit.fees + modelBuyCredit.cost} \$"),
+                        "Total Cost: ${(modelBuyCredit.fees + modelBuyCredit.cost).toStringAsFixed(2)} \$"),
                   ],
                 ),
               )

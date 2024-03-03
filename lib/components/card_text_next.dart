@@ -36,13 +36,13 @@ Widget CardTextNext(
           ),
           Positioned(
               right: -7,
-              top: 0,
+              top: -1,
               child: GestureDetector(
                 onTap: onNextClick,
                 child: SvgPicture.asset(
                   iconPath,
                   semanticsLabel: 'Next',
-                  height: 85,
+                  height: 87,
                 ),
               ))
         ],

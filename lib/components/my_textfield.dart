@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyTextField extends StatefulWidget {
   MyTextField(
@@ -15,7 +16,7 @@ class MyTextField extends StatefulWidget {
         Icons.clear,
       ),
       required this.onValueChanged,
-      this.errorText});
+      this.errorText, this.inputFormatters});
 
   final TextEditingController controller;
   final Color fillColor;
@@ -27,6 +28,7 @@ class MyTextField extends StatefulWidget {
   final bool enabled;
   final Function(String) onValueChanged;
   String? errorText;
+  List<TextInputFormatter>? inputFormatters;
 
   @override
   _MyTextField createState() => _MyTextField();
@@ -47,16 +49,16 @@ class _MyTextField extends State<MyTextField> {
       color: widget.fillColor,
       elevation: 2,
       child: TextField(
+        inputFormatters: widget.inputFormatters,
         cursorColor: const Color(0xff243141),
         enabled: widget.enabled,
         keyboardType: widget.inputType,
         controller: widget.controller,
         onTapOutside: (event) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         decoration: InputDecoration(
             errorText: widget.errorText,
-            
             hintText: widget.showLabel == false ? widget.hintText : null,
             hintStyle: const TextStyle(fontWeight: FontWeight.w100),
             labelText: widget.showLabel ? widget.hintText : null,

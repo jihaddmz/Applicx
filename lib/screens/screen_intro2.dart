@@ -11,18 +11,22 @@ Widget ScreenIntro2(Function onBackClick, BuildContext context) {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 200, 0, 0),
-              child: Image.asset("assets/images/image_intro2.png"),
+              padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
+              child: Image.asset(
+                "assets/images/image_intro2.png",
+                width: 350,
+                height: 500,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 00, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextBoldBlack(
                       "Instantly send gifts for Alfa and Touch.")),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(
@@ -36,7 +40,11 @@ Widget ScreenIntro2(Function onBackClick, BuildContext context) {
             onTap: () {
               onBackClick();
             },
-            child: Image.asset("assets/images/image_back.png"),
+            child: Image.asset(
+              "assets/images/image_back.png",
+              width: 40,
+              height: 40,
+            ),
           ),
         ),
       ],

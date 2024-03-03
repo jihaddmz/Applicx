@@ -11,18 +11,22 @@ Widget ScreenIntro3(Function onBackClick, BuildContext context) {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(90, 100, 0, 0),
-              child: Image.asset("assets/images/image_intro3.png"),
+              padding: const EdgeInsets.fromLTRB(90, 150, 0, 0),
+              child: Image.asset(
+                "assets/images/image_intro3.png",
+                width: 350,
+                height: 400,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextBoldBlack(
                       "No need to remember whether the user paid or not.")),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(
@@ -36,7 +40,11 @@ Widget ScreenIntro3(Function onBackClick, BuildContext context) {
             onTap: () {
               onBackClick();
             },
-            child: Image.asset("assets/images/image_back.png"),
+            child: Image.asset(
+              "assets/images/image_back.png",
+              width: 40,
+              height: 40,
+            ),
           ),
         ),
       ],

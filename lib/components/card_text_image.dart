@@ -14,7 +14,11 @@ Widget CardTextImage(String text, String imagePath) {
         TextLessBoldBlack(text),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-          child: Image.asset(imagePath),
+          child: Image.asset(
+            imagePath,
+            width: 70,
+            height: 50,
+          ),
         )
       ],
     ),
