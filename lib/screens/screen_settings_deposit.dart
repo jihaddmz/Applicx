@@ -4,7 +4,6 @@ import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_deposit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ScreenSettingsDeposit extends StatefulWidget {
   ScreenSettingsDeposit({required this.walletAmount});
@@ -178,19 +177,18 @@ class _ScreenSettingsDeposit extends State<ScreenSettingsDeposit> {
             color: colorCard,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(30, 30, 5, 4),
-              child: Expanded(
-                  child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextNormalBlack(
-                      "${modelDeposit.amount}\$ deposit successfully"),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextGrey(modelDeposit.date,
-                        fontSize: 13, fontStyle: FontStyle.italic),
-                  )
+              TextNormalBlack(
+                  "${modelDeposit.amount}\$ deposit successfully"),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextGrey(modelDeposit.date,
+                    fontSize: 13, fontStyle: FontStyle.italic),
+              )
                 ],
-              )),
+              ),
             ),
           ),
         ),

@@ -192,29 +192,33 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextBoldBlack("Services"),
-                    FractionallySizedBox(
-                      widthFactor: 0.7,
-                      child: TextGrey("Specify the service you want"),
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Positioned(
-                      right: 0,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextBoldBlack("Services"),
+                      FractionallySizedBox(
+                        widthFactor: 0.7,
+                        child: TextGrey("Specify the service you want"),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: Align(
+                      alignment: Alignment.centerRight,
                       child: Image.asset(
                         "assets/images/logo_touch.png",
                         width: 70,
                         height: 70,
-                      )),
-                ),
-              ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(

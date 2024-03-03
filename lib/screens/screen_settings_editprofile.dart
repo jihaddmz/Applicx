@@ -1,11 +1,8 @@
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/components/textfield_border.dart';
-import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 class ScreenSettingsEditProfile extends StatefulWidget {
   ScreenSettingsEditProfile({required this.username});

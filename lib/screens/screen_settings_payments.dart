@@ -1,10 +1,11 @@
 import 'package:applicx/colors.dart';
+import 'package:applicx/components/button.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/models/model_payment.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ScreenSettingsPayments extends StatefulWidget {
   ScreenSettingsPayments({required this.walletAmount});
@@ -17,6 +18,8 @@ class ScreenSettingsPayments extends StatefulWidget {
 
 class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
   List<ModelPayment> _list = [];
+  final ScrollController scrollController = ScrollController();
+  bool _showScrollBtn = false;
 
   @override
   void initState() {
@@ -45,14 +48,36 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
       _list = result;
     });
 
+    scrollController.addListener(() {
+      HelperLogging.logD("position ${scrollController.position.pixels}");
+      if (scrollController.position.pixels.toInt() == 1) {
+        setState(() {
+          _showScrollBtn = true;
+        });
+      } else if (scrollController.position.pixels.toInt() == 0) {
+        setState(() {
+          _showScrollBtn = false;
+        });
+      }
+    });
+
     Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton:
+          Visibility(visible: _showScrollBtn, child: Button("Top", () => null)),
       body: SafeArea(
           child: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -178,24 +203,23 @@ class _ScreenSettingsPayments extends State<ScreenSettingsPayments> {
             color: colorCard,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 30, 10, 4),
-              child: Expanded(
-                  child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextNormalBlack("${modelPayment.cost}\$"),
-                      TextNormalBlack(modelPayment.title)
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextGrey(modelPayment.date,
-                        fontStyle: FontStyle.italic, fontSize: 13),
-                  )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextNormalBlack("${modelPayment.cost}\$"),
+                  TextNormalBlack(modelPayment.title)
                 ],
-              )),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextGrey(modelPayment.date,
+                    fontStyle: FontStyle.italic, fontSize: 13),
+              )
+                ],
+              ),
             ),
           ),
         ),
