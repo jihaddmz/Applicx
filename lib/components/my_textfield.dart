@@ -43,11 +43,25 @@ class _MyTextField extends State<MyTextField> {
     // TODO: implement initState
     super.initState();
 
-    widget.controller.addListener(() {
-      if (widget.controller.text.length == 2 || widget.controller.text.length == 6) {
-        widget.controller.text += " ";
-      }
-    });
+    if (widget.inputType == TextInputType.phone) {
+      String previousText = "";
+      widget.controller.addListener(() {
+        if (widget.controller.text.length > previousText.length) {
+          if (widget.controller.text.length == 2 ||
+              widget.controller.text.length == 6) {
+            widget.controller.text += " ";
+            previousText = widget.controller.text;
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.controller.removeListener(() {});
   }
 
   @override
