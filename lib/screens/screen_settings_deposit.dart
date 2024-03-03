@@ -1,4 +1,5 @@
 import 'package:applicx/colors.dart';
+import 'package:applicx/components/fab_scrolltotop.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
@@ -16,6 +17,7 @@ class ScreenSettingsDeposit extends StatefulWidget {
 
 class _ScreenSettingsDeposit extends State<ScreenSettingsDeposit> {
   List<ModelDeposit> _list = [];
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -48,10 +50,18 @@ class _ScreenSettingsDeposit extends State<ScreenSettingsDeposit> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FABScrollTopTop(scrollController: scrollController),
       body: SafeArea(
           child: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -180,13 +190,13 @@ class _ScreenSettingsDeposit extends State<ScreenSettingsDeposit> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              TextNormalBlack(
-                  "${modelDeposit.amount}\$ deposit successfully"),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextGrey(modelDeposit.date,
-                    fontSize: 13, fontStyle: FontStyle.italic),
-              )
+                  TextNormalBlack(
+                      "${modelDeposit.amount}\$ deposit successfully"),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextGrey(modelDeposit.date,
+                        fontSize: 13, fontStyle: FontStyle.italic),
+                  )
                 ],
               ),
             ),

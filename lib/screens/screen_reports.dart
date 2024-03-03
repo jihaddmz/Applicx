@@ -3,6 +3,7 @@ import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_paid_status.dart';
 import 'package:applicx/components/card_toggler.dart';
 import 'package:applicx/components/card_unpaid_status.dart';
+import 'package:applicx/components/fab_scrolltotop.dart';
 import 'package:applicx/components/item_history_report.dart';
 import 'package:applicx/components/item_history_report_cardvoucher.dart';
 import 'package:applicx/components/text.dart';
@@ -35,6 +36,7 @@ class _ScreenReports extends State<ScreenReports> {
   bool _isFilterStatusPaid = true;
   bool _isFilterCarrierAlfa = true;
   String _currentPhoneNumber = "";
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -125,7 +127,10 @@ class _ScreenReports extends State<ScreenReports> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Scaffold(
+      floatingActionButton: FABScrollTopTop(scrollController: scrollController),
+      body: SingleChildScrollView(
+      controller: scrollController,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -275,7 +280,7 @@ class _ScreenReports extends State<ScreenReports> {
           ],
         ),
       ),
-    );
+    ),) ;
   }
 
   List<Widget> addReportWidgets() {

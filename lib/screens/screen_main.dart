@@ -291,7 +291,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                     height: 40,
                     child: TextField(
                       controller: TextEditingController(
-                          text: "$_historyReportsNumber Reports"),
+                          text: "$_historyReportsNumber Record"),
                       enabled: false,
                       textAlign: TextAlign.center,
                       style: const TextStyle(color: Colors.black),

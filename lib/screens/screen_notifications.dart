@@ -1,11 +1,14 @@
+import 'package:applicx/colors.dart';
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/card_toggler.dart';
+import 'package:applicx/components/fab_scrolltotop.dart';
 import 'package:applicx/components/item_notification.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/models/model_notification.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ScreenNotifications extends StatefulWidget {
   ScreenNotifications();
@@ -19,6 +22,7 @@ class _ScreenNotifications extends State<ScreenNotifications>
   int _index = 0;
   List<ModelNotification> _list = [];
   List<ModelNotification> initiaList = [];
+  final ScrollController scrollController = ScrollController();
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 200),
@@ -44,111 +48,144 @@ class _ScreenNotifications extends State<ScreenNotifications>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Button("Clear All", () async {
-          if (_index == 0) {
-            if (_list.isNotEmpty) {
-              await clearAllNewNotifications();
-            }
-          } else {
-            // don't do anything
-          }
-        }),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FABScrollTopTop(scrollController: scrollController),
       appBar: null,
       body: SafeArea(
-          child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context,
-                      _list.where((element) => !element.cleared).toList());
-                },
-                child: Image.asset(
-                  "assets/images/image_back.png",
-                  width: 40,
-                  height: 40,
+          child: SingleChildScrollView(
+        controller: scrollController,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context,
+                        _list.where((element) => !element.cleared).toList());
+                  },
+                  child: Image.asset(
+                    "assets/images/image_back.png",
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Image.asset(
-              "assets/images/image_chatbot_notifications.png",
-              width: 130,
-              height: 250,
+            Align(
+              alignment: Alignment.topRight,
+              child: Image.asset(
+                "assets/images/image_chatbot_notifications.png",
+                width: 130,
+                height: 250,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextBoldBlack("Notifications"),
-                TextGrey(
-                    "You have ${_index == 0 ? _list.length : 0} new notifications"),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: CardToggler(
-                      textLeft: "Recent",
-                      textRight: "Cleared",
-                      onToggle: (index) {
-                        setState(() {
-                          _index = index;
-                        });
-                        if (index == 0) {
-                          getNewNotifications();
-                          _controller.reverse();
-                        } else {
-                          getClearedNotifications();
-                          _controller.forward();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: _list.isNotEmpty,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      children: listOfNotifications(),
-                    ),
-                  ),
-                ),
-                Visibility(
-                    visible: _list.isEmpty,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 40),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            TextNormalBlack("No Notifications Found"),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
-                              child: Image.asset(
-                                "assets/images/image_chatbot_noresults.png",
-                                height: 250,
-                              ),
-                            )
-                          ],
-                        ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 70, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextBoldBlack("Notifications"),
+                  TextGrey(
+                      "You have ${_index == 0 ? _list.length : 0} new notifications"),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CardToggler(
+                        textLeft: "Recent",
+                        textRight: "Cleared",
+                        onToggle: (index) {
+                          setState(() {
+                            _index = index;
+                          });
+                          if (index == 0) {
+                            getNewNotifications();
+                            _controller.reverse();
+                          } else {
+                            getClearedNotifications();
+                            _controller.forward();
+                          }
+                        },
                       ),
-                    ))
-              ],
-            ),
-          )
-        ],
+                    ),
+                  ),
+                  Visibility(
+                      visible: _list.isNotEmpty && _index == 0,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (_index == 0) {
+                            if (_list.isNotEmpty) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      elevation: 0,
+                                      title: TextLessBoldBlack("Attention!",
+                                          textAlign: TextAlign.center),
+                                      content: TextGrey(
+                                          "Are you sure want to clear all new notifications?",
+                                          textAlign: TextAlign.center),
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      actions: [
+                                        ButtonSmall("No", () {
+                                          Navigator.pop(context);
+                                        }),
+                                        ButtonSmall("Yes", color: colorGreen,
+                                            () async {
+                                          Navigator.pop(context);
+                                          await clearAllNewNotifications();
+                                        }),
+                                      ],
+                                    );
+                                  });
+                            }
+                          } else {
+                            // don't do anything
+                          }
+                        },
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child:
+                              SvgPicture.asset("assets/svgs/vector_delete.svg"),
+                        ),
+                      )),
+                  Visibility(
+                    visible: _list.isNotEmpty,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        children: listOfNotifications(),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                      visible: _list.isEmpty,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              TextNormalBlack("No Notifications Found"),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 30, 0, 0),
+                                child: Image.asset(
+                                  "assets/images/image_chatbot_noresults.png",
+                                  height: 250,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ))
+                ],
+              ),
+            )
+          ],
+        ),
       )),
     );
   }
