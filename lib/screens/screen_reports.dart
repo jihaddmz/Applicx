@@ -129,157 +129,159 @@ class _ScreenReports extends State<ScreenReports> {
     return Scaffold(
       floatingActionButton: FABScrollTopTop(scrollController: scrollController),
       body: SingleChildScrollView(
-      controller: scrollController,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextBoldBlack("History"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _showFilter = !_showFilter;
-                          });
-                          if (_showFilter) {
+        controller: scrollController,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextBoldBlack("History"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: GestureDetector(
+                          onTap: () {
                             setState(() {
-                              _filterPath =
-                                  "assets/svgs/vector_filter_close.svg";
+                              _showFilter = !_showFilter;
                             });
-                            filterReports();
-                          } else {
-                            setState(() {
-                              _filterPath = "assets/svgs/vector_filter.svg";
-                              _isFilterCarrierAlfa = true;
-                              _isFilterStatusPaid = true;
-                              _list = initialHistoryGiftReportList;
-                            });
-                            setState(() {
-                              _list = _tabIndex == 0
-                                  ? initialHistoryGiftReportList
-                                  : initialHistoryCardVoucherReportList;
-                            });
-                            widget.changeNumberOfReports(_list.length);
-                          }
-                        },
-                        child: SvgPicture.asset(
-                          _filterPath,
-                          semanticsLabel: "Filter",
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            TextNormalBlack("View your purchase history"),
-            Visibility(
-                visible: _showFilter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: double.infinity,
-                      child: Filter(),
-                    ),
-                  ),
-                )),
-            Visibility(
-                maintainState: true,
-                visible: !_showFilter,
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: CardToggler(
-                            textLeft: "Gifts",
-                            textRight: "Cards Voucher",
-                            onToggle: (index) async {
-                              if (index == 0) {
-                                await fetchGiftsHistory();
-                              } else {
-                                await fetchCardsVoucherHistory();
-                              }
+                            if (_showFilter) {
                               setState(() {
-                                _tabIndex = index;
+                                _filterPath =
+                                    "assets/svgs/vector_filter_close.svg";
+                              });
+                              filterReports();
+                            } else {
+                              setState(() {
+                                _filterPath = "assets/svgs/vector_filter.svg";
+                                _isFilterCarrierAlfa = true;
+                                _isFilterStatusPaid = true;
+                                _list = initialHistoryGiftReportList;
+                              });
+                              setState(() {
+                                _list = _tabIndex == 0
+                                    ? initialHistoryGiftReportList
+                                    : initialHistoryCardVoucherReportList;
                               });
                               widget.changeNumberOfReports(_list.length);
-                            }),
+                            }
+                          },
+                          child: SvgPicture.asset(
+                            _filterPath,
+                            semanticsLabel: "Filter",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              TextNormalBlack("View your purchase history"),
+              Visibility(
+                  visible: _showFilter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: double.infinity,
+                        child: Filter(),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: MyTextField(
-                          controller: _controllerSearch,
-                          hintText: "Search by Name/Number",
-                          onValueChanged: (value) {
-                            searchReports(value);
-                          }),
+                  )),
+              Visibility(
+                  maintainState: true,
+                  visible: !_showFilter,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: CardToggler(
+                              textLeft: "Gifts",
+                              textRight: "Cards Voucher",
+                              onToggle: (index) async {
+                                if (index == 0) {
+                                  await fetchGiftsHistory();
+                                } else {
+                                  await fetchCardsVoucherHistory();
+                                }
+                                setState(() {
+                                  _tabIndex = index;
+                                });
+                                widget.changeNumberOfReports(_list.length);
+                              }),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: MyTextField(
+                            controller: _controllerSearch,
+                            hintText: "Search by Name/Number",
+                            onValueChanged: (value) {
+                              searchReports(value);
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextLessBoldBlack("Name/Number"),
+                            TextLessBoldBlack(
+                                _tabIndex == 0 ? "Service" : "Card")
+                          ],
+                        ),
+                      ),
+                      const Divider(
+                        color: colorDarkBlue,
+                        thickness: 3,
+                        indent: 20,
+                        endIndent: 20,
+                      )
+                    ],
+                  )),
+              Visibility(
+                  visible: _list.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+                    child: Column(
+                      children: _tabIndex == 0
+                          ? addReportWidgets()
+                          : addCardVoucherReportWidgets(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  )),
+              Visibility(
+                  visible: _list.isEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          TextLessBoldBlack("Name/Number"),
-                          TextLessBoldBlack(_tabIndex == 0 ? "Service" : "Card")
+                          TextNormalBlack("No Results Found"),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
+                            child: Image.asset(
+                              "assets/images/image_chatbot_noresults.png",
+                              width: 150,
+                              height: 200,
+                            ),
+                          )
                         ],
                       ),
                     ),
-                    const Divider(
-                      color: colorDarkBlue,
-                      thickness: 3,
-                      indent: 20,
-                      endIndent: 20,
-                    )
-                  ],
-                )),
-            Visibility(
-                visible: _list.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                  child: Column(
-                    children: _tabIndex == 0
-                        ? addReportWidgets()
-                        : addCardVoucherReportWidgets(),
-                  ),
-                )),
-            Visibility(
-                visible: _list.isEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextNormalBlack("No Results Found"),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
-                          child: Image.asset(
-                            "assets/images/image_chatbot_noresults.png",
-                            width: 150,
-                            height: 200,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ))
-          ],
+                  ))
+            ],
+          ),
         ),
       ),
-    ),) ;
+    );
   }
 
   List<Widget> addReportWidgets() {
@@ -437,10 +439,12 @@ class _ScreenReports extends State<ScreenReports> {
           }
         }
 
-        if (element.phoneNumber.toLowerCase().contains(text.toLowerCase())) {
-          setState(() {
-            _list.add(element);
-          });
+        if (!_list.contains(element)) {
+          if (element.phoneNumber.toLowerCase().contains(text.toLowerCase())) {
+            setState(() {
+              _list.add(element);
+            });
+          }
         }
       }
     }

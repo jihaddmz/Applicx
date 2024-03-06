@@ -11,6 +11,7 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
@@ -53,6 +54,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
   void initState() {
     super.initState();
     _walletAmount = widget.walletAmount;
+
+    HelperLogging.logD("size hello}");
 
     HelperFirebaseFirestore.listenForWalletAmountChanges((p0) {
       if (!mounted) return;
@@ -765,9 +768,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                           ));
                     });
               } else {
-                if (phoneNumber
-                        .length !=
-                    8) {
+                if (phoneNumber.length != 8) {
                   HelperDialog.showDialogInfo("Warning!",
                       "Invalid phone number format", context, () => null);
                   scrollController.animateTo(0,
@@ -830,8 +831,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                             child: TextGrey(
                                                 "Cart: ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
                                           ),
-                                          TextGrey(
-                                              "Number: ${phoneNumber}"),
+                                          TextGrey("Number: ${phoneNumber}"),
                                           TextGrey(
                                               "User: ${_controllerName.text}"),
                                         ],
@@ -867,8 +867,8 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                         .setWalletAmount(_walletAmount);
 
                                     await HelperFirebaseFirestore
-                                        .createBuyVoucher(modelCartVoucher,
-                                            phoneNumber);
+                                        .createBuyVoucher(
+                                            modelCartVoucher, phoneNumber);
 
                                     await HelperFirebaseFirestore
                                         .removeCardVoucher(modelCartVoucher);

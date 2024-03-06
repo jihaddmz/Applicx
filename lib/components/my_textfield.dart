@@ -1,3 +1,4 @@
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -40,21 +41,7 @@ class _MyTextField extends State<MyTextField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    if (widget.inputType == TextInputType.phone) {
-      String previousText = "";
-      widget.controller.addListener(() {
-        if (widget.controller.text.length > previousText.length) {
-          if (widget.controller.text.length == 2 ||
-              widget.controller.text.length == 6) {
-            widget.controller.text += " ";
-            previousText = widget.controller.text;
-          }
-        }
-      });
-    }
   }
 
   @override
@@ -106,6 +93,18 @@ class _MyTextField extends State<MyTextField> {
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide.none)),
         onChanged: (value) {
+          if (widget.inputType == TextInputType.phone) {
+            // ensuring the textfield type is of phone number
+            String textWritten = value.replaceAll(" ", "");
+            if (textWritten.replaceAll(" ", "").length == 8) {
+              // 81909560
+              String first = textWritten.substring(0, 2); // 81
+              String second = textWritten.substring(2, 5); // 909
+              String third = textWritten.substring(5, 8); // 560
+              widget.controller.text = "$first $second $third";
+            }
+          }
+
           if (widget.errorText != null) {
             if (widget.errorText!.isNotEmpty) {
               setState(() {
