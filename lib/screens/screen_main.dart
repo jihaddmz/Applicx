@@ -245,14 +245,12 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Visibility(
-                visible: MediaQuery.of(context).viewInsets.bottom == 0,
-                child: const Divider(
-                  color: colorDarkBlue,
-                  thickness: 3,
-                  indent: 70,
-                  endIndent: 70,
-                )),
+            const Divider(
+              color: colorDarkBlue,
+              thickness: 3,
+              indent: 70,
+              endIndent: 70,
+            ),
 
             /**                                 Wallet Amount          */
 
