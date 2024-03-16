@@ -9,6 +9,7 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/models/model_history_report_vouchercard.dart';
 import 'package:applicx/models/model_report.dart';
@@ -48,7 +49,7 @@ class _ScreenReports extends State<ScreenReports> {
     });
   }
 
-  Future<void> fetchGiftsHistory() async {
+  Future<void> fetchGiftsHistory({Function()? onFinishFetching}) async {
     HelperDialog.showLoadingDialog(context, "Fetching Gifts");
 
     initialHistoryGiftReportList.clear();
@@ -79,9 +80,13 @@ class _ScreenReports extends State<ScreenReports> {
     widget.changeNumberOfReports(_list.length);
 
     Navigator.pop(context);
+
+    if (onFinishFetching != null) {
+      onFinishFetching();
+    }
   }
 
-  Future<void> fetchCardsVoucherHistory() async {
+  Future<void> fetchCardsVoucherHistory({Function()? onFinishFetching}) async {
     HelperDialog.showLoadingDialog(context, "Fetching Cards Voucher");
 
     initialHistoryCardVoucherReportList.clear();
@@ -114,6 +119,10 @@ class _ScreenReports extends State<ScreenReports> {
     widget.changeNumberOfReports(_list.length);
 
     Navigator.pop(context);
+
+    if (onFinishFetching != null) {
+      onFinishFetching();
+    }
   }
 
   void fetchUserName() async {
@@ -206,6 +215,7 @@ class _ScreenReports extends State<ScreenReports> {
                               textLeft: "Gifts",
                               textRight: "Cards Voucher",
                               onToggle: (index) async {
+                                _controllerSearch.clear();
                                 if (index == 0) {
                                   await fetchGiftsHistory();
                                 } else {
@@ -286,18 +296,28 @@ class _ScreenReports extends State<ScreenReports> {
 
   List<Widget> addReportWidgets() {
     List<Widget> result = [];
-    for (var element in _list) {
+    for (int i = 0; i < _list.length; i++) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: ItemHistoryReportGift(element, context, _currentPhoneNumber,
-            (modelHistoryReportGift, newStatus) {
-          setState(() {
-            modelHistoryReportGift.isPaid = newStatus;
-          });
-          HelperFirebaseFirestore.updateHistoryItemStatus(
-              modelHistoryReportGift.isPaid, modelHistoryReportGift.id, true);
-          // todo here
-        }),
+        child: ItemHistoryReportGift(
+            modelReport: _list[i] as ModelHistoryReportGift,
+            context: context,
+            currentPhoneNumber: _currentPhoneNumber,
+            onYesChangeStatusClick: (modelHistoryReportGift, newStatus) async {
+              double position = scrollController.offset;
+              await HelperFirebaseFirestore.updateHistoryItemStatus(
+                  _list[i].isPaid == 0 ? 1 : 0, _list[i].id, true);
+              fetchGiftsHistory(
+                onFinishFetching: () {
+                  scrollController.animateTo(position,
+                      duration: const Duration(milliseconds: 5),
+                      curve: Curves.linear);
+                  if (_controllerSearch.text.isNotEmpty) {
+                    searchReports(_controllerSearch.text);
+                  }
+                },
+              );
+            }),
       ));
     }
 
@@ -306,20 +326,27 @@ class _ScreenReports extends State<ScreenReports> {
 
   List<Widget> addCardVoucherReportWidgets() {
     List<Widget> result = [];
-    for (var element in _list) {
+    for (int i = 0; i < _list.length; i++) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
-        child:
-            ItemHistoryReportCardVoucher(element, context, _currentPhoneNumber,
-                (modelHistoryReportCardVoucher, newStatus) {
-          setState(() {
-            modelHistoryReportCardVoucher.isPaid = newStatus;
-          });
-          HelperFirebaseFirestore.updateHistoryItemStatus(
-              modelHistoryReportCardVoucher.isPaid,
-              modelHistoryReportCardVoucher.id,
-              false);
-          // todo here
+        child: ItemHistoryReportCardVoucher(
+            _list[i] as ModelHistoryReportCardVoucher,
+            context,
+            _currentPhoneNumber,
+            (modelHistoryReportCardVoucher, newStatus) async {
+          double position = scrollController.offset;
+          await HelperFirebaseFirestore.updateHistoryItemStatus(
+              _list[i].isPaid == 0 ? 1 : 0, _list[i].id, false);
+          fetchCardsVoucherHistory(
+            onFinishFetching: () {
+              scrollController.animateTo(position,
+                  duration: const Duration(milliseconds: 5),
+                  curve: Curves.linear);
+              if (_controllerSearch.text.isNotEmpty) {
+                searchReports(_controllerSearch.text);
+              }
+            },
+          );
         }),
       ));
     }
@@ -431,23 +458,32 @@ class _ScreenReports extends State<ScreenReports> {
       for (var element in listToFilterFrom) {
         if (_list.contains(element)) return;
 
-        if (element.name != null) {
-          if (element.name!.toLowerCase().contains(text.toLowerCase())) {
-            setState(() {
-              _list.add(element);
-            });
+        if (double.tryParse(text) == null) {
+          // entered text to search
+          HelperLogging.logD("Entered is 1");
+          if (element.name != null) {
+            if (element.name!.toLowerCase().contains(text.toLowerCase())) {
+              setState(() {
+                _list.add(element);
+              });
+            }
           }
-        }
-
-        if (!_list.contains(element)) {
-          if (element.phoneNumber.toLowerCase().contains(text.toLowerCase())) {
-            setState(() {
-              _list.add(element);
-            });
+        } else {
+          // entered phone number to search
+          HelperLogging.logD("Entered is 2");
+          if (!_list.contains(element)) {
+            if (element.phoneNumber
+                .toLowerCase()
+                .contains(text.toLowerCase())) {
+              setState(() {
+                _list.add(element);
+              });
+            }
           }
         }
       }
     }
+    HelperLogging.logD("size of list is ${_list.length}");
     widget.changeNumberOfReports(_list.length);
   }
 }

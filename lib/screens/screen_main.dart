@@ -241,16 +241,18 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
 
     return Scaffold(
       floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).viewInsets.bottom == 0 ? 30 : 0),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            const Divider(
-              color: colorDarkBlue,
-              thickness: 3,
-              indent: 70,
-              endIndent: 70,
-            ),
+            Visibility(
+                visible: MediaQuery.of(context).viewInsets.bottom == 0,
+                child: const Divider(
+                  color: colorDarkBlue,
+                  thickness: 3,
+                  indent: 70,
+                  endIndent: 70,
+                )),
 
             /**                                 Wallet Amount          */
 
@@ -282,31 +284,29 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                 )),
 
             /**                                 Reports found          */
-            Padding(
-              padding: const EdgeInsets.only(bottom: 0),
-              child: Visibility(
-                  visible: _selectedIndex == 1,
-                  child: SizedBox(
-                    width: 150,
-                    height: 40,
-                    child: TextField(
-                      controller: TextEditingController(
-                          text: "$_historyReportsNumber Record"),
-                      enabled: false,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.all(0),
-                        fillColor: Colors.white,
-                        filled: true,
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(40),
-                            borderSide: const BorderSide(
-                                color: colorDarkBlue, width: 3)),
-                      ),
+            Visibility(
+                visible: _selectedIndex == 1 &&
+                    MediaQuery.of(context).viewInsets.bottom == 0,
+                child: SizedBox(
+                  width: 150,
+                  height: 40,
+                  child: TextField(
+                    controller: TextEditingController(
+                        text: "$_historyReportsNumber Record"),
+                    enabled: false,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: const BorderSide(
+                              color: colorDarkBlue, width: 3)),
                     ),
-                  )),
-            ),
+                  ),
+                )),
           ],
         ),
       ),
