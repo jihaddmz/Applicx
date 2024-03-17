@@ -7,6 +7,7 @@ import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:applicx/screens/screen_intro1.dart';
 import 'package:applicx/screens/screen_intro2.dart';
 import 'package:applicx/screens/screen_intro3.dart';
@@ -100,68 +101,74 @@ class _ScreenIntros extends State<ScreenIntros>
                   if (controller.text.isNotEmpty) {
                     // if user has entered a username
 
-                    HelperDialog.showLoadingDialog(context, "Signing In...");
+                    if (await HelperUtils.isConnected()) {
+                      String enteredUsername = controller.text.toLowerCase();
 
-                    int nbreOfDevicesSignedIn = await HelperFirebaseFirestore
-                        .fetchNumberOfDevicesSignedIn(controller.text);
+                      HelperDialog.showLoadingDialog(context, "Signing In...");
 
-                    if (nbreOfDevicesSignedIn == -1) {
-                      Navigator.pop(context);
+                      int nbreOfDevicesSignedIn = await HelperFirebaseFirestore
+                          .fetchNumberOfDevicesSignedIn(enteredUsername);
 
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              elevation: 0,
-                              title: TextBoldBlack("Attention!",
-                                  textAlign: TextAlign.center),
-                              content: TextGrey("Incorrect Username!",
-                                  textAlign: TextAlign.center),
-                              actionsAlignment: MainAxisAlignment.center,
-                              actions: [
-                                ButtonSmall("OK", () {
-                                  Navigator.pop(context);
-                                })
-                              ],
-                            );
-                          });
-                    } else if (nbreOfDevicesSignedIn > 0) {
-                      await HelperFirebaseFirestore
-                          .updateNumberOfDevicesSignedIn(
-                              controller.text, nbreOfDevicesSignedIn - 1);
+                      if (nbreOfDevicesSignedIn == -1) {
+                        Navigator.pop(context);
 
-                      await HelperSharedPreferences.setUsername(
-                          controller.text);
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                elevation: 0,
+                                title: TextBoldBlack("Attention!",
+                                    textAlign: TextAlign.center),
+                                content: TextGrey("Incorrect Username!",
+                                    textAlign: TextAlign.center),
+                                actionsAlignment: MainAxisAlignment.center,
+                                actions: [
+                                  ButtonSmall("OK", () {
+                                    Navigator.pop(context);
+                                  })
+                                ],
+                              );
+                            });
+                      } else if (nbreOfDevicesSignedIn > 0) {
+                        await HelperFirebaseFirestore
+                            .updateNumberOfDevicesSignedIn(
+                                enteredUsername, nbreOfDevicesSignedIn - 1);
 
-                      Navigator.pop(context);
+                        await HelperSharedPreferences.setUsername(
+                            enteredUsername);
 
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MyCustomRoute((context) => ScreenMain(),
-                              const RouteSettings(), ScreenMain()),
-                          (route) => false);
+                        Navigator.pop(context);
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MyCustomRoute((context) => ScreenMain(),
+                                const RouteSettings(), ScreenMain()),
+                            (route) => false);
+                      } else {
+                        Navigator.pop(context);
+
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                elevation: 0,
+                                title: TextBoldBlack("Attention!",
+                                    textAlign: TextAlign.center),
+                                content: TextGrey(
+                                    "You have reached the max number of devices allowed.",
+                                    textAlign: TextAlign.center),
+                                actionsAlignment: MainAxisAlignment.center,
+                                actions: [
+                                  ButtonSmall("OK", () {
+                                    Navigator.pop(context);
+                                  })
+                                ],
+                              );
+                            });
+                      }
                     } else {
-                      Navigator.pop(context);
-
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              elevation: 0,
-                              title: TextBoldBlack("Attention!",
-                                  textAlign: TextAlign.center),
-                              content: TextGrey(
-                                  "You have reached the max number of devices allowed.",
-                                  textAlign: TextAlign.center),
-                              actionsAlignment: MainAxisAlignment.center,
-                              actions: [
-                                ButtonSmall("OK", () {
-                                  Navigator.pop(context);
-                                })
-                              ],
-                            );
-                          });
+                      HelperDialog.showDialogNotConnectedToInternet(context);
                     }
                   } else {}
                 }, (value) {

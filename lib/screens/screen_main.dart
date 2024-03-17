@@ -53,47 +53,71 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
     super.initState();
 
     Future.doWhile(() async {
-      await fetchWalletAmount();
+      HelperSharedPreferences.getUsername().then(
+        (value) async {
+          if (value.isNotEmpty) {
+            await fetchWalletAmount();
+          }
+        },
+      );
       await Future.delayed(const Duration(seconds: 5), () {});
       return true;
     });
 
     Future.doWhile(() async {
-      await fetchUserInformation();
+      HelperSharedPreferences.getUsername().then(
+        (value) async {
+          if (value.isNotEmpty) {
+            await fetchUserInformation();
+          }
+        },
+      );
       var isActive = await isUserAccountActive();
       if (isActive) {
-        if (!await isAppVersionLatest()) {
-          // if the app is not update to the latest latest, tell the user to update
-
-          if (!_isDialogDisabledShown) {
-            showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    elevation: 0,
-                    title: TextBoldBlack("Attention!",
-                        textAlign: TextAlign.center),
-                    content: TextGrey(
-                        "Please update your app, and relaunch it.",
-                        textAlign: TextAlign.center),
-                  );
-                });
-            setState(() {
-              _isDialogDisabledShown = true;
-            });
-          }
-        } else {
-          // if the app is updated to the latest release, ensure that the expiration date is not crossed
-          await isAppExpired();
-        }
+        HelperSharedPreferences.getUsername().then(
+          (value) async {
+            if (value.isNotEmpty) {
+              if (!await isAppVersionLatest()) {
+                // if the app is not update to the latest latest, tell the user to update
+                if (!_isDialogDisabledShown) {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          elevation: 0,
+                          title: TextBoldBlack("Attention!",
+                              textAlign: TextAlign.center),
+                          content: TextGrey(
+                              "Please update your app, and relaunch it.",
+                              textAlign: TextAlign.center),
+                        );
+                      });
+                  setState(() {
+                    _isDialogDisabledShown = true;
+                  });
+                }
+              } else {
+                // if the app is updated to the latest release, ensure that the expiration date is not crossed
+                await isAppExpired();
+              }
+            }
+          },
+        );
       }
+
       await Future.delayed(const Duration(seconds: 10), () {});
       return isActive;
     });
 
     Future.doWhile(() async {
-      await fetchNotifications();
+      HelperSharedPreferences.getUsername().then(
+        (value) async {
+          if (value.isNotEmpty) {
+            await fetchNotifications();
+          }
+        },
+      );
       await Future.delayed(const Duration(seconds: 60), () {});
       return true;
     });
@@ -116,11 +140,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                 actionsAlignment: MainAxisAlignment.center,
                 actions: [
                   ButtonSmall("Contact US", () async {
-                    final Uri url =
-                        Uri.parse('https://wa.me/qr/LC33BHI4P7U3O1');
-                    if (!await launchUrl(url)) {
-                      throw Exception('Could not launch');
-                    }
+                    HelperUtils.goToWhatsapp();
                   })
                 ],
               );
@@ -134,14 +154,20 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
   }
 
   Future<void> fetchUserInformation() async {
-    await HelperFirebaseFirestore.fetchUserInformation().then((value) async {
-      await HelperSharedPreferences.setAddress(value.get("address"));
-      await HelperSharedPreferences.setPhoneNumber(value.get("phoneNumber"));
-      await HelperSharedPreferences.setIsActive(value.get("isActive"));
-      await HelperSharedPreferences.setNbreOfDevicesSignedIn(
-          value.get("nbreOfDevicesSignedIn"));
-      await HelperSharedPreferences.setSubscriptionFees(
-          double.parse(value.get("subscriptionFees")));
+    HelperSharedPreferences.getUsername().then((value) async {
+      if (value.isNotEmpty) {
+        await HelperFirebaseFirestore.fetchUserInformation()
+            .then((value) async {
+          await HelperSharedPreferences.setAddress(value.get("address"));
+          await HelperSharedPreferences.setPhoneNumber(
+              value.get("phoneNumber"));
+          await HelperSharedPreferences.setIsActive(value.get("isActive"));
+          await HelperSharedPreferences.setNbreOfDevicesSignedIn(
+              value.get("nbreOfDevicesSignedIn"));
+          await HelperSharedPreferences.setSubscriptionFees(
+              double.parse(value.get("subscriptionFees")));
+        });
+      }
     });
   }
 
@@ -241,7 +267,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
 
     return Scaffold(
       floatingActionButton: Padding(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, MediaQuery.of(context).viewInsets.bottom == 0 ? 30 : 0),
+        padding: EdgeInsets.fromLTRB(
+            0, 0, 0, MediaQuery.of(context).viewInsets.bottom == 0 ? 30 : 0),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -300,8 +327,8 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
                       filled: true,
                       disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(
-                              color: colorDarkBlue, width: 3)),
+                          borderSide:
+                              const BorderSide(color: colorDarkBlue, width: 3)),
                     ),
                   ),
                 )),

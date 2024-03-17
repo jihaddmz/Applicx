@@ -336,4 +336,15 @@ class HelperFirebaseFirestore {
         .then((value) => null)
         .catchError((err) {});
   }
+
+  static Future<void> fetchCreditsCosts(
+      Function(DocumentSnapshot<Map<String, dynamic>>) onValueChanged) async {
+    firebaseFirestore
+        .collection("services")
+        .doc("creditsCost")
+        .snapshots()
+        .listen((event) {
+      onValueChanged(event);
+    }).onError((e) {});
+  }
 }

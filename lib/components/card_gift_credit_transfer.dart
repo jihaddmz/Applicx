@@ -21,7 +21,7 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 170,
+      height: 180,
       child: Stack(
         children: [
           GestureDetector(
@@ -31,10 +31,10 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
             },
             child: Visibility(
                 visible: widget.modelGift.showConfirm,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Positioned(
-                      bottom: -30,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
                       child: Card(
                         elevation: 0,
                         color: const Color(0xff243141),
@@ -177,7 +177,8 @@ class _CardGiftCreditTransfer extends State<CardGiftCreditTransfer> {
 
       var transfeerFeesByCarrier = widget.isAlfa ? 0.14 : 0.16;
 
-      var transferFees = results.toInt() * transfeerFeesByCarrier + moduloCheck * transfeerFeesByCarrier;
+      var transferFees = results.toInt() * transfeerFeesByCarrier +
+          moduloCheck * transfeerFeesByCarrier;
 
       return transferFees;
     } else {

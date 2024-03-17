@@ -7,6 +7,7 @@ import 'package:applicx/components/my_textfield.dart';
 import 'package:applicx/components/text.dart';
 import 'package:applicx/helpers/helper_dialog.dart';
 import 'package:applicx/helpers/helper_firebasefirestore.dart';
+import 'package:applicx/helpers/helper_logging.dart';
 import 'package:applicx/helpers/helper_permission.dart';
 import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:applicx/helpers/helper_utils.dart';
@@ -30,8 +31,10 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   String? _textNumberError;
   int _tabIndex = 0;
   double _walletAmount = 0;
-  late final listOfCreditsToBuy;
+  List<ModelBuyCredit> _listOfTouchCreditsToBuy = [];
+  List<ModelBuyCredit> _listOfAlfaCreditsToBuy = [];
   final ScrollController scrollController = ScrollController();
+  late BuildContext mContext;
 
   @override
   void initState() {
@@ -45,15 +48,43 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
       });
     });
 
-    listOfCreditsToBuy = [
-      ModelBuyCredit(credits: 1, cost: 1.07, fees: 0.16),
-      ModelBuyCredit(credits: 2, cost: 2.14, fees: 0.16),
-      ModelBuyCredit(credits: 3, cost: 3.21, fees: 0.16),
-    ];
+    // _listOfTouchCreditsToBuy = [
+    //   ModelBuyCredit(credits: 1, cost: 1.07, fees: 0.16),
+    //   ModelBuyCredit(credits: 2, cost: 2.14, fees: 0.16),
+    //   ModelBuyCredit(credits: 3, cost: 3.21, fees: 0.16),
+    // ];
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      fetchCreditsCost();
+    });
+  }
+
+  Future<void> fetchCreditsCost() async {
+    await HelperFirebaseFirestore.fetchCreditsCosts((event) {
+      double alfaOneCreditsCost = event["CR_A_0_1"];
+      double touchOneCreditsCost = event["CR_T_0_1"];
+      HelperLogging.logD(
+          "Value is ${alfaOneCreditsCost} ${touchOneCreditsCost}");
+
+      setState(() {
+        _listOfAlfaCreditsToBuy = [
+          ModelBuyCredit(credits: 1, cost: alfaOneCreditsCost, fees: 0.16),
+          ModelBuyCredit(credits: 2, cost: alfaOneCreditsCost * 2, fees: 0.16),
+          ModelBuyCredit(credits: 3, cost: alfaOneCreditsCost * 3, fees: 0.16),
+        ];
+
+        _listOfTouchCreditsToBuy = [
+          ModelBuyCredit(credits: 1, cost: touchOneCreditsCost, fees: 0.16),
+          ModelBuyCredit(credits: 2, cost: touchOneCreditsCost * 2, fees: 0.16),
+          ModelBuyCredit(credits: 3, cost: touchOneCreditsCost * 3, fees: 0.16),
+        ];
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    mContext = context;
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -76,7 +107,7 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                 ),
               ),
               Positioned(
-                  right: 0,
+                  right: 20,
                   top: 40,
                   child: Column(
                     children: [
@@ -178,7 +209,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                         child: MyTextField(
                                           controller: _controllerPhoneNumber,
                                           inputFormatters: [
-                                            LengthLimitingTextInputFormatter(8),
+                                            LengthLimitingTextInputFormatter(
+                                                10),
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
                                           ],
@@ -288,24 +320,36 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
   List<Widget> widgetOfCredits() {
     List<Widget> result = [];
 
-    for (var element in listOfCreditsToBuy) {
+    for (var element in _tabIndex == 1
+        ? _listOfTouchCreditsToBuy
+        : _listOfAlfaCreditsToBuy) {
       result.add(Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ItemBuyCredit(element, _tabIndex, (modelBuyCredit) async {
-          if (_controllerPhoneNumber.text.toString().length != 8) {
+          String phoneNumber =
+              _controllerPhoneNumber.text.toString().replaceAll(" ", "");
+
+          if (_walletAmount < modelBuyCredit.cost) {
+            HelperDialog.showDialogInfo(
+                "Warning!",
+                "There is no enough money in your wallet to complete the transaction.",
+                mContext,
+                () {});
+            return;
+          }
+
+          if (phoneNumber.length != 8) {
             scrollController.animateTo(0,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linear);
             HelperDialog.showDialogInfo(
-                "Warning!", "Invalid phone number format", context, () => null);
+                "Warning!", "Invalid phone number format", mContext, () => null);
             return;
           }
-          String phoneNumber = _controllerPhoneNumber.text.isEmpty
-              ? await HelperSharedPreferences.getPhoneNumber()
-              : _controllerPhoneNumber.text;
+
           showDialog(
               barrierDismissible: false,
-              context: context,
+              context: mContext,
               builder: (context) {
                 return AlertDialog(
                   elevation: 0,
@@ -321,12 +365,6 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                           textAlign: TextAlign.center),
                       TextNote("It may take up to 5 min to transfer credits",
                           textAlign: TextAlign.center),
-                      Visibility(
-                          visible: _walletAmount < modelBuyCredit.cost,
-                          child: TextGrey(
-                              "There is no enough money in your wallet to complete this transaction!!",
-                              textAlign: TextAlign.center,
-                              color: Colors.red)),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
@@ -376,6 +414,9 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                             () async {
                           if (await HelperUtils.isConnected()) {
                             if (_walletAmount >= modelBuyCredit.cost) {
+                              Navigator.pop(context);
+                              HelperDialog.showLoadingDialog(
+                                  mContext, "Processing Transaction...");
                               setState(() {
                                 _walletAmount -= modelBuyCredit.cost;
                               });
@@ -395,11 +436,11 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                           : _controllerName.text,
                                       _tabIndex == 0 ? true : false);
 
-                              Navigator.pop(context);
+                              Navigator.pop(mContext);
                             }
                           } else {
                             HelperDialog.showDialogNotConnectedToInternet(
-                                context);
+                                mContext);
                           }
                         }, color: const Color(0xffAAD59E)),
                       ],

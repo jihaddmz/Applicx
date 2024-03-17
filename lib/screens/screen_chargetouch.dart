@@ -207,13 +207,13 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                     ],
                   ),
                   Positioned(
-                    right: 0,
+                    right: 20,
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Image.asset(
                         "assets/images/logo_touch.png",
-                        width: 70,
-                        height: 70,
+                        width: 60,
+                        height: 60,
                       ),
                     ),
                   ),
@@ -429,7 +429,21 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
         padding: const EdgeInsets.only(top: 10),
         child: CardCartRechargeVoucher(
             modelCartVoucher: element,
-            onActionPerformed: (modelCartVoucher, action) {
+            onActionPerformed: (modelCartVoucher, action) async {
+              if (_walletAmount < modelCartVoucher.cost) {
+                HelperDialog.showDialogInfo(
+                    "Warning!",
+                    "There is no enough money in your wallet to complete the transaction.",
+                    context,
+                    () {});
+                return;
+              }
+
+              if (!await HelperUtils.isConnected()) {
+                HelperDialog.showDialogNotConnectedToInternet(context);
+                return;
+              }
+
               String phoneNumber =
                   _controllerPhoneNumber.text.toString().replaceAll(" ", "");
               if (action == "buy") {
@@ -450,13 +464,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               TextGrey(
                                   "Are you sure you want to purchase this cart?",
                                   textAlign: TextAlign.center),
-                              Visibility(
-                                  visible:
-                                      _walletAmount < modelCartVoucher.cost,
-                                  child: TextGrey(
-                                      "There is no enough money in your wallet to complete this transaction!!",
-                                      textAlign: TextAlign.center,
-                                      color: Colors.red)),
                               Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: Card(
@@ -496,191 +503,183 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                     ButtonSmall(
                                         "Pay ${modelCartVoucher.cost}\$",
                                         () async {
-                                      if (await HelperUtils.isConnected()) {
-                                        if (_walletAmount >=
-                                            modelCartVoucher.cost) {
-                                          setState(() {
-                                            modelCartVoucher.isCardClicked =
-                                                false;
-                                            _walletAmount -=
-                                                modelCartVoucher.cost;
-                                          });
-                                          await HelperSharedPreferences
-                                              .setWalletAmount(_walletAmount);
+                                      Navigator.pop(mContext);
+                                      HelperDialog.showLoadingDialog(mContext,
+                                          "Processing Transaction...");
+                                      setState(() {
+                                        modelCartVoucher.isCardClicked = false;
+                                        _walletAmount -= modelCartVoucher.cost;
+                                      });
+                                      await HelperSharedPreferences
+                                          .setWalletAmount(_walletAmount);
 
+                                      await HelperFirebaseFirestore
+                                          .setWalletAmount(_walletAmount);
+
+                                      setState(() {
+                                        modelCartVoucher.isCardClicked = false;
+                                      });
+
+
+                                      var modelCardVoucher1 =
                                           await HelperFirebaseFirestore
-                                              .setWalletAmount(_walletAmount);
+                                              .removeCardVoucher(
+                                                  modelCartVoucher);
 
-                                          setState(() {
-                                            modelCartVoucher.isCardClicked =
-                                                false;
-                                          });
+                                      await HelperFirebaseFirestore
+                                          .createCardVoucherHistory(
+                                              modelCardVoucher1,
+                                              _controllerName.text.isEmpty
+                                                  ? await HelperSharedPreferences
+                                                      .getUsername()
+                                                  : _controllerName.text,
+                                              _controllerPhoneNumber
+                                                      .text.isEmpty
+                                                  ? await HelperSharedPreferences
+                                                      .getPhoneNumber()
+                                                  : _controllerPhoneNumber
+                                                      .text);
+                                      Navigator.pop(mContext);
 
-                                          Navigator.pop(mContext);
-
-                                          var modelCardVoucher1 =
-                                              await HelperFirebaseFirestore
-                                                  .removeCardVoucher(
-                                                      modelCartVoucher);
-
-                                          await HelperFirebaseFirestore
-                                              .createCardVoucherHistory(
-                                                  modelCardVoucher1,
-                                                  _controllerName.text.isEmpty
-                                                      ? await HelperSharedPreferences
-                                                          .getUsername()
-                                                      : _controllerName.text,
-                                                  _controllerPhoneNumber
-                                                          .text.isEmpty
-                                                      ? await HelperSharedPreferences
-                                                          .getPhoneNumber()
-                                                      : _controllerPhoneNumber
-                                                          .text);
-
-                                          showDialog(
-                                              barrierDismissible: false,
-                                              context: mContext,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  elevation: 0,
-                                                  backgroundColor:
-                                                      const Color(0xffF2F2F2),
-                                                  title: Align(
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: mContext,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              elevation: 0,
+                                              backgroundColor:
+                                                  const Color(0xffF2F2F2),
+                                              title: Align(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    TextBoldBlack("Share Info"),
+                                              ),
+                                              content: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Align(
                                                     alignment: Alignment.center,
-                                                    child: TextBoldBlack(
-                                                        "Share Info"),
+                                                    child: TextGrey(
+                                                        "You will share the purchased cart as an image"),
                                                   ),
-                                                  content: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: TextGrey(
-                                                            "You will share the purchased cart as an image"),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 20),
-                                                        child: WidgetsToImage(
-                                                            controller:
-                                                                controller,
-                                                            child: Card(
-                                                              elevation: 0,
-                                                              color: const Color(
-                                                                  0xffffffff),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                            10),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: WidgetsToImage(
+                                                        controller: controller,
+                                                        child: Card(
+                                                          elevation: 0,
+                                                          color: const Color(
+                                                              0xffffffff),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 10),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Stack(
                                                                   children: [
-                                                                    Stack(
+                                                                    Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topRight,
+                                                                      child: Image
+                                                                          .asset(
+                                                                        !modelCardVoucher1.isAlfa
+                                                                            ? "assets/images/logo_touch.png"
+                                                                            : "assets/images/logo_alfa.png",
+                                                                        width:
+                                                                            50,
+                                                                        height:
+                                                                            50,
+                                                                      ),
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
                                                                       children: [
-                                                                        Align(
-                                                                          alignment:
-                                                                              Alignment.topRight,
+                                                                        TextNormalBlack(
+                                                                            "Activation Code"),
+                                                                        TextGrey(modelCardVoucher1
+                                                                            .map
+                                                                            .keys
+                                                                            .elementAt(0)),
+                                                                        TextNormalBlack(
+                                                                            "Expiration Date"),
+                                                                        TextGrey(modelCardVoucher1
+                                                                            .map
+                                                                            .values
+                                                                            .elementAt(0)
+                                                                            .toString()),
+                                                                        TextNormalBlack(
+                                                                            "Instruction"),
+                                                                        TextGrey(
+                                                                            "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .only(
+                                                                              right: 10),
                                                                           child:
-                                                                              Image.asset(
-                                                                            !modelCardVoucher1.isAlfa
-                                                                                ? "assets/images/logo_touch.png"
-                                                                                : "assets/images/logo_alfa.png",
-                                                                            width:
-                                                                                50,
-                                                                            height:
-                                                                                50,
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment.bottomRight,
+                                                                            child:
+                                                                                TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
                                                                           ),
-                                                                        ),
-                                                                        Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            TextNormalBlack("Activation Code"),
-                                                                            TextGrey(modelCardVoucher1.map.keys.elementAt(0)),
-                                                                            TextNormalBlack("Expiration Date"),
-                                                                            TextGrey(modelCardVoucher1.map.values.elementAt(0).toString()),
-                                                                            TextNormalBlack("Instruction"),
-                                                                            TextGrey("Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
-                                                                            Padding(
-                                                                              padding: const EdgeInsets.only(right: 10),
-                                                                              child: Align(
-                                                                                alignment: Alignment.bottomRight,
-                                                                                child: TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
-                                                                              ),
-                                                                            )
-                                                                          ],
                                                                         )
                                                                       ],
-                                                                    ),
+                                                                    )
                                                                   ],
                                                                 ),
-                                                              ),
-                                                            )),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  actions: [
-                                                    ButtonSmall("Save", () {
-                                                      Navigator.pop(mContext);
-                                                    },
-                                                        color: const Color(
-                                                            0xff9ECCFA)),
-                                                    ButtonSmall("Share", () {
-                                                      final bytes =
-                                                          controller.capture();
-                                                      bytes.then((bytes) async {
-                                                        if (bytes != null) {
-                                                          getApplicationDocumentsDirectory()
-                                                              .then(
-                                                                  (value) async {
-                                                            File file = File(
-                                                                value.path +
-                                                                    "/image.png");
-                                                            file.writeAsBytes(
-                                                                bytes);
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )),
+                                                  )
+                                                ],
+                                              ),
+                                              actions: [
+                                                ButtonSmall("Save", () {
+                                                  Navigator.pop(mContext);
+                                                },
+                                                    color: const Color(
+                                                        0xff9ECCFA)),
+                                                ButtonSmall("Share", () {
+                                                  final bytes =
+                                                      controller.capture();
+                                                  bytes.then((bytes) async {
+                                                    if (bytes != null) {
+                                                      getApplicationDocumentsDirectory()
+                                                          .then((value) async {
+                                                        File file = File(
+                                                            value.path +
+                                                                "/image.png");
+                                                        file.writeAsBytes(
+                                                            bytes);
 
-                                                            await Share
-                                                                .shareFiles([
-                                                              file.path
-                                                            ]);
+                                                        await Share.shareFiles(
+                                                            [file.path]);
 
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        }
+                                                        Navigator.pop(context);
                                                       });
-                                                    },
-                                                        color: const Color(
-                                                            0xffAAD59E))
-                                                  ],
-                                                  actionsAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                );
-                                              });
-                                        } else {
-                                          HelperDialog.showDialogInfo(
-                                              "Attention!",
-                                              "There is no enough money in your wallet",
-                                              mContext, () {
-                                            Navigator.of(mContext).pop();
+                                                    }
+                                                  });
+                                                },
+                                                    color:
+                                                        const Color(0xffAAD59E))
+                                              ],
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                            );
                                           });
-                                        }
-                                      } else {
-                                        HelperDialog
-                                            .showDialogNotConnectedToInternet(
-                                                context);
-                                      }
                                     }, color: const Color(0xffAAD59E))
                                   ],
                                 ),
@@ -690,9 +689,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                     });
               } else {
                 // action clicked is direct
-                if (phoneNumber
-                        .length !=
-                    8) {
+                if (phoneNumber.length != 8) {
                   HelperDialog.showDialogInfo("Warning!",
                       "Invalid phone number format", context, () => null);
                   scrollController.animateTo(0,
@@ -707,7 +704,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
 
                 showDialog(
                     barrierDismissible: false,
-                    context: context,
+                    context: mContext,
                     builder: (context) {
                       return AlertDialog(
                         elevation: 0,
@@ -755,8 +752,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                             child: TextGrey(
                                                 "Cart: ${modelCartVoucher.title} ${modelCartVoucher.cost}\$"),
                                           ),
-                                          TextGrey(
-                                              "Number: ${phoneNumber}"),
+                                          TextGrey("Number: ${phoneNumber}"),
                                           TextGrey(
                                               "User: ${_controllerName.text}"),
                                         ],
@@ -780,34 +776,34 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                               }),
                               ButtonSmall("Pay ${modelCartVoucher.cost}\$",
                                   () async {
-                                if (_walletAmount >= modelCartVoucher.cost) {
-                                  setState(() {
-                                    modelCartVoucher.isCardClicked = false;
-                                    _walletAmount -= modelCartVoucher.cost;
-                                  });
-                                  await HelperSharedPreferences.setWalletAmount(
-                                      _walletAmount);
+                                Navigator.pop(mContext);
+                                HelperDialog.showLoadingDialog(
+                                    mContext, "Processing Transaction...");
+                                setState(() {
+                                  modelCartVoucher.isCardClicked = false;
+                                  _walletAmount -= modelCartVoucher.cost;
+                                });
+                                await HelperSharedPreferences.setWalletAmount(
+                                    _walletAmount);
 
-                                  await HelperFirebaseFirestore.setWalletAmount(
-                                      _walletAmount);
+                                await HelperFirebaseFirestore.setWalletAmount(
+                                    _walletAmount);
 
-                                  await HelperFirebaseFirestore
-                                      .createBuyVoucher(modelCartVoucher,
-                                          phoneNumber);
+                                await HelperFirebaseFirestore.createBuyVoucher(
+                                    modelCartVoucher, phoneNumber);
 
-                                  await HelperFirebaseFirestore
-                                      .removeCardVoucher(modelCartVoucher);
+                                await HelperFirebaseFirestore.removeCardVoucher(
+                                    modelCartVoucher);
 
-                                  await HelperFirebaseFirestore
-                                      .createCardVoucherHistory(
-                                          modelCartVoucher,
-                                          _controllerName.text.isEmpty
-                                              ? "N/A"
-                                              : _controllerName.text,
-                                          phoneNumber);
+                                await HelperFirebaseFirestore
+                                    .createCardVoucherHistory(
+                                        modelCartVoucher,
+                                        _controllerName.text.isEmpty
+                                            ? "N/A"
+                                            : _controllerName.text,
+                                        phoneNumber);
 
-                                  Navigator.pop(context);
-                                }
+                                Navigator.pop(mContext);
                               }, color: const Color(0xffAAD59E)),
                             ],
                           )
@@ -855,9 +851,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                           TextGrey(
                               "Are you sure you want to proceed with this charge?",
                               textAlign: TextAlign.center),
-                          TextNote(
-                              "It may take up to 5 min to transfer credits",
-                              textAlign: TextAlign.center),
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Card(
@@ -883,8 +876,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                       children: [
                                         TextGrey(
                                             "Credits: ${modelGift.chosen}"),
-                                        TextGrey(
-                                            "Number: ${phoneNumber}"),
+                                        TextGrey("Number: ${phoneNumber}"),
                                         TextGrey(
                                             "User: ${_controllerName.text}"),
                                       ],
@@ -911,17 +903,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                             }),
                             ButtonSmall("Yes", () async {
                               String result = await sendSMS(
-                                  message:
-                                      "${phoneNumber}t${modelGift.chosen}",
+                                  message: "${phoneNumber}t${modelGift.chosen}",
                                   recipients: ["1199"],
                                   sendDirect: false);
-
-                              setState(() {
-                                modelGift.showConfirm = false;
-                                modelGift.totalFees = 0.0;
-                                modelGift.transfeerFees = 0.0;
-                                modelGift.chosen = null;
-                              });
 
                               if (result == "sent") {
                                 await HelperFirebaseFirestore
@@ -933,6 +917,14 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                         false,
                                         phoneNumber);
                               }
+
+                              setState(() {
+                                modelGift.showConfirm = false;
+                                modelGift.totalFees = 0.0;
+                                modelGift.transfeerFees = 0.0;
+                                modelGift.chosen = null;
+                              });
+
                               Navigator.pop(context);
                             }, color: const Color(0xffAAD59E)),
                           ],

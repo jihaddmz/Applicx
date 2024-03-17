@@ -34,7 +34,7 @@ class _CardGiftOthers extends State<CardGiftOthers> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 170,
+      height: 180,
       child: Stack(
         children: [
           GestureDetector(
@@ -43,22 +43,23 @@ class _CardGiftOthers extends State<CardGiftOthers> {
             },
             child: Visibility(
                 visible: widget.modelGift.chosen != null,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Positioned(
-                      bottom: 20,
-                      child: Card(
-                        color: const Color(0xff243141),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 30, 30, 2),
-                          child: Text(
-                            "Confirm",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Card(
+                      color: const Color(0xff243141),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: const Padding(
+                        padding: EdgeInsets.fromLTRB(30, 30, 30, 2),
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(color: Colors.white),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 )),
           ),
           SizedBox(
@@ -84,7 +85,7 @@ class _CardGiftOthers extends State<CardGiftOthers> {
                       children: [
                         Positioned(
                           right: 0,
-                          bottom: 20,
+                          bottom: 15,
                           child: showDropDown
                               ? MyDropDown(
                                   list: widget.list!,
@@ -97,8 +98,7 @@ class _CardGiftOthers extends State<CardGiftOthers> {
                                                   ? item.split(":")[0]
                                                   : item;
                                           widget.modelGift.cost =
-                                              double.parse(item.split(":")[1]) ;
-                                          
+                                              double.parse(item.split(":")[1]);
                                         })
                                       })
                               : GestureDetector(
