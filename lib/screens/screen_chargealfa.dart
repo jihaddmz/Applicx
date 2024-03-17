@@ -539,7 +539,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                         child: TextNormalBlack("Cart:"),
                                       ),
                                       TextGrey(
-                                          "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
+                                          "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.dolars}\$"),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Image.asset(
@@ -601,6 +601,10 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                       .getPhoneNumber()
                                                   : _controllerPhoneNumber
                                                       .text);
+
+                                      await HelperUtils.addPoints(
+                                          modelCardVoucher1.cost);
+
                                       Navigator.pop(mContext);
 
                                       showDialog(
@@ -699,7 +703,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                                                           alignment:
                                                                               Alignment.bottomRight,
                                                                           child: TextNormalBlack(
-                                                                              "${modelCardVoucher1.cost}\$",
+                                                                              "${modelCardVoucher1.dolars}\$",
                                                                               textAlign: TextAlign.right),
                                                                         ),
                                                                       )
@@ -818,7 +822,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                           FractionallySizedBox(
                                             widthFactor: 0.7,
                                             child: TextGrey(
-                                                "Cart: ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
+                                                "Cart: ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.dolars}\$"),
                                           ),
                                           TextGrey("Number: ${phoneNumber}"),
                                           TextGrey(
@@ -844,34 +848,36 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                               }),
                               ButtonSmall("Pay ${modelCartVoucher.cost}\$",
                                   () async {
-                                    Navigator.pop(mContext);
-                                      HelperDialog.showLoadingDialog(mContext,
-                                          "Processing Transaction...");
-                                    setState(() {
-                                      modelCartVoucher.isCardClicked = false;
-                                      _walletAmount -= modelCartVoucher.cost;
-                                    });
-                                    await HelperFirebaseFirestore
-                                        .setWalletAmount(_walletAmount);
-                                    await HelperSharedPreferences
-                                        .setWalletAmount(_walletAmount);
+                                Navigator.pop(mContext);
+                                HelperDialog.showLoadingDialog(
+                                    mContext, "Processing Transaction...");
+                                setState(() {
+                                  modelCartVoucher.isCardClicked = false;
+                                  _walletAmount -= modelCartVoucher.cost;
+                                });
+                                await HelperFirebaseFirestore.setWalletAmount(
+                                    _walletAmount);
+                                await HelperSharedPreferences.setWalletAmount(
+                                    _walletAmount);
 
-                                    await HelperFirebaseFirestore
-                                        .createBuyVoucher(
-                                            modelCartVoucher, phoneNumber);
+                                await HelperFirebaseFirestore.createBuyVoucher(
+                                    modelCartVoucher, phoneNumber);
 
-                                    await HelperFirebaseFirestore
-                                        .removeCardVoucher(modelCartVoucher);
+                                await HelperFirebaseFirestore.removeCardVoucher(
+                                    modelCartVoucher);
 
-                                    await HelperFirebaseFirestore
-                                        .createCardVoucherHistory(
-                                            modelCartVoucher,
-                                            _controllerName.text.isEmpty
-                                                ? "N/A"
-                                                : _controllerName.text,
-                                            phoneNumber);
+                                await HelperFirebaseFirestore
+                                    .createCardVoucherHistory(
+                                        modelCartVoucher,
+                                        _controllerName.text.isEmpty
+                                            ? "N/A"
+                                            : _controllerName.text,
+                                        phoneNumber);
 
-                                    Navigator.pop(mContext);
+                                await HelperUtils.addPoints(
+                                    modelCartVoucher.cost);
+
+                                Navigator.pop(mContext);
                               }, color: const Color(0xffAAD59E)),
                             ],
                           )

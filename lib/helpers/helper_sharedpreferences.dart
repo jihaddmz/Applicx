@@ -70,4 +70,20 @@ class HelperSharedPreferences {
   static Future<void> clearSharedPreferences() async {
     instance.clear();
   }
+
+  static Future<String> getPointsFormula() async {
+    return instance.getString("pointsFormula") ?? "";
+  }
+
+  static Future<void> setPointsFormula(String value) async {
+    await instance.setString("pointsFormula", value);
+  }
+
+  static Future<String> getPoints() async {
+    return instance.getString("points") ?? "";
+  }
+
+  static Future<void> setPoints(String value) async {
+    await instance.setString("points", value);
+  }
 }

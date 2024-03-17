@@ -68,9 +68,9 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
 
       setState(() {
         _listOfAlfaCreditsToBuy = [
-          ModelBuyCredit(credits: 1, cost: alfaOneCreditsCost, fees: 0.16),
-          ModelBuyCredit(credits: 2, cost: alfaOneCreditsCost * 2, fees: 0.16),
-          ModelBuyCredit(credits: 3, cost: alfaOneCreditsCost * 3, fees: 0.16),
+          ModelBuyCredit(credits: 1, cost: alfaOneCreditsCost, fees: 0.14),
+          ModelBuyCredit(credits: 2, cost: alfaOneCreditsCost * 2, fees: 0.14),
+          ModelBuyCredit(credits: 3, cost: alfaOneCreditsCost * 3, fees: 0.14),
         ];
 
         _listOfTouchCreditsToBuy = [
@@ -342,8 +342,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
             scrollController.animateTo(0,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linear);
-            HelperDialog.showDialogInfo(
-                "Warning!", "Invalid phone number format", mContext, () => null);
+            HelperDialog.showDialogInfo("Warning!",
+                "Invalid phone number format", mContext, () => null);
             return;
           }
 
@@ -418,7 +418,8 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                               HelperDialog.showLoadingDialog(
                                   mContext, "Processing Transaction...");
                               setState(() {
-                                _walletAmount -= modelBuyCredit.cost;
+                                _walletAmount -=
+                                    modelBuyCredit.cost + modelBuyCredit.fees;
                               });
 
                               await HelperFirebaseFirestore.setWalletAmount(
@@ -427,14 +428,20 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                               await HelperSharedPreferences.setWalletAmount(
                                   _walletAmount);
 
-                              await HelperFirebaseFirestore
-                                  .createBuyCreditsEntry(
-                                      modelBuyCredit,
-                                      phoneNumber,
-                                      _controllerName.text.isEmpty
-                                          ? "N\\A"
-                                          : _controllerName.text,
-                                      _tabIndex == 0 ? true : false);
+                              // await HelperFirebaseFirestore
+                              //     .createBuyCreditsEntry(
+                              //         modelBuyCredit,
+                              //         phoneNumber,
+                              //         _controllerName.text.isEmpty
+                              //             ? "N\\A"
+                              //             : _controllerName.text,
+                              //         _tabIndex == 0 ? true : false);
+
+                              // await HelperUtils.updatePoints(
+                              //     modelBuyCredit);
+
+                              await HelperUtils.minusPoints(
+                                  modelBuyCredit.cost + modelBuyCredit.fees);
 
                               Navigator.pop(mContext);
                             }

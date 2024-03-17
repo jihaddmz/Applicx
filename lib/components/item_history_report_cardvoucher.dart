@@ -75,6 +75,7 @@ Widget ItemHistoryReportCardVoucher(
                         Align(
                           alignment: Alignment.center,
                           child: TextGrey(
+                              textAlign: TextAlign.center,
                               "You will share the purchased cart as an image"),
                         ),
                         Padding(

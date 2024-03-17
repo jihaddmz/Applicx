@@ -152,7 +152,7 @@ class _ScreenReports extends State<ScreenReports> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {

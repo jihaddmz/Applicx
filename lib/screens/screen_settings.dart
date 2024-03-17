@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:applicx/colors.dart';
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/custom_route.dart';
 import 'package:applicx/components/text.dart';
@@ -11,6 +12,7 @@ import 'package:applicx/screens/screen_intros.dart';
 import 'package:applicx/screens/screen_settings_deposit.dart';
 import 'package:applicx/screens/screen_settings_editprofile.dart';
 import 'package:applicx/screens/screen_settings_payments.dart';
+import 'package:applicx/screens/screen_settings_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,6 +35,7 @@ class _ScreenSettings extends State<ScreenSettings> {
   String _expDate = "";
   double _subscriptionFees = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  double _pointsAmount = 0;
 
   @override
   void initState() {
@@ -56,6 +59,22 @@ class _ScreenSettings extends State<ScreenSettings> {
       if (widget.toRenew) {
         renewSubscription();
       }
+    });
+
+    HelperSharedPreferences.getPoints().then((value) {
+      setState(() {
+        _pointsAmount = double.parse(value);
+      });
+    });
+
+    fetchPoints();
+  }
+
+  Future<void> fetchPoints() async {
+    HelperFirebaseFirestore.fetchUserPoints((p0) {
+      setState(() {
+        _pointsAmount = double.parse(p0["points"]);
+      });
     });
   }
 
@@ -144,8 +163,9 @@ class _ScreenSettings extends State<ScreenSettings> {
                             ),
                             ItemSettingHeadline("Wallet:",
                                 "${_walletAmount.toStringAsFixed(2)}\$"),
+                            ItemSettingHeadline("Points:", "$_pointsAmount"),
                             ItemSettingHeadline(
-                                "Subscription Fees:", "${_subscriptionFees}\$"),
+                                "Subscription Fees:", "$_subscriptionFees\$"),
                             ItemSettingHeadline(
                                 "Expiration Date:", _expDate.split(" ")[0]),
                             ItemSettingHeadline("App Version:", "1.0"),
@@ -261,7 +281,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                     child: ItemSettingAction(
                                         "Subscription",
                                         null,
-                                        "assets/svgs/vector_tap.svg",
+                                        "assets/svgs/vector_subscription.svg",
                                         const Color(0xffFDD848),
                                         ButtonSmall("Renew", () async {
                                           renewSubscription();
@@ -293,7 +313,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       child: ItemSettingAction(
                                           "Wallet Deposits",
                                           null,
-                                          "assets/svgs/vector_deposit.svg",
+                                          "assets/svgs/vector_wallet.svg",
                                           const Color(0xffAAD59E),
                                           SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg")),
@@ -328,6 +348,38 @@ class _ScreenSettings extends State<ScreenSettings> {
                                           "assets/svgs/vector_money.svg",
                                           const Color(0xffCDBCDB),
                                           SvgPicture.asset(
+                                              "assets/svgs/vector_arrow_next.svg",)),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (await HelperUtils.isConnected()) {
+                                        Navigator.of(context).push(
+                                            MyCustomRoute(
+                                                (BuildContext context) {
+                                          return ScreenSettingsPoints(
+                                            pointsAmount: _pointsAmount,
+                                          );
+                                        },
+                                                const RouteSettings(),
+                                                ScreenSettingsPoints(
+                                                  pointsAmount: _pointsAmount,
+                                                )));
+                                      } else {
+                                        HelperDialog
+                                            .showDialogNotConnectedToInternet(
+                                                context);
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: ItemSettingAction(
+                                          "Redeem Gifts",
+                                          null,
+                                          "assets/svgs/vector_gift.svg",
+                                          colorBlue,
+                                          SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg")),
                                     ),
                                   ),
@@ -355,7 +407,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                       child: ItemSettingAction(
                                           "Contact Us",
                                           null,
-                                          "assets/svgs/vector_support.svg",
+                                          "assets/svgs/vector_whatsapp.svg",
                                           const Color(0xff243141),
                                           SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg")),
@@ -498,7 +550,7 @@ Appsfourlife reserves the right to terminate or suspend access to the Applicx pl
                                       child: ItemSettingAction(
                                           "Privacy & Terms",
                                           null,
-                                          "assets/svgs/vector_privacy.svg",
+                                          "assets/svgs/vector_lock.svg",
                                           const Color(0xff243141),
                                           SvgPicture.asset(
                                               "assets/svgs/vector_arrow_next.svg")),
@@ -735,6 +787,8 @@ Appsfourlife reserves the right to terminate or suspend access to the Applicx pl
                 child: Center(
                   child: SvgPicture.asset(
                     imagePath,
+                    width: 20,
+                    height:20,
                   ),
                 ),
               ),

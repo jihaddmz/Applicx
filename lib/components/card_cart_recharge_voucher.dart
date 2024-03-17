@@ -4,11 +4,14 @@ import 'package:applicx/models/model_cart_voucher.dart';
 import 'package:flutter/material.dart';
 
 class CardCartRechargeVoucher extends StatefulWidget {
-  const CardCartRechargeVoucher(
-      {required this.modelCartVoucher, required this.onActionPerformed});
+  CardCartRechargeVoucher(
+      {required this.modelCartVoucher,
+      required this.onActionPerformed,
+      this.isPoints = false});
 
   final ModelCartVoucher modelCartVoucher;
   final Function(ModelCartVoucher, String) onActionPerformed;
+  bool isPoints;
 
   @override
   _CardCartRechargeVoucher createState() => _CardCartRechargeVoucher();
@@ -67,7 +70,8 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
               Positioned(
                   bottom: 15,
                   left: 8,
-                  child: TextBoldBlack("\$${widget.modelCartVoucher.cost}")),
+                  child: TextBoldBlack(
+                      "\$${widget.modelCartVoucher.dolars}${widget.isPoints ? "/" : ""}${widget.isPoints ? widget.modelCartVoucher.cost : ""}${widget.isPoints ? "P" : ""}")),
               Positioned(
                   bottom: 0,
                   left: 2,
@@ -115,17 +119,21 @@ class _CardCartRechargeVoucher extends State<CardCartRechargeVoucher> {
                             child: widget.modelCartVoucher.map.isEmpty
                                 ? TextLessBoldBlack("Not Available")
                                 : Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: widget.isPoints
+                                        ? MainAxisAlignment.center
+                                        : MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Button("Buy", () {
                                         widget.onActionPerformed(
                                             widget.modelCartVoucher, "buy");
                                       }, color: const Color(0xffAAD59E)),
-                                      Button("Direct", () {
-                                        widget.onActionPerformed(
-                                            widget.modelCartVoucher, "direct");
-                                      }, color: const Color(0xffAAD59E)),
+                                      Visibility(
+                                          visible: !widget.isPoints,
+                                          child: Button("Direct", () {
+                                            widget.onActionPerformed(
+                                                widget.modelCartVoucher,
+                                                "direct");
+                                          }, color: const Color(0xffAAD59E))),
                                     ],
                                   ),
                           )

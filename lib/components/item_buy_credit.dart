@@ -49,7 +49,7 @@ Widget ItemBuyCredit(ModelBuyCredit modelBuyCredit, int tabIndex,
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child:
-                          TextNormalBlack("Price: ${modelBuyCredit.cost} \$"),
+                          TextNormalBlack("Price: ${modelBuyCredit.cost.toStringAsFixed(2)} \$"),
                     ),
                     TextNormalBlack("Message Fees: ${modelBuyCredit.fees} \$"),
                     TextNormalBlack(

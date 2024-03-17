@@ -155,6 +155,19 @@ class HelperFirebaseFirestore {
     });
   }
 
+  static Future<void> fetchRewardsCardVouchers(
+      Function(QuerySnapshot<Map<String, dynamic>>) onChange,
+      bool isAlfa) async {
+    firebaseFirestore
+        .collection("rewardingSystem")
+        .doc("cardVouchers")
+        .collection(isAlfa ? "alfa" : "touch")
+        .snapshots()
+        .listen((event) {
+      onChange(event);
+    });
+  }
+
   static Future<ModelCartVoucher> removeCardVoucher(
       ModelCartVoucher modelCartVoucher) async {
     Map<String, dynamic> map = Map.from(modelCartVoucher.map);
@@ -163,6 +176,23 @@ class HelperFirebaseFirestore {
 
     await firebaseFirestore
         .collection("services")
+        .doc("cardVouchers")
+        .collection(modelCartVoucher.isAlfa ? "alfa" : "touch")
+        .doc(modelCartVoucher.id)
+        .set({"cost": modelCartVoucher.cost.toString(), "list": map},
+            SetOptions(merge: false));
+
+    return modelCartVoucher;
+  }
+
+  static Future<ModelCartVoucher> removeRewardingCardVoucher(
+      ModelCartVoucher modelCartVoucher) async {
+    Map<String, dynamic> map = Map.from(modelCartVoucher.map);
+
+    map.remove(map.keys.elementAt(0));
+
+    await firebaseFirestore
+        .collection("rewardingSystem")
         .doc("cardVouchers")
         .collection(modelCartVoucher.isAlfa ? "alfa" : "touch")
         .doc(modelCartVoucher.id)
@@ -346,5 +376,36 @@ class HelperFirebaseFirestore {
         .listen((event) {
       onValueChanged(event);
     }).onError((e) {});
+  }
+
+  static Future<void> fetchPointsFormula(
+      Function(DocumentSnapshot<Map<String, dynamic>>) onChange) async {
+    firebaseFirestore
+        .collection("app")
+        .doc("controls")
+        .snapshots()
+        .listen((event) {
+      onChange(event);
+    }).onError((e) {});
+  }
+
+  static Future<void> updatePoints(double value) async {
+    Map<String, dynamic> map = {};
+    map["points"] = value.toString();
+    await firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .set(map, SetOptions(merge: true));
+  }
+
+  static Future<void> fetchUserPoints(
+      Function(DocumentSnapshot<Map<String, dynamic>>) onChange) async {
+    firebaseFirestore
+        .collection("users")
+        .doc(await HelperSharedPreferences.getUsername())
+        .snapshots()
+        .listen((event) {
+      onChange(event);
+    });
   }
 }

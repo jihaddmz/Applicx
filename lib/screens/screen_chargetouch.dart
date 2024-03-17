@@ -478,7 +478,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                         child: TextNormalBlack("Cart:"),
                                       ),
                                       TextGrey(
-                                          "Alfa ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$"),
+                                          "Touch ${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.dolars}\$"),
                                       Image.asset(
                                         "assets/images/logo_touch.png",
                                         width: 50,
@@ -520,7 +520,6 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                         modelCartVoucher.isCardClicked = false;
                                       });
 
-
                                       var modelCardVoucher1 =
                                           await HelperFirebaseFirestore
                                               .removeCardVoucher(
@@ -539,6 +538,10 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                       .getPhoneNumber()
                                                   : _controllerPhoneNumber
                                                       .text);
+
+                                      await HelperUtils.addPoints(
+                                          modelCardVoucher1.cost);
+
                                       Navigator.pop(mContext);
 
                                       showDialog(
@@ -622,7 +625,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                                         TextNormalBlack(
                                                                             "Instruction"),
                                                                         TextGrey(
-                                                                            "Dial *14*${modelCardVoucher1.map.keys.elementAt(0)}#"),
+                                                                            "Dial *200*${modelCardVoucher1.map.keys.elementAt(0)}#"),
                                                                         Padding(
                                                                           padding: const EdgeInsets
                                                                               .only(
@@ -632,7 +635,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                                                             alignment:
                                                                                 Alignment.bottomRight,
                                                                             child:
-                                                                                TextNormalBlack("${modelCardVoucher1.cost}\$", textAlign: TextAlign.right),
+                                                                                TextNormalBlack("${modelCardVoucher1.dolars}\$", textAlign: TextAlign.right),
                                                                           ),
                                                                         )
                                                                       ],
@@ -750,7 +753,7 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                           FractionallySizedBox(
                                             widthFactor: 0.7,
                                             child: TextGrey(
-                                                "Cart: ${modelCartVoucher.title} ${modelCartVoucher.cost}\$"),
+                                                "Cart: ${modelCartVoucher.title} ${modelCartVoucher.dolars}\$"),
                                           ),
                                           TextGrey("Number: ${phoneNumber}"),
                                           TextGrey(
@@ -802,6 +805,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                             ? "N/A"
                                             : _controllerName.text,
                                         phoneNumber);
+
+                                await HelperUtils.addPoints(
+                                    modelCartVoucher.cost);
 
                                 Navigator.pop(mContext);
                               }, color: const Color(0xffAAD59E)),

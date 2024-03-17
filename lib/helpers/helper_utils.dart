@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:applicx/helpers/helper_firebasefirestore.dart';
 import 'package:applicx/helpers/helper_logging.dart';
+import 'package:applicx/helpers/helper_sharedpreferences.dart';
 import 'package:flutter_phone_dialer/flutter_phone_dialer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ussd_service/ussd_service.dart';
@@ -46,5 +48,29 @@ class HelperUtils {
         throw Exception('Could not launch');
       }
     }
+  }
+
+  static Future<void> addPoints(double cost) async {
+    HelperSharedPreferences.getPointsFormula().then((formula) async {
+      HelperSharedPreferences.getPoints().then((value) async {
+        HelperLogging.logD(
+            "The added value is ${(cost * double.parse(formula.split(":")[1]) / double.parse(formula.split(":")[0]))} where the current value is ${value}");
+        await HelperFirebaseFirestore.updatePoints((cost *
+                double.parse(formula.split(":")[1]) /
+                double.parse(formula.split(":")[0]) +
+            double.parse(value)));
+        await HelperSharedPreferences.setPoints((cost *
+                    double.parse(formula.split(":")[1]) /
+                    double.parse(formula.split(":")[0]) +
+                double.parse(value))
+            .toString());
+      });
+    });
+  }
+
+  static Future<void> minusPoints(double cost) async {
+    HelperSharedPreferences.getPoints().then((value) async {
+      await HelperFirebaseFirestore.updatePoints(double.parse(value));
+    });
   }
 }

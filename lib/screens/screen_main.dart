@@ -121,6 +121,14 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
       await Future.delayed(const Duration(seconds: 60), () {});
       return true;
     });
+
+    fetchPointsFormula();
+  }
+
+  Future<void> fetchPointsFormula() async {
+    HelperFirebaseFirestore.fetchPointsFormula((formula) {
+      HelperSharedPreferences.setPointsFormula(formula["pointsFormula"]);
+    });
   }
 
   Future<bool> isUserAccountActive() async {
@@ -166,6 +174,7 @@ class _ScreenMain extends State<ScreenMain> with TickerProviderStateMixin {
               value.get("nbreOfDevicesSignedIn"));
           await HelperSharedPreferences.setSubscriptionFees(
               double.parse(value.get("subscriptionFees")));
+          await HelperSharedPreferences.setPoints(value.get("points"));
         });
       }
     });
