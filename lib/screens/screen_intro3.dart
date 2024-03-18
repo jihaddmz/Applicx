@@ -15,11 +15,11 @@ Widget ScreenIntro3(Function onBackClick, BuildContext context) {
               child: Image.asset(
                 "assets/images/image_intro3.png",
                 width: 350,
-                height: 400,
+                height: MediaQuery.of(context).size.height * 0.4,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(5, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 30, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextBoldBlack(

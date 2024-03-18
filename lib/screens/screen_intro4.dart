@@ -14,11 +14,11 @@ Widget ScreenIntro4(BuildContext context, Function onBackClick) {
               padding: const EdgeInsets.fromLTRB(90, 150, 0, 0),
               child: Image.asset(
                 "assets/images/image_intro4.png",
-                height: 400,
+                height: MediaQuery.of(context).size.height * 0.4,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(40, 30, 0, 0),
               child: SizedBox(width: 335, child: TextBoldBlack("Sign In")),
             ),
             Padding(

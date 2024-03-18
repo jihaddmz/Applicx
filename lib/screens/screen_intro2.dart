@@ -15,18 +15,18 @@ Widget ScreenIntro2(Function onBackClick, BuildContext context) {
               child: Image.asset(
                 "assets/images/image_intro2.png",
                 width: 350,
-                height: 500,
+                height: MediaQuery.of(context).size.height * 0.4,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40, 00, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextBoldBlack(
                       "Instantly send gifts for Alfa and Touch.")),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40, 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: SizedBox(
                   width: 335,
                   child: TextGrey(

@@ -232,7 +232,8 @@ class _ScreenSettingsPoints extends State<ScreenSettingsPoints> {
                         padding: const EdgeInsets.only(top: 10),
                         child: TextBoldBlack("Redeem Gifts"),
                       ),
-                      TextGrey("Check gifts available and redeem using your points."),
+                      TextGrey(
+                          "Check gifts available and \nredeem using your points."),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 40),

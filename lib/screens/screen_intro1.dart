@@ -13,11 +13,11 @@ Widget ScreenIntro1(BuildContext context) {
           child: Image.asset(
             "assets/images/image_intro1.png",
             width: 350,
-            height: 500,
+            height: MediaQuery.of(context).size.height * 0.4,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
           child: SizedBox(
               width: 335,
               child: TextBoldBlack(

@@ -120,7 +120,7 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
           isServiceCreditTransfer: 0,
           title: "Minutes Booster 20 Min",
           msg: "Recharge 20 Mins call for anyone",
-          availability: "Tomorrow Midnight",
+          availability: "Tomorrow 12 am",
           cost: 0.34,
           color: const Color(0xffAAD59E)),
       ModelGift(

@@ -23,11 +23,16 @@
           <set>
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/cloud_firestore-4.14.0/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_core-2.24.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_phone_dialer-0.0.5/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_sms-2.3.3/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/fluttercontactpicker-4.7.0/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/package_info_plus-4.2.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.2.2/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/permission_handler_android-10.3.6/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-7.2.2/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/ussd_service-0.1.1/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/../../../sdks/flutter/packages/flutter_tools/gradle" />

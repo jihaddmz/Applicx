@@ -159,7 +159,7 @@
     },
     {
       "name": "flutter_slidable",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_slidable-3.0.1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_slidable-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -171,7 +171,7 @@
     },
     {
       "name": "flutter_svg",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_svg-2.0.9",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/flutter_svg-2.0.10+1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -237,7 +237,7 @@
     },
     {
       "name": "logger",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/logger-2.0.2+1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/logger-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -321,9 +321,9 @@
     },
     {
       "name": "path_provider_platform_interface",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_windows",
@@ -369,13 +369,13 @@
     },
     {
       "name": "platform",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/platform-3.1.3",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/platform-3.1.4",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.7",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -417,9 +417,9 @@
     },
     {
       "name": "shared_preferences_foundation",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.3.4",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.3.5",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "shared_preferences_linux",
@@ -429,9 +429,9 @@
     },
     {
       "name": "shared_preferences_platform_interface",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "shared_preferences_web",
@@ -483,7 +483,7 @@
     },
     {
       "name": "swipe_to",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/swipe_to-1.0.5",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/swipe_to-1.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -519,7 +519,7 @@
     },
     {
       "name": "url_launcher_android",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.2",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -543,9 +543,9 @@
     },
     {
       "name": "url_launcher_platform_interface",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.1"
     },
     {
       "name": "url_launcher_web",
@@ -573,19 +573,19 @@
     },
     {
       "name": "vector_graphics",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics-1.1.9+1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics-1.1.11+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "vector_graphics_codec",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.9+1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.11+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "vector_graphics_compiler",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.9+1",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.11+1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -621,9 +621,9 @@
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/xdg_directories-1.0.3",
+      "rootUri": "file:///Users/jihadmahfouz/.pub-cache/hosted/pub.dev/xdg_directories-1.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "xml",
@@ -638,7 +638,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-02-18T12:29:59.227217Z",
+  "generated": "2024-03-17T19:51:04.502705Z",
   "generator": "pub",
   "generatorVersion": "3.1.3"
 }
