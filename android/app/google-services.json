@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517212495735",
+    "project_id": "applicx-409112",
+    "storage_bucket": "applicx-409112.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517212495735:android:0019db1ffddce3f1e40b72",
+        "android_client_info": {
+          "package_name": "com.appsfourlife.applicx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc8WCfD0byF8SprcS1xmqctnj--6F5YCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
