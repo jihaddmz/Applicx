@@ -391,7 +391,7 @@ class HelperFirebaseFirestore {
 
   static Future<void> updatePoints(double value) async {
     Map<String, dynamic> map = {};
-    map["points"] = value.toString();
+    map["points"] = value.toStringAsFixed(2);
     await firebaseFirestore
         .collection("users")
         .doc(await HelperSharedPreferences.getUsername())

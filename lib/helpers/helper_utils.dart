@@ -53,8 +53,6 @@ class HelperUtils {
   static Future<void> addPoints(double cost) async {
     HelperSharedPreferences.getPointsFormula().then((formula) async {
       HelperSharedPreferences.getPoints().then((value) async {
-        HelperLogging.logD(
-            "The added value is ${(cost * double.parse(formula.split(":")[1]) / double.parse(formula.split(":")[0]))} where the current value is ${value}");
         await HelperFirebaseFirestore.updatePoints((cost *
                 double.parse(formula.split(":")[1]) /
                 double.parse(formula.split(":")[0]) +

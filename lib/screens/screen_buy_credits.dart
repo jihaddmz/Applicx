@@ -428,19 +428,16 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                               await HelperSharedPreferences.setWalletAmount(
                                   _walletAmount);
 
-                              // await HelperFirebaseFirestore
-                              //     .createBuyCreditsEntry(
-                              //         modelBuyCredit,
-                              //         phoneNumber,
-                              //         _controllerName.text.isEmpty
-                              //             ? "N\\A"
-                              //             : _controllerName.text,
-                              //         _tabIndex == 0 ? true : false);
+                              await HelperFirebaseFirestore
+                                  .createBuyCreditsEntry(
+                                      modelBuyCredit,
+                                      phoneNumber,
+                                      _controllerName.text.isEmpty
+                                          ? "N\\A"
+                                          : _controllerName.text,
+                                      _tabIndex == 0 ? true : false);
 
-                              // await HelperUtils.updatePoints(
-                              //     modelBuyCredit);
-
-                              await HelperUtils.minusPoints(
+                              await HelperUtils.addPoints(
                                   modelBuyCredit.cost + modelBuyCredit.fees);
 
                               Navigator.pop(mContext);
