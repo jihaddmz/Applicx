@@ -1,4 +1,5 @@
 import 'package:applicx/helpers/helper_logging.dart';
+import 'package:applicx/helpers/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -95,13 +96,8 @@ class _MyTextField extends State<MyTextField> {
         onChanged: (value) {
           if (widget.inputType == TextInputType.phone) {
             // ensuring the textfield type is of phone number
-            String textWritten = value.replaceAll(" ", "");
-            if (textWritten.replaceAll(" ", "").length == 8) {
-              // 81909560
-              String first = textWritten.substring(0, 2); // 81
-              String second = textWritten.substring(2, 5); // 909
-              String third = textWritten.substring(5, 8); // 560
-              widget.controller.text = "$first $second $third";
+            if (value.replaceAll(" ", "").length == 8) {
+              widget.controller.text = HelperUtils.formatPhoneNumber(value);
             }
           }
 

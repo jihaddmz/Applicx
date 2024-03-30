@@ -317,8 +317,13 @@ class _ScreenChargeAlfa extends State<ScreenChargeAlfa> {
                                     });
                                     if (contact.phoneNumber != null) {
                                       setState(() {
-                                        _controllerPhoneNumber.text =
-                                            contact.phoneNumber!.number ?? "";
+                                        if (contact.phoneNumber!.number !=
+                                            null) {
+                                          _controllerPhoneNumber.text =
+                                              HelperUtils.formatPhoneNumber(
+                                                  contact.phoneNumber!.number!
+                                                      .replaceAll("+961", ""));
+                                        }
                                       });
                                     }
                                   }

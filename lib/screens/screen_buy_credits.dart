@@ -170,9 +170,9 @@ class _ScreenBuyCredits extends State<ScreenBuyCredits> {
                                               if (contact.phoneNumber != null) {
                                                 setState(() {
                                                   _controllerPhoneNumber.text =
-                                                      contact.phoneNumber!
-                                                              .number ??
-                                                          "";
+                                              HelperUtils.formatPhoneNumber(
+                                                  contact.phoneNumber!.number!
+                                                      .replaceAll("+961", ""));
                                                 });
                                               }
                                             }

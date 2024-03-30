@@ -258,7 +258,9 @@ class _ScreenChargeTouch extends State<ScreenChargeTouch> {
                                     if (contact.phoneNumber != null) {
                                       setState(() {
                                         _controllerPhoneNumber.text =
-                                            contact.phoneNumber!.number ?? "";
+                                              HelperUtils.formatPhoneNumber(
+                                                  contact.phoneNumber!.number!
+                                                      .replaceAll("+961", ""));
                                       });
                                     }
                                   }

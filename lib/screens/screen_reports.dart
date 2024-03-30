@@ -44,7 +44,7 @@ class _ScreenReports extends State<ScreenReports> {
 
     fetchUserName();
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       fetchGiftsHistory();
     });
   }

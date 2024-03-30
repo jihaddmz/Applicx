@@ -71,4 +71,13 @@ class HelperUtils {
       await HelperFirebaseFirestore.updatePoints(double.parse(value));
     });
   }
+
+  static String formatPhoneNumber(String phoneNumber) {
+    String textWritten = phoneNumber.replaceAll(" ", "");
+      // 81909560
+      String first = textWritten.substring(0, 2); // 81
+      String second = textWritten.substring(2, 5); // 909
+      String third = textWritten.substring(5, 8); // 560
+      return "$first $second $third";
+  }
 }
