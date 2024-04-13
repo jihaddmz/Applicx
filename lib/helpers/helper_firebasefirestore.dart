@@ -214,7 +214,7 @@ class HelperFirebaseFirestore {
       "actCode": modelCartVoucher.map.keys.elementAt(0),
       "expDate": modelCartVoucher.map.values.elementAt(0),
       "cartInfo":
-          "${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.cost}\$",
+          "${modelCartVoucher.title == "وفّر" ? "Waffer" : ""} ${modelCartVoucher.dolars}\$",
       "paid": true,
       "alfa": modelCartVoucher.isAlfa,
       "date": date

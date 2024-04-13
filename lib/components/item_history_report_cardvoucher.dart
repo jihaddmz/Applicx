@@ -121,7 +121,7 @@ Widget ItemHistoryReportCardVoucher(
                                                       .expDate),
                                               TextNormalBlack("Instruction"),
                                               TextGrey(
-                                                  "Dial *14*${modelHistoryReportCardVoucher.activationCode}#"),
+                                                  "Dial ${modelHistoryReportCardVoucher.isTouch == 1 ? "*200*" : "*14*"}${modelHistoryReportCardVoucher.activationCode}#"),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 5),

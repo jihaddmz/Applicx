@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:ffi';
+
 import 'package:applicx/colors.dart';
 import 'package:applicx/components/button.dart';
 import 'package:applicx/components/custom_route.dart';
@@ -16,6 +18,7 @@ import 'package:applicx/screens/screen_settings_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ScreenSettings extends StatefulWidget {
   ScreenSettings({required this.walletAmount, this.toRenew = false});
@@ -36,6 +39,7 @@ class _ScreenSettings extends State<ScreenSettings> {
   double _subscriptionFees = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   double _pointsAmount = 0;
+  String appVersion = "1.0";
 
   @override
   void initState() {
@@ -67,7 +71,17 @@ class _ScreenSettings extends State<ScreenSettings> {
       });
     });
 
+    fetchPckageInfo();
+
     fetchPoints();
+  }
+
+  Future<void> fetchPckageInfo() async {
+    PackageInfo.fromPlatform().then((value) {
+      setState(() {
+        appVersion = value.version;
+      });
+    });
   }
 
   Future<void> fetchPoints() async {
@@ -168,7 +182,7 @@ class _ScreenSettings extends State<ScreenSettings> {
                                 "Subscription Fees:", "$_subscriptionFees\$"),
                             ItemSettingHeadline(
                                 "Expiration Date:", _expDate.split(" ")[0]),
-                            ItemSettingHeadline("App Version:", "1.0"),
+                            ItemSettingHeadline("App Version:", appVersion),
                           ],
                         ),
                       ),
@@ -348,7 +362,8 @@ class _ScreenSettings extends State<ScreenSettings> {
                                           "assets/svgs/vector_money.svg",
                                           const Color(0xffCDBCDB),
                                           SvgPicture.asset(
-                                              "assets/svgs/vector_arrow_next.svg",)),
+                                            "assets/svgs/vector_arrow_next.svg",
+                                          )),
                                     ),
                                   ),
                                   GestureDetector(
@@ -788,7 +803,7 @@ Appsfourlife reserves the right to terminate or suspend access to the Applicx pl
                   child: SvgPicture.asset(
                     imagePath,
                     width: 20,
-                    height:20,
+                    height: 20,
                   ),
                 ),
               ),
